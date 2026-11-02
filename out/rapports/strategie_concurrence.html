@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Stratégie de concurrence – FestiBed</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.lead { font-size: 11pt; }
+.cols { display: flex; gap: 8px; }
+.cols > .box { flex: 1; margin: 4px 0; }
+.num { display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #1f4e79; color: #fff; text-align: center; font-weight: 700; font-size: 9pt; line-height: 18px; margin-right: 5px; }
+.part { font-size: 9pt; letter-spacing: 2px; text-transform: uppercase; color: #e08a00; font-weight: 700; margin: 10px 0 0; }
+svg text { font-family: "Segoe UI", Arial, sans-serif; }
+</style></head><body>
+
+<header>
+  <h1>FestiBed – Gestion de la concurrence et passage à l’échelle</h1>
+  <p>Projet intégrateur M1 MIAGE – Groupe 3 – 23/10/2026 – Oracle · Spring Boot réactif (WebFlux) · Kotlin · JPA</p>
+</header>
+
+<p class="lead"><b>En une phrase :</b> pendant que le festivalier remplit son panier, rien n’est bloqué ; quand il valide, une seule transaction très courte vérifie et réserve ensemble les Pass et les nuitées, et c’est la base de données qui décide qui obtient la dernière place.</p>
+
+<p class="part">Partie 1 – Pour tout le monde</p>
+
+<h2>1. Le problème</h2>
+<p>Les Pass (quota par festival) et les nuits d’hébergement sont <b>limités</b>. Si Alice et Bruno voient « 1 chambre disponible » et valident à la même seconde, la chambre risque d’être <b>vendue deux fois</b>. Objectif : <b>aucune survente</b>, et rester <b>rapide même avec des milliers de personnes</b>.</p>
+
+<h2>2. Notre stratégie en trois idées</h2>
+<div class="cols">
+  <div class="box ok"><span class="num">1</span><b>Le panier ne bloque rien</b><br>Il reste dans le navigateur (15 min max). Personne n’est bloqué par un panier abandonné.</div>
+  <div class="box ok"><span class="num">2</span><b>Tout se joue à la validation</b><br>Une seule opération réserve Pass et nuitées ensemble : tout réussit, ou rien n’est réservé.</div>
+  <div class="box ok"><span class="num">3</span><b>La base décide qui gagne</b><br>Une nuitée n’est réservée que si elle est encore libre au moment précis de l’écriture.</div>
+</div>
+<p class="small">Comme un siège d’avion : tout le monde peut regarder le plan, mais au paiement un seul obtient le siège 12A ; l’autre reçoit « siège déjà pris ».</p>
+
+<h2>3. Deux personnes, la dernière chambre</h2>
+<table>
+  <tr><th style="width:8%">Temps</th><th style="width:46%">Alice</th><th style="width:46%">Bruno</th></tr>
+  <tr><td>1</td><td>Valide : la base réserve la chambre et la <b>verrouille</b>.</td><td></td></tr>
+  <tr><td>2</td><td></td><td>Valide un instant après : il <b>attend</b> quelques millisecondes.</td></tr>
+  <tr><td>3</td><td><b>Réservation confirmée</b> (Pass + bon d’hébergement).</td><td></td></tr>
+  <tr><td>4</td><td></td><td>La chambre n’est plus libre : <b>rien n’est réservé</b>, message « plus disponible, choisissez-en un autre ».</td></tr>
+</table>
+
+<h2>4. Pourquoi cela tient sous forte charge</h2>
+<ul>
+  <li><b>Opérations très courtes</b> : la base n’est sollicitée que quelques millisecondes, à la validation.</li>
+  <li><b>On ne bloque que ce qui est disputé</b> : deux chambres différentes se réservent en parallèle.</li>
+  <li><b>Serveur réactif</b> : peu de threads servent des milliers de visiteurs ; le serveur ne reste jamais inactif à attendre.</li>
+  <li><b>Base protégée</b> : un nombre fixe d’accès simultanés à Oracle (des « guichets ») ; au-delà, on fait la queue dans l’application.</li>
+</ul>
+<p><b>Garanties :</b> jamais deux ventes de la même nuit ; jamais de Pass sans hébergement ; une panne pendant la validation n’enregistre rien ; le panier ne garantit pas la place, seule la validation la garantit.</p>
+
+<p class="part">Partie 2 – Pour l’équipe technique</p>
+
+<h2>5. Architecture réactive</h2>
+<svg viewBox="0 0 700 118" width="100%" aria-label="Navigateurs, Spring WebFlux, pool IO dédié, HikariCP, Oracle">
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1f4e79"/></marker></defs>
+  <g font-size="11" text-anchor="middle">
+    <rect x="5" y="10" width="110" height="64" rx="8" fill="#f7fafd" stroke="#1f4e79"/><text x="60" y="36" font-weight="700">Navigateurs</text><text x="60" y="54">panier local</text>
+    <rect x="145" y="10" width="125" height="64" rx="8" fill="#e8eef5" stroke="#1f4e79"/><text x="207" y="36" font-weight="700">Spring WebFlux</text><text x="207" y="54">peu de threads</text>
+    <rect x="300" y="10" width="125" height="64" rx="8" fill="#fff4e0" stroke="#e08a00"/><text x="362" y="36" font-weight="700">Pool IO dédié</text><text x="362" y="54">N threads (JPA)</text>
+    <rect x="455" y="10" width="105" height="64" rx="8" fill="#fff4e0" stroke="#e08a00"/><text x="507" y="36" font-weight="700">HikariCP</text><text x="507" y="54">N connexions</text>
+    <rect x="590" y="10" width="105" height="64" rx="8" fill="#e8f3ea" stroke="#2e7d32"/><text x="642" y="36" font-weight="700">Oracle</text><text x="642" y="54">verrous de ligne</text>
+    <text x="350" y="104" fill="#555">La file d’attente se forme dans l’application, jamais dans Oracle.</text>
+  </g>
+  <g stroke="#1f4e79" stroke-width="2" marker-end="url(#a)"><line x1="115" y1="42" x2="143" y2="42"/><line x1="270" y1="42" x2="298" y2="42"/><line x1="425" y1="42" x2="453" y2="42"/><line x1="560" y1="42" x2="588" y2="42"/></g>
+</svg>
+<div class="box warn"><b>Point clé :</b> JPA est <b>bloquant</b> et sa transaction est <b>liée à un thread</b>. La validation est donc une fonction Kotlin <b>normale (pas <code>suspend</code>)</b> annotée <code>@Transactional</code>, lancée par <code>withContext</code> sur un pool IO de même taille que HikariCP.</div>
+
+<h2>6. Vérifier et réserver en une seule instruction</h2>
+<pre>UPDATE Nuitee SET idSelection = :sel
+ WHERE idEtablissement = :e AND numeroHebergement = :h
+   AND dateNuitee IN (:nuits) AND idSelection IS NULL;         -- lignes &lt; nuits → échec
+UPDATE Festival SET nbPassVendus = nbPassVendus + :n          -- en DERNIER (ligne la plus disputée)
+ WHERE idFestival = :f AND nbPassVendus + :n &lt;= quotaPass;      -- 0 ligne → échec</pre>
+<p>Jamais « <code>SELECT</code> puis <code>UPDATE</code> » : la condition et l’écriture sont atomiques. Si une autre transaction tient le verrou, Oracle attend son COMMIT puis réévalue la condition : 0 ligne modifiée.</p>
+
+<h2>7. Code Spring réactif + Kotlin</h2>
+<pre>// Contrôleur WebFlux : n'occupe jamais un thread réseau
+suspend fun valider(panier: PanierDto, user: String): ResponseEntity&lt;ReservationDto&gt; {
+    repeat(3) { essai -&gt;
+        try {
+            val resa = withContext(jpaDispatcher) { validationService.valider(panier, user) }
+            documentService.genererPdfAsync(resa)                 // après le COMMIT
+            return ResponseEntity.ok(resa)
+        } catch (e: IndisponibleException) { return ResponseEntity.status(409).build() }  // pas de réessai
+          catch (e: CannotAcquireLockException) { delay(50L * (essai + 1)) }               // réessai
+    }
+    return ResponseEntity.status(503).build()
+}
+
+// Service : transaction courte, tout ou rien
+@Transactional(isolation = Isolation.READ_COMMITTED, timeout = 5)
+fun valider(panier: PanierDto, user: String): ReservationDto {             // PAS suspend
+    val resa = reservationRepo.save(Reservation(festivalier(user)))
+    for (s in panier.selections.sortedBy { it.idFestival }) {              // ordre fixe
+        val sel = selectionRepo.save(Selection(resa, s))
+        for (h in s.hebergements.sortedBy { it.cle })
+            if (nuiteeRepo.occuper(sel, h, h.nuits) &lt; h.nuits.size) throw IndisponibleException()
+        if (festivalRepo.reserverPass(s.idFestival, s.nbPass) == 0) throw IndisponibleException()
+        passRepo.saveAll(Pass.generer(sel, s.nbPass))
+    }
+    return resa.toDto()                         // exception → ROLLBACK ; sinon → COMMIT
+}</pre>
+
+<h2>8. Règles de montée en charge et choix de l’approche</h2>
+<table>
+  <tr><th style="width:26%">Règle</th><th>Effet</th></tr>
+  <tr><td>Transaction courte</td><td>PDF, emails, paiement après le COMMIT : verrous tenus quelques ms.</td></tr>
+  <tr><td>Point chaud en dernier</td><td>La ligne <code>Festival</code>, partagée par tous les acheteurs, est verrouillée le moins longtemps.</td></tr>
+  <tr><td>Ordre de verrouillage fixe</td><td>Festivals par id, nuitées par (établissement, hébergement, date) : pas d’interblocage.</td></tr>
+  <tr><td>Pool borné + timeout 5 s</td><td>N threads IO = N connexions : Oracle n’est jamais saturé.</td></tr>
+  <tr><td>Réessai ciblé</td><td>Seulement sur verrou / interblocage, jamais sur « plus de place ».</td></tr>
+</table>
+<table>
+  <tr><th style="width:30%">Approche</th><th style="width:12%">Survente ?</th><th>Sous forte charge</th></tr>
+  <tr><td>SELECT puis UPDATE</td><td><b>Oui</b></td><td>Deux clients lisent « libre » en même temps.</td></tr>
+  <tr><td>SELECT … FOR UPDATE</td><td>Non</td><td>Verrou tenu plus longtemps (deux allers-retours).</td></tr>
+  <tr><td><code>@Version</code> (optimiste)</td><td>Non</td><td>Échecs en série sur un festival populaire alors qu’il reste des places.</td></tr>
+  <tr><td><b>UPDATE conditionnel (choix)</b></td><td><b>Non</b></td><td><b>Un aller-retour, verrou minimal, échec seulement s’il ne reste rien.</b></td></tr>
+</table>
+
+<h2>9. Preuves</h2>
+<p><b>Test concurrent</b> (JUnit + coroutines) : N validations simultanées sur la dernière place → une seule réussit. <b>Deux sessions SQL</b> : la seconde attend le verrou puis modifie 0 ligne. <b>Test de charge</b> (Gatling/JMeter) : temps de réponse et débit mesurés, zéro survente en base.</p>
+
+</body></html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Modifications des modèles – FestiBed</title>
+<link rel="stylesheet" href="style.css"></head><body>
+
+<header>
+  <h1>Modifications des modèles après l'audit</h1>
+  <p>Projet intégrateur M1 MIAGE – Groupe 3 – revue avec l'enseignant du 21/10/2026 – à rendre le 22/10/2026</p>
+</header>
+
+<p>Les points sont classés du <b>plus important</b> au <b>moins important</b>, comme demandé.
+<span class="tag t1">Prioritaire</span> change la structure du modèle,
+<span class="tag t2">Important</span> corrige un processus ou un mapping,
+<span class="tag t3">Secondaire</span> simplifie.</p>
+
+<h2>1. Modèles de données (MCD, MLD, UML technique)</h2>
+
+<h3><span class="tag t1">Prioritaire</span> 1.1 Pass rattaché au Festival</h3>
+<p><b>Constat :</b> le Pass était « tout seul dans un coin », relié uniquement à la ligne de réservation. Rien ne garantissait qu'un Pass appartient au festival de sa ligne.</p>
+<p><b>Correction :</b> un Pass est <b>une place</b> pour un festival (et non l'objet qu'on envoie). Il faut ajouter l'association <b>Festival (0,n) — Pass (1,1)</b>.
+Une ligne de réservation (une « sélection ») contient <b>un festival et un hébergement</b>, sinon elle n'existe pas. Le Pass garde un identifiant artificiel, et <code>codePass</code> est rempli à la validation.</p>
+
+<h3><span class="tag t1">Prioritaire</span> 1.2 Rien en base avant le paiement</h3>
+<p><b>Décision :</b> le panier et ses sélections restent dans l'IHM, 15 minutes au plus. Reservation, Ligne_reservation, Pass et l'occupation des Nuitees ne sont créés <b>qu'une fois le paiement accepté</b>.
+Une ligne qui échoue à la validation est supprimée, pas conservée.
+<br><b>Conséquence :</b> aucune entité Panier, et la valeur ANNULEE du statut de ligne devient inutile.</p>
+
+<h3><span class="tag t1">Prioritaire</span> 1.3 Hébergement et Nuitee en composition</h3>
+<p><b>Constat :</b> des identifiants artificiels partout, alors que dans la réalité une chambre est identifiée par son hôtel et son numéro, et une nuitée par sa date.</p>
+<p><b>Correction (identification relative) :</b></p>
+<ul>
+  <li><b>Hebergement</b> est identifié par (idEtablissement, numHebergement), le numéro de chambre propre à l'établissement ;</li>
+  <li><b>Nuitee</b> est identifiée par (idEtablissement, numHebergement, dateNuitee) : on supprime <code>idNuitee</code> et on garde la date.</li>
+</ul>
+<p>Dans le MLD, la clé de Nuitee contient donc les trois attributs, et celle d'Hebergement deux.
+<br><i>Variante acceptée par le prof :</i> gérer des <b>paquets</b> (« 40 chambres de 2 places ») avec un compteur qui diminue. Il n'y a alors ni composition ni numéro de chambre. Il faut choisir l'une des deux approches et la justifier.</p>
+
+<h3><span class="tag t2">Important</span> 1.4 UML technique et mapping objet-relationnel</h3>
+<ul>
+  <li>Représenter les <b>compositions</b> (losange plein) : Etablissement ◆— Hebergement ◆— Nuitee.</li>
+  <li>Pour une composition, mettre les <b>attributs de la clé</b> d'un côté (clé composée, <code>@EmbeddedId</code>) et les <b>références</b> de l'autre.</li>
+  <li>Garder des références d'objets et des listes, pas des identifiants de jointure : par exemple <code>Notation_festival</code> contient <code>festival: Festival</code> et <code>festivalier: Festivalier</code>.</li>
+</ul>
+
+<h3><span class="tag t2">Important</span> 1.5 Localisation</h3>
+<ul>
+  <li>Ajouter <b>latitude</b> et <b>longitude</b> dans <b>Festival</b> et dans <b>Etablissement</b>, à partir des nouvelles données fournies, ou à défaut des coordonnées du centre de la commune.</li>
+  <li>Garder Region, Departement et Commune seulement s'ils servent à la recherche. Le sujet prévoit une recherche par région et département : on les garde.</li>
+</ul>
+
+<h3><span class="tag t3">Secondaire</span> 1.6 Classement devient un attribut</h3>
+<p>Il n'y a que 5 valeurs (les étoiles) : on remplace l'entité Classement par un <b>attribut énuméré</b> <code>classement</code> dans Etablissement.</p>
+
+<h3><span class="tag t3">Secondaire</span> 1.7 Périodicité devient un attribut</h3>
+<p>Les valeurs sont peu nombreuses (annuelle, biennale…) et ne servent qu'au festival : on remplace l'entité Periodicite par un <b>attribut</b> <code>periodicite</code> dans Festival.</p>
+
+<h3><span class="tag t3">Secondaire</span> 1.8 Domaine et sous-domaine</h3>
+<p>Complement_domaine est bien un <b>sous-domaine</b> du Domaine (ex. Musique → Jazz). On garde la hiérarchie Domaine → sous-domaine en la limitant à quelques niveaux, et on relie le Festival à son sous-domaine.</p>
+
+<h3><span class="tag t3">Aucun changement</span> 1.9 Organisateur et Hebergeur sans attribut</h3>
+<p>Validé : on sait ce qu'ils sont parce qu'ils sont dans la bonne table et qu'ils portent leurs associations (Organisation, Gestion).</p>
+
+<h3>1.10 Démarche à montrer</h3>
+<p>Fournir la <b>liste des tables gardées</b> (MCD rétro-conçu → tables retenues → MLD final), en expliquant ce qui est devenu un attribut et ce qui reste une table.</p>
+
+<h2>2. Processus (BPMN)</h2>
+
+<h3><span class="tag t1">Prioritaire</span> 2.1 Plusieurs hébergements pour couvrir les Pass</h3>
+<p>Exemple : 100 Pass, alors qu'aucune chambre n'a 100 places. Il manque une <b>boucle</b> : choisir un hébergement, déduire sa capacité du nombre de Pass restant à loger,
+et recommencer (même établissement ou un autre) jusqu'à ce que tout le monde soit logé. Le festivalier prend ce qu'il voit et valide vite, à cause de la concurrence.</p>
+
+<h3><span class="tag t2">Important</span> 2.2 Validation du panier</h3>
+<ul>
+  <li>Supprimer la purge des 15 minutes : c'est un autre processus.</li>
+  <li>Commencer par « panier vide ? » (l'IHM peut le vérifier).</li>
+  <li>Vérifier <b>tous</b> les Pass et <b>tous</b> les hébergements. Aucun disponible : on arrête. Une partie disponible : on prend ce qui reste et on continue. Tout disponible : on continue. Puis le paiement.</li>
+  <li>Paiement refusé : fin du processus. Le festivalier le relance lui-même : pas de boucle.</li>
+</ul>
+
+<h3><span class="tag t2">Important</span> 2.3 Recherche de festival</h3>
+<p>Si aucun résultat : un message de l'IHM « aucun festival trouvé, modifiez vos critères », puis retour à la saisie des critères.
+Si les résultats ne plaisent pas : le festivalier peut <b>choisir</b> un festival ou <b>changer les critères</b>.</p>
+
+<h3><span class="tag t2">Important</span> 2.4 Critères d'hébergement</h3>
+<p>Demander les critères d'hébergement (lieu, distance au festival, type…) <b>avant</b> de chercher, sinon on trouve « dans toute l'Europe ».
+Un formulaire unique ou deux formulaires successifs conviennent tous les deux.</p>
+
+<h3><span class="tag t3">Secondaire</span> 2.5 Nombre de Pass</h3>
+<p>Le nombre de Pass peut être saisi en même temps que le choix du festival. L'IHM refuse un nombre supérieur à la disponibilité affichée.
+Il est inutile de revérifier à chaque étape : la vérification qui compte est celle de la validation (voir le document sur la concurrence).</p>
+
+<h3><span class="tag t3">Secondaire</span> 2.6 Authentification</h3>
+<p>Réseau social <b>ou</b> email, pas les deux. Elle n'est pas indispensable : le sujet autorise une approche sans authentification.</p>
+
+<h2>3. À ne pas oublier</h2>
+<div class="box warn"><b>Les données :</b> les récupérer, les nettoyer et les charger (ETL) dès maintenant. Elles sont volumineuses et ce traitement est coûteux.</div>
+
+</body></html>

@@ -1,0 +1,38 @@
+# FestiBed - Groupe 3 - Configuration JPA (exemple à reprendre dans le projet Spring Boot)
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@//HOTE:1521/SERVICE
+    username: festibed
+    password: ${FESTIBED_DB_PASSWORD}          # jamais de mot de passe en clair dans le dépôt
+    hikari:
+      maximum-pool-size: 10                    # = taille du pool IO des appels JPA (stratégie de concurrence)
+  jpa:
+    open-in-view: false                        # pas de chargement paresseux dans les contrôleurs
+    hibernate:
+      ddl-auto: validate                       # le schéma vient de 01_schema_oracle.sql ; Hibernate vérifie seulement
+      naming:
+        # OBLIGATOIRE : garder les noms du MLD (nomFestival) ; la stratégie par défaut de Spring Boot
+        # les transformerait en nom_festival et la validation échouerait.
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        jdbc.batch_size: 50                    # INSERT groupés (séquences allocationSize = 50)
+        order_inserts: true
+        order_updates: true
+        default_batch_fetch_size: 50           # limite les N+1 sur les relations LAZY
+
+---
+# Profil de test : H2 en mémoire, schéma + jeu d'essai des scénarios
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:festibed;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:sql/01_schema_h2.sql                     # copié depuis 3_peuplement_donnees
+      data-locations: classpath:sql/insert_jeu_essai_scenarios_h2.sql      # copié depuis 2_insertion_excel

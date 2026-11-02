@@ -1,0 +1,407 @@
+@startuml UML_technique_ORM
+' =============================================================================
+'  FestiBed - Groupe 3 - UML technique (modèle ORM / JPA)
+'  Source : MCD_GLOBAL_FINAL-20-10-2026.loo  ->  MLD_GLOBAL_FINAL-22-10-2026
+'  Règles de passage :
+'   - Références d'objets et listes (pas d'identifiants de jointure).
+'   - Héritages avec attributs ou associations propres -> classes Java
+'     (@Inheritance JOINED) : Utilisateur, Utilisateur_backoffice, Etablissement.
+'   - Sous-types sans attribut -> TYPE (enum) dans la classe mère :
+'       Festival    : domaine / sousDomaine
+'       Hebergement : typeHebergement
+'   - Compositions (losange plein) : Etablissement ◆ Hebergement ◆ Nuitee,
+'     Reservation ◆ Selection ; clés composées en @EmbeddedId (+ @MapsId).
+'   - Nuitee.selection = null -> nuitée libre.
+'   - Equipement (n,n sans attribut) -> @ManyToMany (table EQUIPEMENT).
+' =============================================================================
+
+!define CONCRETE_COLOR #FFF9C4
+
+skinparam classBackgroundColor CONCRETE_COLOR
+skinparam classArrowColor black
+skinparam classBorderColor black
+skinparam classAttributeIconSize 0
+skinparam linetype polyline
+skinparam defaultFontSize 16
+skinparam titleFontSize 22
+skinparam noteFontSize 15
+hide empty methods
+
+skinparam class {
+    FontSize 18
+    FontStyle bold
+    AttributeFontSize 16
+    BackgroundColor CONCRETE_COLOR
+    BorderColor black
+    ArrowColor black
+}
+
+title Diagramme UML technique - FestiBed (modèle ORM / JPA)
+
+' ====== UTILISATEURS ======
+abstract class Utilisateur {
+    - idUtilisateur: Long
+    - nom: String
+    - email: String
+}
+
+class Festivalier {
+    - fournisseurAuth: String
+    - identifiantExterneFestivalier: String
+    - reservations: List<Reservation>
+    - notationsFestival: List<NotationFestival>
+    - notationsEtablissement: List<NotationEtablissement>
+}
+
+abstract class UtilisateurBackoffice {
+    - motDePasseHache: String
+}
+
+class Organisateur {
+    - festivals: List<Festival>
+}
+
+class Hebergeur {
+    - etablissements: List<Etablissement>
+}
+
+' ====== GEOGRAPHIE ======
+class Region {
+    - idRegion: Long
+    - nomRegion: String
+    - departements: List<Departement>
+}
+
+class Departement {
+    - codeDepartement: String
+    - nomDepartement: String
+    - region: Region
+    - communes: List<Commune>
+}
+
+class Commune {
+    - codeInsee: String
+    - nomCommune: String
+    - latitude: BigDecimal
+    - longitude: BigDecimal
+    - departement: Departement
+    - festivals: List<Festival>
+}
+
+' ====== FESTIVALS ======
+class Festival {
+    - idFestival: Long
+    - nomFestival: String
+    - domaine: Domaine
+    - sousDomaine: SousDomaine
+    - periodicite: Periodicite
+    - moisDebut: Byte
+    - siteWebFestival: String
+    - numIdentification: String
+    - dateCreation: LocalDate
+    - codePostalFestival: String
+    - dateDebutAncien: LocalDate
+    - dateFinAncien: LocalDate
+    - dateDebutFestival: LocalDate
+    - dateFinFestival: LocalDate
+    - quotaPass: Integer
+    - prixPass: BigDecimal
+    - actifFestival: Boolean
+    - commune: Commune
+    - organisateur: Organisateur
+    - passes: List<Pass>
+    - notations: List<NotationFestival>
+}
+
+class NotationFestival {
+    - id: NotationFestivalId
+    - festival: Festival
+    - festivalier: Festivalier
+    - noteFestival: Integer
+    - dateNoteFestival: LocalDate
+}
+
+class NotationFestivalId {
+    - idFestival: Long
+    - idFestivalier: Long
+}
+
+' ====== ETABLISSEMENTS ======
+abstract class Etablissement {
+    - idEtablissement: Long
+    - nomCommercial: String
+    - adresse: String
+    - codePostalEtablissement: String
+    - nomCommuneEtablissement: String
+    - telephoneEtablissement: String
+    - siteWebEtablissement: String
+    - capaciteAccueil: Integer
+    - classement: Classement
+    - dateClassement: LocalDate
+    - classementProroge: Boolean
+    - latitudeEtablissement: BigDecimal
+    - longitudeEtablissement: BigDecimal
+    - hebergeur: Hebergeur
+    - hebergements: List<Hebergement>
+    - notations: List<NotationEtablissement>
+}
+
+class HotelDeTourisme {
+    - nbChambresHotel: Integer
+}
+
+class AubergeCollective {
+    - nbChambresAuberge: Integer
+}
+
+class Camping {
+    - categorie: CategorieCamping
+    - nbEmplacementsCamping: Integer
+}
+
+class ParcResidentielDeLoisirs {
+    - nbEmplacementsParc: Integer
+}
+
+class VillageDeVacances {
+    - mention: MentionVillage
+    - typeSejour: TypeSejour
+    - nbLogements: Integer
+}
+
+class ResidenceDeTourisme {
+    - nbUnitesHabitation: Integer
+}
+
+class NotationEtablissement {
+    - id: NotationEtablissementId
+    - etablissement: Etablissement
+    - festivalier: Festivalier
+    - noteEtablissement: Integer
+    - dateNoteEtablissement: LocalDate
+}
+
+class NotationEtablissementId {
+    - idEtablissement: Long
+    - idFestivalier: Long
+}
+
+' ====== HEBERGEMENTS ======
+class Hebergement {
+    - id: HebergementId
+    - typeHebergement: TypeHebergement
+    - capaciteHebergement: Integer
+    - prixNuitHebergement: BigDecimal
+    - descriptionHebergement: String
+    - actifHebergement: Boolean
+    - etablissement: Etablissement
+    - nuitees: List<Nuitee>
+    - photos: List<PhotoHebergement>
+    - options: List<OptionHebergement>
+}
+
+class HebergementId {
+    - idEtablissement: Long
+    - numeroHebergement: String
+}
+
+class Nuitee {
+    - id: NuiteeId
+    - prixNuitee: BigDecimal
+    - hebergement: Hebergement
+    - selection: Selection
+}
+
+class NuiteeId {
+    - hebergementId: HebergementId
+    - dateNuitee: LocalDate
+}
+
+class PhotoHebergement {
+    - idPhotoHebergement: Long
+    - urlPhotoHebergement: String
+    - hebergement: Hebergement
+}
+
+class OptionHebergement {
+    - idOptionHebergement: Long
+    - libelleOptionHebergement: String
+}
+
+' ====== RESERVATIONS ======
+class Reservation {
+    - numeroReservation: String
+    - dateReservation: LocalDateTime
+    - festivalier: Festivalier
+    - selections: List<Selection>
+    - paiement: Paiement
+}
+
+class Selection {
+    - idSelection: Long
+    - prixPassSelection: BigDecimal
+    - statutSelection: String
+    - reservation: Reservation
+    - passes: List<Pass>
+    - nuitees: List<Nuitee>
+}
+
+class Pass {
+    - idPass: Long
+    - codePass: String
+    - festival: Festival
+    - selection: Selection
+}
+
+class Paiement {
+    - numTransaction: String
+    - montantPaiement: BigDecimal
+    - datePaiement: LocalDateTime
+    - statutPaiement: String
+    - reservation: Reservation
+}
+
+' ====== ENUMERATIONS ======
+enum Domaine {
+    MUSIQUES_ACTUELLES
+    CINEMA_ET_AUDIOVISUEL
+    MUSIQUES_CLASSIQUES
+    CIRQUE_ET_ARTS_DE_LA_RUE
+    LIVRE_ET_LITTERATURE
+    DANSE
+    THEATRE
+    ARTS_PLASTIQUES_ET_VISUELS
+    PLURIDISCIPLINAIRE_SPECTACLE_VIVANT
+    PLURIDISCIPLINAIRE_MUSIQUE
+    DIVERS_SPECTACLE_VIVANT
+    TRANSDISCIPLINAIRE
+    DOMAINES_DIVERS
+}
+
+enum SousDomaine {
+    AMPLIFIEES_OU_ELECTRONIQUES
+    JAZZ_BLUES_ET_IMPROVISEES
+    CHANSON
+    TRADITIONNELLES_ET_DU_MONDE
+    BAROQUE_ET_ANCIEN
+    ARTS_DE_LA_RUE
+}
+
+enum Periodicite {
+    ANNUELLE
+    BIENNALE_ANNEES_PAIRES
+    BIENNALE_ANNEES_IMPAIRES
+    BIANNUELLE
+    IRREGULIERE
+}
+
+enum TypeHebergement {
+    CHAMBRE_SIMPLE
+    CHAMBRE_DOUBLE
+    EMPLACEMENT_DE_CAMPING
+    BUNGALOW
+}
+
+enum Classement {
+    UNE_ETOILE
+    DEUX_ETOILES
+    TROIS_ETOILES
+    QUATRE_ETOILES
+    CINQ_ETOILES
+}
+
+enum CategorieCamping {
+    TOURISME
+    LOISIRS
+}
+
+enum MentionVillage {
+    NON
+    HEBERGEMENT_DISPERSE
+    HEBERGEMENT_LEGER
+    HEBERGEMENT_LEGER_ET_DISPERSE
+}
+
+enum TypeSejour {
+    FORMULE_PENSION
+    FORMULE_LOCATION
+    FORMULE_LOCATION_PENSION
+}
+
+' ====== HERITAGE ======
+' Écrit « classe du dessus -- classe du dessous » pour fixer la mise en page
+UtilisateurBackoffice <|-- Organisateur
+UtilisateurBackoffice --|> Utilisateur
+UtilisateurBackoffice <|-- Hebergeur
+Utilisateur <|-- Festivalier
+
+HotelDeTourisme --|> Etablissement
+AubergeCollective --|> Etablissement
+Camping --|> Etablissement
+ParcResidentielDeLoisirs --|> Etablissement
+VillageDeVacances --|> Etablissement
+ResidenceDeTourisme --|> Etablissement
+
+
+' ====== ORDRE GAUCHE -> DROITE (liens invisibles, mise en page seulement) ======
+Organisateur -[hidden]right- Utilisateur
+Utilisateur -[hidden]right- Hebergeur
+Hebergeur -[hidden]right- HotelDeTourisme
+HotelDeTourisme -[hidden]right- AubergeCollective
+AubergeCollective -[hidden]right- Camping
+Camping -[hidden]right- ParcResidentielDeLoisirs
+ParcResidentielDeLoisirs -[hidden]right- VillageDeVacances
+VillageDeVacances -[hidden]right- ResidenceDeTourisme
+Festival -[hidden]right- Festivalier
+Festivalier -[hidden]right- Etablissement
+NotationFestival -[hidden]right- Reservation
+Reservation -[hidden]right- NotationEtablissement
+Nuitee -[hidden]right- PhotoHebergement
+PhotoHebergement -[hidden]right- OptionHebergement
+
+' ====== RELATIONS ======
+Organisateur "0..1" -- "0..*" Festival : Organisation
+Hebergeur "0..1" -- "0..*" Etablissement : Gestion
+
+Festival "0..*" -- "1" Commune : Deroulement
+Commune "1..*" -- "1" Departement : Contenance
+Departement "1..*" -- "1" Region : Constitution
+
+Festival "1" -- "0..*" NotationFestival
+Festivalier "1" -- "0..*" NotationFestival
+Festivalier "1" -- "0..*" Reservation : Effectuation
+Festivalier "1" -- "0..*" NotationEtablissement
+Etablissement "1" -- "0..*" NotationEtablissement
+
+Reservation "1" *-- "1..*" Selection : Composition
+Reservation "1" -- "0..1" Paiement : Reglement
+Selection "1" -- "1..*" Pass : Delivrance
+Festival "1" -- "0..*" Pass : Allocation
+
+Etablissement "1" *-- "0..*" Hebergement : Proposition
+Selection "0..1" -- "1..*" Nuitee : Occupation
+Hebergement "1" *-- "0..*" Nuitee : Disponibilite
+Hebergement "1" -- "0..*" PhotoHebergement : Illustration
+Hebergement "0..*" -- "0..*" OptionHebergement : Equipement
+
+' ====== CLES COMPOSEES (@EmbeddedId) ======
+NotationFestival *-- NotationFestivalId
+NotationEtablissement *-- NotationEtablissementId
+Hebergement *-- HebergementId
+Nuitee *-- NuiteeId
+NuiteeId ..> HebergementId
+
+' ====== TYPES ENUMERES (sur les côtés) ======
+' Gauche : énumérations du Festival
+Periodicite <.right. Festival
+SousDomaine <.right. Festival
+SousDomaine .right.> Domaine
+Domaine <.right. Festival
+' Droite : énumérations des établissements et hébergements
+Etablissement .right.> Classement
+CategorieCamping <.. Camping
+TypeSejour <.. VillageDeVacances
+MentionVillage <.. VillageDeVacances
+Hebergement .right.> TypeHebergement
+
+@enduml

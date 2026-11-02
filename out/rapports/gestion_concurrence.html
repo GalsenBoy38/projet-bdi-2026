@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Gestion de la concurrence – FestiBed</title>
+<link rel="stylesheet" href="style.css"></head><body>
+
+<header>
+  <h1>Gestion des transactions concurrentes – FestiBed</h1>
+  <p>Projet intégrateur M1 MIAGE – Groupe 3 – 22/10/2026 – Oracle · Kotlin Spring · JPA</p>
+</header>
+
+<h2>1. Le problème</h2>
+<p>FestiBed vend deux ressources <b>limitées</b> que plusieurs festivaliers peuvent vouloir en même temps :</p>
+<ul>
+  <li><b>les Pass</b> d'un festival, limités par <code>quotaPass</code> ;</li>
+  <li><b>les nuitées</b> d'un hébergement : une chambre ne peut être occupée qu'une fois par nuit.</li>
+</ul>
+<p>Le risque est la <b>survente</b> : deux festivaliers voient la même dernière place, paient tous les deux, et l'un d'eux n'a rien.
+Le sujet impose de garantir les propriétés ACID et de tenir la montée en charge (beaucoup de demandes simultanées sur un festival populaire).</p>
+
+<h2>2. Principe retenu (validé à l'audit du 21/10)</h2>
+<div class="box ok">
+  <b>Rien n'est écrit en base avant le paiement.</b> Le panier (les « sélections ») vit dans l'IHM, 15 minutes au plus.
+  La réservation, les lignes, les Pass et l'occupation des nuitées sont créés <b>en une seule transaction courte</b>,
+  au moment de la validation payée.
+</div>
+<ul>
+  <li>Aucun verrou n'est tenu pendant que le festivalier réfléchit (contrôle <b>optimiste</b>) : c'est indispensable pour monter en charge.</li>
+  <li>Les disponibilités affichées pendant la recherche sont <b>indicatives</b>. La seule vérification qui fait foi est celle faite <b>dans</b> la transaction finale (le prof : « la concurrence, c'est quand il paye »).</li>
+  <li>Il est inutile de revérifier à chaque étape intermédiaire du parcours.</li>
+</ul>
+
+<h2>3. Ce que le MCD apporte déjà (points forts)</h2>
+<table>
+  <tr><th>Élément du modèle</th><th>Pourquoi il protège</th></tr>
+  <tr><td><b>Nuitee</b> identifiée par (hébergement, date), par composition</td>
+      <td>L'identifiant naturel interdit d'avoir deux fois la même nuit pour une chambre. C'est la clé primaire qui garantit l'unicité, pas le code applicatif.</td></tr>
+  <tr><td><b>Occupation</b> Nuitee 0,1 — Ligne_reservation</td>
+      <td>Une nuitée est occupée par <b>au plus une</b> ligne. Réserver revient à faire passer <code>idLigneReservation</code> de NULL à une valeur, et un seul UPDATE peut réussir.</td></tr>
+  <tr><td><b>Pass</b> rattaché au Festival et à la Ligne_reservation</td>
+      <td>Chaque Pass est une place d'un festival précis. On compte les places vendues par festival sans ambiguïté.</td></tr>
+  <tr><td><b>Reservation → Ligne_reservation → Pass / Nuitee</b></td>
+      <td>Tout ce qui est créé à la validation dépend de la réservation : une seule transaction englobe l'ensemble.</td></tr>
+  <tr><td><b>Paiement</b> avec <code>statutPaiement</code> (dont REMBOURSE)</td>
+      <td>Permet de tracer le cas « payé mais plus disponible » et de rembourser.</td></tr>
+</table>
+
+<h2>4. Points sensibles</h2>
+<div class="box crit"><b>1. Le quota de Pass est un « point chaud ».</b>
+  Pour un festival très demandé, toutes les transactions touchent la même ligne Festival. Compter les Pass vendus (<code>COUNT(*)</code>)
+  sous verrou est lent, et sans verrou c'est faux.
+  <br><i>Solution :</i> un compteur <code>nbPassVendus</code> dans Festival et un UPDATE conditionnel atomique (§5). Le verrou ne dure alors que quelques millisecondes.</div>
+<div class="box crit"><b>2. Paiement accepté, mais transaction refusée.</b>
+  Le paiement se fait avant la transaction : entre les deux, un autre festivalier peut prendre la place.
+  <br><i>Solution :</i> rembourser la partie non servie (<code>statutPaiement = REMBOURSE</code>). Mieux encore, si la passerelle de paiement le permet :
+  <b>autoriser</b> le montant, faire la transaction, puis <b>encaisser</b> le montant réellement servi.</div>
+<div class="box warn"><b>3. Interblocages (deadlocks).</b> Une réservation peut verrouiller plusieurs nuitées et plusieurs festivals.
+  Deux transactions qui les prennent dans un ordre différent se bloquent mutuellement.
+  <br><i>Solution :</i> toujours verrouiller dans le même ordre : festivals par <code>idFestival</code>, puis nuitées par (établissement, hébergement, date).</div>
+<div class="box warn"><b>4. Échec partiel d'une réservation.</b> Une réservation contient plusieurs sélections. Selon l'audit, seule la ligne en échec « saute », pas toute la réservation.
+  <br><i>Solution :</i> un <code>SAVEPOINT</code> par ligne. En cas d'échec, <code>ROLLBACK TO SAVEPOINT</code>, la ligne est retirée et le montant ajusté.</div>
+<div class="box warn"><b>5. Plusieurs hébergements pour couvrir les Pass</b> (ex. 100 Pass, des chambres de 2 à 4 places).
+  La validation doit occuper <b>toutes</b> les chambres choisies. Si l'une a été prise entre-temps, on applique la règle du BPMN (prendre ce qui reste, ou retirer la sélection).</div>
+<div class="box warn"><b>6. Unicité du code Pass.</b> Il est généré dans la transaction (séquence Oracle ou UUID) et protégé par une contrainte UNIQUE : pas de collision possible.</div>
+<div class="box"><b>7. Purge du panier (15 min).</b> Le panier n'est pas en base : sa purge n'a aucun impact transactionnel. C'est un point fort de notre choix.</div>
+
+<h2>5. Mise en œuvre dans notre modèle</h2>
+<p>Isolation Oracle par défaut (<b>READ COMMITTED</b>) et verrous de ligne. Toute la validation tient dans <b>une</b> méthode <code>@Transactional</code> côté serveur.</p>
+<pre>BEGIN  -- validation d'un panier payé
+  INSERT INTO Reservation (idReservation, dateReservation, idFestivalier) VALUES (...);
+  INSERT INTO Paiement (...) VALUES (..., 'ACCEPTE');
+
+  POUR CHAQUE sélection, triée par idFestival puis par hébergement :
+    SAVEPOINT ligne_i;
+    INSERT INTO Ligne_reservation (...) VALUES (...);
+
+    -- 1) Pass : réservation atomique dans le quota (un seul ordre SQL)
+    UPDATE Festival SET nbPassVendus = nbPassVendus + :nbPass
+     WHERE idFestival = :f AND nbPassVendus + :nbPass &lt;= quotaPass;
+    SI 0 ligne modifiée → ROLLBACK TO ligne_i ; sélection retirée ; CONTINUER
+    INSERT INTO Pass (idPass, codePass, idFestival, idLigneReservation) ...  -- nbPass fois
+
+    -- 2) Nuitées : prendre uniquement celles encore libres
+    UPDATE Nuitee SET idLigneReservation = :ligne
+     WHERE idEtablissement = :e AND numHebergement = :h
+       AND dateNuitee BETWEEN :debut AND :fin
+       AND idLigneReservation IS NULL;
+    SI lignes modifiées &lt; nuits demandées → ROLLBACK TO ligne_i ; sélection retirée
+  FIN POUR
+
+  SI aucune ligne servie → ROLLBACK ; remboursement total
+  SINON → ajuster le montant ; remboursement partiel éventuel
+COMMIT;</pre>
+<ul>
+  <li><b>Pourquoi un UPDATE conditionnel</b> plutôt que « SELECT puis UPDATE » : la vérification et l'écriture sont atomiques. Il n'existe aucune fenêtre entre « je lis qu'il reste une place » et « je la prends ».</li>
+  <li><b>Côté JPA :</b> ces deux ordres s'écrivent en requêtes <code>@Modifying</code>, en testant le nombre de lignes modifiées. On peut aussi utiliser <code>@Version</code> (verrou optimiste) sur Festival, avec quelques nouvelles tentatives en cas de conflit.</li>
+  <li><b>Index nécessaires :</b> la clé (idEtablissement, numHebergement, dateNuitee) sert directement à l'UPDATE des nuitées. Il faut aussi un index sur <code>Pass.idFestival</code>.</li>
+</ul>
+
+<h3>Variante « paquets » d'hébergement (évoquée à l'audit)</h3>
+<p>Si l'on gère un stock (« 40 chambres de 2 places ») au lieu de chambres numérotées, la nuitée devient un compteur <code>nbRestant</code> par (hébergement, date).
+On réserve avec <code>UPDATE … SET nbRestant = nbRestant - :n WHERE … AND nbRestant &gt;= :n</code>, sur le même principe que le quota de Pass.
+C'est plus simple pour l'hébergeur, mais cela crée un point chaud par paquet. La version chambre par chambre répartit mieux les verrous.</p>
+
+<h2>6. Passage à l'échelle</h2>
+<table>
+  <tr><th>Levier</th><th>Effet</th></tr>
+  <tr><td>Panier hors base, transaction seulement à la validation</td><td>Les transactions durent quelques millisecondes et aucun verrou n'est tenu pendant que l'utilisateur réfléchit.</td></tr>
+  <tr><td>Verrous de ligne (Oracle)</td><td>Deux réservations sur des hébergements différents ne se gênent jamais.</td></tr>
+  <tr><td>Compteur <code>nbPassVendus</code> et UPDATE conditionnel</td><td>Le point chaud par festival est réduit à un seul ordre SQL très court.</td></tr>
+  <tr><td>Ordre de verrouillage fixe</td><td>Pas d'interblocage, donc pas de transactions annulées par Oracle.</td></tr>
+  <tr><td>Nouvelle tentative avec délai en cas de conflit</td><td>Absorbe les pics sans erreur visible pour l'utilisateur.</td></tr>
+  <tr><td>Pool de connexions et serveur réactif</td><td>Beaucoup de requêtes simultanées avec peu de threads.</td></tr>
+</table>
+
+<h2>7. Comment le démontrer</h2>
+<ul>
+  <li>Un test qui lance N validations simultanées sur un festival dont le quota restant est 1 : <b>une seule</b> doit réussir.</li>
+  <li>Le même test sur une nuitée libre : une seule ligne obtient la nuitée, les autres voient leur sélection retirée.</li>
+  <li>Une démonstration avec deux sessions SQL (SQL Developer) montrant le blocage puis la libération du verrou.</li>
+</ul>
+
+<h2>8. Ce que cela implique dans le MCD</h2>
+<ul>
+  <li>Ajouter <code>nbPassVendus</code> dans Festival, ou à défaut compter les Pass par festival sous verrou.</li>
+  <li>Garder Occupation en 0,1 côté Nuitee et identifier Nuitee par (hébergement, date).</li>
+  <li>Rattacher Pass au Festival (voir le document des modifications).</li>
+  <li>Garder <code>statutPaiement</code> avec la valeur REMBOURSE.</li>
+</ul>
+
+</body></html>

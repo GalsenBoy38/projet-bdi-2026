@@ -1,0 +1,8 @@
+# Données générées (58 Mo) : se régénèrent à l'identique avec
+#   python 3_peuplement_donnees/generer_peuplement.py
+3_peuplement_donnees/csv/
+3_peuplement_donnees/logs/
+# Projet de vérification
+1_entites_jpa/verification_h2/target/
+1_entites_jpa/verification_h2/cp.txt
+__pycache__/

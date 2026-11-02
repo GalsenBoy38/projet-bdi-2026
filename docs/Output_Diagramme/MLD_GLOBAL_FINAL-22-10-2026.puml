@@ -1,0 +1,303 @@
+@startuml MLD_GLOBAL_FINAL
+' =============================================================================
+'  FestiBed - Groupe 3 - MLD issu de MCD_GLOBAL_FINAL-20-10-2026.loo
+'  Clé primaire soulignée, # clé étrangère, <<UK>> unicité,
+'  [0..1] = peut être NULL (sinon NOT NULL)
+'  Héritages :
+'   - Utilisateur / Utilisateur_backoffice / Etablissement : une table par
+'     sous-type, clé primaire = clé étrangère vers la table mère (JOINED).
+'   - Festival (domaines) et Hebergement (types) : sous-types sans attribut
+'     ni association propre -> remontés dans la table mère sous forme d'un
+'     attribut énuméré (domaine / sousDomaine, typeHebergement).
+'  Identifications relatives (compositions) :
+'   - Hebergement = (idEtablissement, numeroHebergement)
+'   - Nuitee      = (idEtablissement, numeroHebergement, dateNuitee)
+'  Contraintes : NOTATION_*.note* BETWEEN 1 AND 5,
+'                FESTIVAL.dateFinFestival >= dateDebutFestival
+' =============================================================================
+hide circle
+hide methods
+hide stereotype
+skinparam classAttributeIconSize 0
+skinparam linetype polyline
+skinparam nodesep 40
+skinparam ranksep 50
+skinparam defaultFontSize 16
+skinparam class {
+  FontSize 18
+  FontStyle bold
+  AttributeFontSize 16
+  BackgroundColor #FFFDE7
+  BorderColor #555555
+  ArrowColor black
+}
+
+' ===== Utilisateurs =====
+entity "UTILISATEUR" as Utilisateur {
+  <u>idUtilisateur</u> : INT
+  --
+  nom : VARCHAR(100)
+  email : VARCHAR(150)
+}
+
+entity "FESTIVALIER" as Festivalier {
+  <u>#idUtilisateur</u> : INT
+  --
+  fournisseurAuth : VARCHAR(30) [0..1]
+  identifiantExterneFestivalier : VARCHAR(100) [0..1]
+}
+
+entity "UTILISATEUR_BACKOFFICE" as Backoffice {
+  <u>#idUtilisateur</u> : INT
+  --
+  motDePasseHache : VARCHAR(100)
+}
+
+entity "ORGANISATEUR" as Organisateur {
+  <u>#idUtilisateur</u> : INT
+}
+
+entity "HEBERGEUR" as Hebergeur {
+  <u>#idUtilisateur</u> : INT
+}
+
+' ===== Géographie =====
+entity "REGION" as Region {
+  <u>idRegion</u> : INT
+  --
+  nomRegion : VARCHAR(30)
+}
+
+entity "DEPARTEMENT" as Departement {
+  <u>codeDepartement</u> : VARCHAR(3)
+  --
+  nomDepartement : VARCHAR(50)
+  #idRegion : INT
+}
+
+entity "COMMUNE" as Commune {
+  <u>codeInsee</u> : VARCHAR(5)
+  --
+  nomCommune : VARCHAR(40)
+  latitude : DECIMAL(12,9)
+  longitude : DECIMAL(12,9)
+  #codeDepartement : VARCHAR(3)
+}
+
+' ===== Festivals =====
+entity "FESTIVAL" as Festival {
+  <u>idFestival</u> : INT
+  --
+  nomFestival : VARCHAR(100)
+  domaine : VARCHAR(40)
+  sousDomaine : VARCHAR(70) [0..1]
+  periodicite : VARCHAR(30) [0..1]
+  moisDebut : BYTE
+  siteWebFestival : VARCHAR(150)
+  numIdentification : VARCHAR(50)
+  dateCreation : DATE
+  codePostalFestival : VARCHAR(5)
+  dateDebutAncien : DATE
+  dateFinAncien : DATE
+  dateDebutFestival : DATE
+  dateFinFestival : DATE
+  quotaPass : INT
+  prixPass : DECIMAL(8,2)
+  actifFestival : LOGICAL
+  #codeInsee : VARCHAR(5)
+  #idOrganisateur : INT [0..1]
+}
+
+entity "NOTATION_FESTIVAL" as NotationFestival {
+  <u>#idFestival</u> : INT
+  <u>#idUtilisateur</u> : INT
+  --
+  noteFestival : SMALLINT
+  dateNoteFestival : DATE
+}
+
+' ===== Établissements =====
+entity "ETABLISSEMENT" as Etablissement {
+  <u>idEtablissement</u> : INT
+  --
+  nomCommercial : VARCHAR(80)
+  adresse : VARCHAR(80)
+  codePostalEtablissement : VARCHAR(5)
+  nomCommuneEtablissement : VARCHAR(50)
+  telephoneEtablissement : VARCHAR(30)
+  siteWebEtablissement : VARCHAR(350)
+  capaciteAccueil : INT
+  classement : VARCHAR(50)
+  dateClassement : DATE
+  classementProroge : LOGICAL
+  latitudeEtablissement : DECIMAL(12,9)
+  longitudeEtablissement : DECIMAL(12,9)
+  #idUtilisateur : INT [0..1]
+}
+
+entity "HOTEL_DE_TOURISME" as Hotel {
+  <u>#idEtablissement</u> : INT
+  --
+  nbChambresHotel : INT
+}
+
+entity "AUBERGE_COLLECTIVE" as Auberge {
+  <u>#idEtablissement</u> : INT
+  --
+  nbChambresAuberge : INT
+}
+
+entity "CAMPING" as Camping {
+  <u>#idEtablissement</u> : INT
+  --
+  categorie : VARCHAR(10)
+  nbEmplacementsCamping : INT
+}
+
+entity "PARC_RESIDENTIEL_DE_LOISIRS" as Parc {
+  <u>#idEtablissement</u> : INT
+  --
+  nbEmplacementsParc : INT
+}
+
+entity "VILLAGE_DE_VACANCES" as Village {
+  <u>#idEtablissement</u> : INT
+  --
+  mention : VARCHAR(30)
+  typeSejour : VARCHAR(30)
+  nbLogements : INT
+}
+
+entity "RESIDENCE_DE_TOURISME" as Residence {
+  <u>#idEtablissement</u> : INT
+  --
+  nbUnitesHabitation : INT
+}
+
+entity "NOTATION_ETABLISSEMENT" as NotationEtablissement {
+  <u>#idEtablissement</u> : INT
+  <u>#idUtilisateur</u> : INT
+  --
+  noteEtablissement : SMALLINT
+  dateNoteEtablissement : DATE
+}
+
+' ===== Hébergements =====
+entity "HEBERGEMENT" as Hebergement {
+  <u>#idEtablissement</u> : INT
+  <u>numeroHebergement</u> : VARCHAR(10)
+  --
+  typeHebergement : VARCHAR(30)
+  capaciteHebergement : INT
+  prixNuitHebergement : DECIMAL(8,2)
+  descriptionHebergement : VARCHAR(500) [0..1]
+  actifHebergement : LOGICAL
+}
+
+entity "PHOTO_HEBERGEMENT" as Photo {
+  <u>idPhotoHebergement</u> : INT
+  --
+  urlPhotoHebergement : VARCHAR(300)
+  #idEtablissement : INT
+  #numeroHebergement : VARCHAR(10)
+}
+
+entity "OPTION_HEBERGEMENT" as Option {
+  <u>idOptionHebergement</u> : INT
+  --
+  libelleOptionHebergement : VARCHAR(50)
+}
+
+entity "EQUIPEMENT" as Equipement {
+  <u>#idEtablissement</u> : INT
+  <u>#numeroHebergement</u> : VARCHAR(10)
+  <u>#idOptionHebergement</u> : INT
+  --
+}
+
+entity "NUITEE" as Nuitee {
+  <u>#idEtablissement</u> : INT
+  <u>#numeroHebergement</u> : VARCHAR(10)
+  <u>dateNuitee</u> : DATE
+  --
+  prixNuitee : DECIMAL(8,2)
+  #idSelection : INT [0..1]
+}
+
+' ===== Réservations =====
+entity "RESERVATION" as Reservation {
+  <u>numeroReservation</u> : VARCHAR(20)
+  --
+  dateReservation : DATETIME
+  #idUtilisateur : INT
+}
+
+entity "SELECTION" as Selection {
+  <u>idSelection</u> : INT
+  --
+  prixPassSelection : DECIMAL(8,2)
+  statutSelection : VARCHAR(20)
+  #numeroReservation : VARCHAR(20)
+}
+
+entity "PASS" as Pass {
+  <u>idPass</u> : INT
+  --
+  codePass : VARCHAR(40)
+  #idFestival : INT
+  #idSelection : INT
+}
+
+entity "PAIEMENT" as Paiement {
+  <u>numTransaction</u> : VARCHAR(30)
+  --
+  montantPaiement : DECIMAL(10,2)
+  datePaiement : DATETIME
+  statutPaiement : VARCHAR(20)
+  #numeroReservation : VARCHAR(20)
+}
+
+' ===== Clés étrangères =====
+' Écrites « table du dessus -- table du dessous » pour fixer la mise en page.
+
+' Utilisateurs (haut)
+Backoffice -- Organisateur
+Backoffice -- Utilisateur
+Backoffice -- Hebergeur
+Utilisateur -- Festivalier
+
+' Organisateur -> Festival (gauche), sous-types et Hebergeur -> Etablissement (droite)
+Organisateur -- Festival
+Hotel -- Etablissement
+Auberge -- Etablissement
+Camping -- Etablissement
+Parc -- Etablissement
+Village -- Etablissement
+Residence -- Etablissement
+Hebergeur -- Etablissement
+
+' Géographie (à gauche)
+Festival -- Commune
+Commune -- Departement
+Departement -- Region
+
+' Notations et réservations (au centre)
+Festival -- NotationFestival
+Festivalier -- NotationFestival
+Festivalier -- Reservation
+Festivalier -- NotationEtablissement
+Etablissement -- NotationEtablissement
+
+Reservation -- Selection
+Reservation -- Paiement
+Selection -- Pass
+Festival -- Pass
+
+' Hébergements (en bas à droite)
+Etablissement -- Hebergement
+Selection -- Nuitee
+Hebergement -- Nuitee
+Hebergement -- Photo
+Hebergement -- Equipement
+Equipement -- Option
+@enduml

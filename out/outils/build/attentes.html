@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>FestiBed - Attentes et modèles de données</title>
+<style>
+  @page { size: A4; margin: 15mm 14mm 15mm 14mm; }
+  @page paysage { size: A4 landscape; margin: 9mm; }
+  :root { --ink:#1d2433; --muted:#5b6475; --accent:#283593; --line:#d5d9e2; --soft:#f4f6fa; --warn:#b45309; --ok:#1b5e20; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Arial, sans-serif; color: var(--ink); font-size: 10pt; line-height: 1.42; background:#fff; margin:0; }
+  h1 { font-size: 24pt; color: var(--accent); margin: 0 0 4mm; }
+  h2 { font-size: 15pt; color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 1.5mm; margin: 7mm 0 3mm; break-after: avoid; }
+  h3 { font-size: 12pt; margin: 5mm 0 2mm; break-after: avoid; }
+  h4 { font-size: 10.5pt; margin: 3mm 0 1mm; color: var(--muted); break-after: avoid; }
+  p { margin: 1.5mm 0; }
+  ul, ol { margin: 1mm 0 2mm; padding-left: 6mm; }
+  li { margin: 0.5mm 0; }
+  table { border-collapse: collapse; width: 100%; margin: 2mm 0 3mm; font-size: 9pt; }
+  th, td { border: 1px solid var(--line); padding: 1.3mm 1.8mm; vertical-align: top; text-align: left; }
+  th { background: var(--soft); }
+  tr { break-inside: avoid; }
+  table.dico { font-size: 8.2pt; }
+  table.dico tr { break-inside: auto; }
+  .compact { font-size: 9.2pt; line-height: 1.33; }
+  .compact h3 { margin: 3mm 0 1.5mm; }
+  table.dico td, table.dico th { padding: 1mm 1.5mm; }
+  table.small { font-size: 8.4pt; }
+  table.small td, table.small th { padding: 1mm 1.4mm; }
+  table.clms td, table.clms th { text-align: center; padding: 0.8mm 1mm; font-size: 8.2pt; }
+  table.clms td:first-child, table.clms th:first-child { text-align: left; }
+  code, .mono { font-family: Consolas, "Courier New", monospace; font-size: 8.6pt; }
+  pre { font-family: Consolas, monospace; font-size: 8.1pt; background: var(--soft); border: 1px solid var(--line); padding: 2.5mm; white-space: pre-wrap; break-inside: avoid; margin: 2mm 0; }
+  .cover { height: 255mm; display: flex; flex-direction: column; justify-content: center; }
+  .cover .sub { font-size: 13pt; color: var(--muted); }
+  .cover .meta { margin-top: 12mm; font-size: 9.5pt; color: var(--muted); }
+  .box { border-left: 4px solid var(--accent); background: var(--soft); padding: 2mm 3.5mm; margin: 2.5mm 0; break-inside: avoid; }
+  .warn { border-left-color: var(--warn); }
+  .tag { display:inline-block; font-size: 7.6pt; padding: 0 1.5mm; border-radius: 2mm; border:1px solid var(--line); background:#fff; font-weight: normal; }
+  .ob { color:#b71c1c; border-color:#ef9a9a; } .bo { color:#1b5e20; border-color:#a5d6a7; }
+  .pagebreak { break-before: page; }
+  .fig { page: paysage; break-before: page; }
+  .fig h3 { margin: 0 0 1mm; }
+  .fig .cap { font-size: 8.3pt; color: var(--muted); margin-bottom: 1.5mm; }
+  .fig img { display:block; width: 279mm; height: 170mm; object-fit: contain; }
+  ul.mld { list-style: none; padding-left: 0; font-family: Consolas, monospace; font-size: 8.1pt; }
+  ul.mld li { margin: 0.8mm 0; padding-left: 4mm; text-indent: -4mm; }
+  ul.incl { columns: 2; column-gap: 6mm; }
+  .two { columns: 2; column-gap: 8mm; }
+  .legend span { display:inline-block; margin-right: 4mm; }
+  .sw { display:inline-block; width: 3.2mm; height: 3.2mm; border:1px solid #888; vertical-align: -0.5mm; margin-right: 1mm; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="sub">M1 MIAGE — Projet Intégrateur en Gestion de Données 2026-2027</div>
+  <h1>FestiBed<br>Attentes explicites &amp; modèles de données</h1>
+  <div class="sub">Lecture détaillée du cahier des charges, du kickoff et des jeux de données publics,<br>
+  et modèles de données établis selon la méthode Merise du cours AFMP (MCD, MOD, MLD, MPD) et un modèle technique UML.</div>
+  <div class="meta">
+    <b>Sources analysées</b> : <span class="mono">docs/projet_IGD_2026_FestiBed.pdf</span> (version 16/10/2026) ; <span class="mono">docs/Kickoff26.pdf</span> ;
+    <span class="mono">data/panorama-des-festivals.csv</span> (3 136 lignes) ; <span class="mono">data/hebergements_classes.csv</span> (21 435 lignes) ;
+    supports de cours <span class="mono">cours/</span> : Introduction, Introduction Merise, <b>Données en Merise</b>, MOF / MOT Merise, Modéliser un processus, BPMN base et avancé.<br><br>
+    <b>Fichiers produits</b> : <span class="mono">out/plantuml/*.puml</span> (sources des diagrammes) — <span class="mono">out/diagrammes/</span> (SVG/PNG) — <span class="mono">out/sql/mpd_oracle.sql</span> (MPD) —
+    <span class="mono">out/outils/generer_modeles.py</span> (génère MCD, MLD, MPD et dictionnaire à partir d'une spécification unique et vérifie les règles de qualité du cours).<br><br>
+    Document établi le 17/10/2026.
+  </div>
+</section>
+
+<section class="pagebreak">
+<h2>Sommaire</h2>
+<ol>
+  <li>Comprendre FestiBed en une page</li>
+  <li>Livrables et calendrier</li>
+  <li>Cadre méthodologique du cours appliqué au projet</li>
+  <li>Attentes explicites par domaine</li>
+  <li>Règles métier → où et comment les garantir</li>
+  <li>Analyse des données publiques et nettoyage attendu</li>
+  <li>Choix de modélisation et hypothèses</li>
+  <li>Modèles de données
+    <ol>
+      <li>MLD rétro-conçu des sources publiques (3FN)</li>
+      <li>MCD rétro-conçu des sources publiques</li>
+      <li>MCD global FestiBed et formalisme textuel</li>
+      <li>MOD : qui, où, combien, quand</li>
+      <li>Modèle technique UML (JPA)</li>
+      <li>MLD global (3FN) : transformations, notation textuelle, normalisation</li>
+      <li>MPD Oracle et optimisation</li>
+    </ol></li>
+  <li>Transactions et concurrence déduites du modèle</li>
+  <li>Points à faire valider par les enseignants</li>
+</ol>
+</section>
+
+<section class="pagebreak">
+<h2>1. Comprendre FestiBed en une page</h2>
+<p><b>FestiBed vend des « packs » indissociables : des Pass de festival + des hébergements pour ce même festival.</b> Ce n'est ni une billetterie seule, ni un site de réservation d'hébergements seul. Le cœur évalué est la <b>gestion de données</b> : transactions ACID, concurrence d'accès, contraintes et performance sur un gros volume (≥ 100 000 réservations).</p>
+<table class="small">
+  <tr><th style="width:20%">Concept</th><th>Ce qu'il faut retenir pour la modélisation</th></tr>
+  <tr><td><b>Festival</b></td><td>Issu du jeu public (3 136 manifestations) ou complété par un Organisateur. Possède une localisation, une <b>période</b> (dates à compléter : la source ne donne parfois que le mois), un <b>quota de Pass</b> alloué à FestiBed, un prix.</td></tr>
+  <tr><td><b>Pass</b></td><td>Droit d'accès d'<b>une</b> personne pour <b>toute</b> la durée du festival (pas de Pass partiel). Disponibles = quota − Pass déjà réservés.</td></tr>
+  <tr><td><b>Établissement</b></td><td>Lieu physique du jeu public (hôtel, camping, village de vacances, résidence, PRL, auberge collective). Un Hébergeur peut en gérer plusieurs.</td></tr>
+  <tr><td><b>Hébergement</b></td><td>Offre réservable <b>dans</b> un établissement : type, capacité, prix, options, description, photos, <b>périodes de disponibilité</b>. <b>Jamais rattaché à un festival</b> : il apparaît dans les recherches s'il est libre toutes les nuits du festival et proche.</td></tr>
+  <tr><td><b>Panier</b></td><td>Sélection temporaire, possible sans authentification. Par festival : nb de Pass + hébergements dont la capacité totale ≥ nb de Pass. Chaque élément expire au bout de <b>15 min</b> (paramétrable). Ne bloque rien.</td></tr>
+  <tr><td><b>Réservation</b></td><td>Produit de la validation du panier (authentification obligatoire à ce moment). Re-vérification transactionnelle, puis création de la réservation, des <b>Pass PDF</b> et des <b>bons d'hébergement PDF</b>. Paiement non développé mais <b>présent dans le modèle</b>.</td></tr>
+</table>
+<h3>Les trois acteurs</h3>
+<table class="small">
+  <tr><th>Acteur</th><th>Interface / authentification</th><th>Fonctions obligatoires</th><th>Fonctions bonus</th></tr>
+  <tr><td>Festivalier</td><td>FrontOffice ; réseau social (Firebase optionnel), exigé seulement à la validation</td><td>Rechercher festival ; rechercher hébergement ; ajouter au panier ; valider le panier ; noter festival / établissement</td><td>Modifier le panier</td></tr>
+  <tr><td>Organisateur</td><td>Back-Office ; compte interne</td><td>Gérer le quota de Pass (sans toucher aux Pass réservés)</td><td>Compte ; gérer / désactiver un festival ; statistiques hebdomadaires</td></tr>
+  <tr><td>Hébergeur</td><td>Back-Office ; compte interne</td><td>Retirer un hébergement / modifier ses disponibilités sans casser de réservation</td><td>Compte ; gérer ses hébergements ; statistiques hebdomadaires</td></tr>
+</table>
+<div class="box warn"><b>Attention :</b> le kickoff (diapo 5) classe tout le Back-Office en « bonus », alors que le cahier des charges rend obligatoires « Gérer le quota de Pass » et « Retirer un hébergement ». Le <b>modèle de données doit couvrir tous les acteurs</b> ; seul le développement des écrans bonus est conditionné à la validation des attentes principales.</div>
+<h3>Les 4 scénarios à rendre jouables (et testables)</h3>
+<ol>
+  <li><b>Jeff / Musilac</b> (Aix-les-Bains, AD211) : 2 Pass + 1 emplacement 2 personnes au <i>Camping International du Sierroz</i> (présent dans la source) → 2 Pass + 1 bon d'hébergement.</li>
+  <li><b>Samantha / expiration</b> : recherche depuis Autun, fin juillet ; la sélection expire après 15 min.</li>
+  <li><b>Samantha / concurrence</b> : <i>Jazz à Couches</i> (BD054) + <i>Hôtel des Arcades</i> (Autun) ; une réservation concurrente fait échouer la validation ; repli sur <i>Saint Rock</i> (BD064) → test d'intégration de concurrence.</li>
+  <li><b>Ronald</b> : nouveau festival, quota 50 ; les hébergements existants apparaissent automatiquement s'ils sont libres et proches → aucune association festival ↔ hébergement.</li>
+</ol>
+</section>
+
+<section class="pagebreak">
+<h2>2. Livrables et calendrier</h2>
+<table>
+  <tr><th style="width:21%">Date</th><th style="width:26%">Événement</th><th>Ce qui doit être prêt</th></tr>
+  <tr><td>Ven. 16/10 8h</td><td>Lancement</td><td>Groupes de 4/5, dépôt Classroom50 (GitHub)</td></tr>
+  <tr><td>Mar. 20/10 9h-12h</td><td>Audit : contexte d'interaction</td><td>Acteurs, scénarios, besoins utilisateurs</td></tr>
+  <tr><td>Mer. 21/10 14h30-17h</td><td>Revue des modèles fonctionnels</td><td>Brouillons MCD + processus (texte structuré, BPMN)</td></tr>
+  <tr><td><b>Jeu. 22/10 20h</b></td><td><b>Remise</b></td><td><b>Modèles de données (MLD sources, MCD sources, MCD global, UML technique, MLD global) + BPMN « Ajouter un élément au panier » et « Valider un panier »</b></td></tr>
+  <tr><td>Ven. 23/10 13h30</td><td>Audit modèle de données</td><td>Justifier chaque cardinalité, contrainte, transformation et la 3FN</td></tr>
+  <tr><td><b>Mer. 04/11 20h</b></td><td><b>Remise</b></td><td><b>Modèle de tâches « Passer une réservation à FestiBed »</b></td></tr>
+  <tr><td>Jeu. 05/11 14h</td><td>Revue implémentation JPA</td><td>Entités Kotlin + mapping, données importées</td></tr>
+  <tr><td>Ven. 13/11 8h30</td><td>Audit technique (niveau 0/1)</td><td>Architecture 3-tiers opérationnelle, transactions</td></tr>
+  <tr><td>Mar. 15/12 9h</td><td>Audit tests d'UI</td><td>Tests front</td></tr>
+  <tr><td>Ven. 18/12 8h30</td><td>Audit fonctionnel</td><td>Fonctionnalités principales + scénarios</td></tr>
+  <tr><td><b>Jeu. 21/01 20h</b></td><td><b>Remise</b></td><td><b>Rapport d'évaluation de l'UI</b> (éco-conception, utilisabilité/efficience, plan de tests UI)</td></tr>
+  <tr><td><b>Jeu. 21/01 22h</b></td><td><b>Dépôt final GitHub</b></td><td>Rapport final (objectifs, fait / abandonné et pourquoi, modifications des rapports, organisation, heuristiques ergonomiques du panier, bilan, limites vs scénarios) + application en ligne sur <b>eCloud</b></td></tr>
+  <tr><td>Ven. 22/01 8h30</td><td>Soutenance 30 min</td><td>~20 min présentation + démo, tous les membres parlent</td></tr>
+</table>
+<p class="box">À tenir <b>en continu</b> : un <b>journal de progression</b> (décisions, alternatives, arguments) ; la gestion de projet sur <b>Classroom50</b> ; la qualité et la couverture vérifiées par <b>Sonar</b>. Présence pointée à chaque demi-journée, salles ADE à respecter.</p>
+</section>
+
+<section class="pagebreak">
+<h2>3. Cadre méthodologique du cours appliqué au projet</h2>
+<h3>3.1 Les niveaux Merise et les modèles demandés</h3>
+<p>Le cours (« Introduction Merise », « Données en Merise ») organise la modélisation par niveaux d'abstraction ; chaque passage de niveau ajoute des choix (Δ) qu'il faut <b>documenter</b>. Correspondance avec les livrables du projet :</p>
+<table>
+  <tr><th style="width:17%">Niveau</th><th style="width:18%">Question / point de vue</th><th style="width:18%">Données</th><th style="width:18%">Traitements / flux</th><th>Livrable FestiBed (ce document)</th></tr>
+  <tr><td>Conceptuel</td><td>Quoi ? Pourquoi ? — utilisateur</td><td><b>MCD</b></td><td>MCT</td><td>MCD des sources (fig. 2) et MCD global (fig. 3a/3b) + formalisme textuel (§ 8.3)</td></tr>
+  <tr><td>Organisationnel</td><td>Qui ? Où ? Quand ? — gestionnaire</td><td><b>MOD</b></td><td>MOT, MOF</td><td>MOD : matrice CLMS, volumétrie, stockage, archivage (§ 8.4) ; processus BPMN (livrable du 22/10)</td></tr>
+  <tr><td>Logique</td><td>Comment (abstrait) ? — concepteur</td><td><b>MLD</b></td><td>MLT</td><td>MLD des sources (fig. 1) et MLD global (fig. 5a/5b), textuel + dépendances d'inclusion (§ 8.1, 8.6) ; UML technique (fig. 4a/4b)</td></tr>
+  <tr><td>Physique</td><td>Comment (concret) ? — développeur</td><td><b>MPD</b></td><td>MPT</td><td>MPD Oracle <code>out/sql/mpd_oracle.sql</code> + index (§ 8.7) ; mapping JPA</td></tr>
+</table>
+
+<h3>3.2 Acquis attendus du cours → preuve dans les livrables</h3>
+<table class="small">
+  <tr><th style="width:46%">Acquis attendu (support « Données en Merise »)</th><th>Où il est démontré</th></tr>
+  <tr><td>Représenter les entités/classes essentielles, avec identifiants et attributs essentiels</td><td>Fig. 2, 3a, 3b ; dictionnaire des entités (§ 8.3)</td></tr>
+  <tr><td>Décomposer si nécessaire en sous-entités / sous-classes</td><td>ETABLISSEMENT → CAMPING, VILLAGE_VACANCES (X) ; COMPTE_INTERNE → ORGANISATEUR, HEBERGEUR (T)</td></tr>
+  <tr><td>Représenter les associations avec cardinalités et, si nécessaire, attributs</td><td>27 associations binaires x,1 et 6 associations devenues relations, dont 2 porteuses d'attributs (NOTE_FESTIVAL, NOTE_ETABLISSEMENT) et 1 ternaire (SOUTIEN)</td></tr>
+  <tr><td>Transformer MCD/diagramme de classes en MLD 3FN avec clés externes, y compris les sous-entités</td><td>§ 8.6 : règles appliquées par cas de cardinalité, choix T1/T3 motivés, dépendances d'inclusion</td></tr>
+  <tr><td>Transformer le MLD en MPD (tables SQL)</td><td>§ 8.7 et <code>mpd_oracle.sql</code> (contraintes nommées, CHECK, index)</td></tr>
+  <tr><td>Expliquer la différence MCD / diagramme de classes et MCD / MLD</td><td>§ 8.5 (tableau comparatif)</td></tr>
+  <tr><td><i>Complémentaire</i> : définir le MOD d'un MCD</td><td>§ 8.4 (QOCQ, matrice CLMS)</td></tr>
+  <tr><td><i>Complémentaire</i> : représenter la composition</td><td>Cardinalités <code>(1,1)</code> : PHOTO, PERIODE_DISPONIBILITE, SELECTION, PASS, BON_HEBERGEMENT</td></tr>
+  <tr><td><i>Complémentaire</i> : contraintes entre associations (Merise/2)</td><td>Fig. 3b : inclusions « I » CI-I1 et CI-I2</td></tr>
+</table>
+
+<h3>3.3 Règles de qualité appliquées (vérifiées automatiquement par le générateur)</h3>
+<ol>
+  <li><b>Noms tous distincts</b> (entités, associations, attributs) : d'où <code>nom_festival</code>, <code>nom_commune</code>, <code>libelle_domaine</code>… et non plusieurs <code>nom</code> ou <code>libelle</code>.</li>
+  <li><b>Chaque entité a un identifiant</b> (souligné).</li>
+  <li><b>Attributs élémentaires</b> (atomiques) : les colonnes multivaluées des sources (autres communes, soutiens) deviennent des associations.</li>
+  <li><b>Dépendance fonctionnelle directe et élémentaire</b> de chaque attribut vis-à-vis de l'identifiant : les informations géographiques sont sorties de FESTIVAL, la nature de l'unité d'accueil est portée par la typologie.</li>
+  <li><b>Le formalisme graphique n'est pas suffisant</b> : chaque entité, association et attribut est décrit textuellement (nom, sémantique, domaine, contraintes) au § 8.3.</li>
+  <li><b>Qualités d'un modèle</b> (cours « Introduction ») : <i>fidélité</i> au cahier des charges (vocabulaire identique), <i>cohérence</i> (un seul référentiel génère MCD, MLD et MPD), <i>complétude</i> par rapport aux scénarios (sans viser l'exhaustivité).</li>
+</ol>
+
+<h3>3.4 Processus : ce que le cours attend pour les BPMN du 22/10</h3>
+<ul>
+  <li><b>D'abord un texte structuré</b> (« Modéliser un processus ») : une ligne = une tâche, commençant par l'acteur, avec un verbe d'action au présent et à la voix active ; un processus de base puis ses <b>variantes</b> (panier vide, sélection expirée, Pass ou hébergement devenu indisponible, capacité insuffisante, utilisateur non authentifié).</li>
+  <li><b>BPMN dans un vrai outil BPMN</b> qui produit un fichier <code>.bpmn</code> (Camunda Modeler / bpmn.io recommandé) — <b>pas</b> Visio ni draw.io.</li>
+  <li><b>Règles</b> : un unique événement de début par unité ; plusieurs fins nommées par cas ; une entrée/une sortie par tâche ; pas de séquencement entre pools, messages uniquement entre pools ; toute fourche a une question, des conditions sur ses sorties et une jonction ; tâches à l'infinitif, événements au participe passé.</li>
+  <li><b>« Valider un panier »</b> : sous-processus <b>Transaction</b> (BPMN avancé) avec événement d'annulation en bordure et tâches de compensation ; <b>« Ajouter un élément au panier »</b> : expiration de 15 min modélisée par un <b>minuteur</b> (branchement sur événement ou événement en bordure).</li>
+  <li>Acteurs à représenter (au sens MOF) : externes = Festivalier, Organisateur, Hébergeur, fournisseur d'authentification ; internes = IHM Festivalier, IHM Back-Office, serveur FestiBed, base Oracle (dépôt de données).</li>
+</ul>
+</section>
+
+<section class="pagebreak compact">
+<h2>4. Attentes explicites par domaine</h2>
+<p>Légende : <span class="tag ob">obligatoire</span> <span class="tag bo">bonus</span>.</p>
+<h3>4.1 Modélisation <span class="tag ob">obligatoire — 22/10</span></h3>
+<table class="small">
+  <tr><th style="width:32%">Attente du cahier des charges</th><th>Traduction concrète / critère de réussite</th></tr>
+  <tr><td>Rétro-concevoir les sources : MLD 3FN avec clés étrangères</td><td>Partir des colonnes CSV, isoler les dépendances fonctionnelles, éclater groupes répétitifs et référentiels ; relations en 3FN, clés et dépendances d'inclusion explicites. → <b>Fig. 1</b>, § 8.1.</td></tr>
+  <tr><td>Rétro-concevoir le MCD des sources à partir de ces relations</td><td>Clés étrangères → associations avec cardinalités ; relations d'association → associations porteuses ; colonnes nulles exclusives → sous-entités. → <b>Fig. 2</b>.</td></tr>
+  <tr><td>MCD global, en parallèle des BPMN</td><td>Le MCD des sources <b>enrichi</b> (pas remplacé) des concepts du cahier des charges, vocabulaire identique. → <b>Fig. 3a/3b</b>, § 8.3.</td></tr>
+  <tr><td>Modèle technique UML correspondant au MCD</td><td>Classes Kotlin persistantes : types, nullabilité, navigabilité, multiplicités, annotations JPA, enums. → <b>Fig. 4a/4b</b>.</td></tr>
+  <tr><td>MLD 3FN issu de la transformation du MCD</td><td>Règles de passage du cours appliquées et documentées, schéma utilisé par l'ORM. → <b>Fig. 5a/5b</b>, § 8.6, MPD § 8.7.</td></tr>
+  <tr><td>BPMN « Ajouter un élément au panier » / « Valider un panier »</td><td>Point de vue système, règles du § 3.4.</td></tr>
+  <tr><td>Modèle de tâches « Passer une réservation » (04/11)</td><td>Arbre de tâches point de vue utilisateur, base de la conception de l'UI.</td></tr>
+</table>
+<h3>4.2 Base de données <span class="tag ob">obligatoire</span></h3>
+<ul>
+  <li><b>Persistance par ORM</b> : classes Kotlin issues de l'UML technique, mapping vers <b>Oracle</b> (tests sur H2 ou autre).</li>
+  <li><b>Nettoyage et import des données publiques dès le début</b> (en rouge dans le kickoff) — § 6.</li>
+  <li><b>Données synthétiques</b> : quota ≥ 30 Pass par festival ; hébergements pour les établissements avec disponibilités (semi-)aléatoires ; festivals qui se chevauchent ; <b>≥ 100 000 réservations</b>, ≥ 50 % du quota réservé par festival ; festivaliers de test non authentifiables. Voir la volumétrie du MOD (§ 8.4) : <b>ces exigences imposent un quota moyen bien supérieur à 30</b>.</li>
+  <li><b>ACID</b> : atomicité (Pass <b>et</b> hébergements ou rien), cohérence (contraintes), isolation (même hébergement / périodes qui se chevauchent), durabilité.</li>
+  <li><b>Optimisation</b> (modèle, SGBD, backend) des recherches <b>localisation + période + capacité + disponibilité</b> et de la validation.</li>
+</ul>
+<h3>4.3 IHM <span class="tag ob">obligatoire</span></h3>
+<ul>
+  <li>Techno libre mais argumentée (squelette Angular déjà présent) ; widgets WIMP ; toutes les entrées/sorties, critères et filtres pour tous les utilisateurs ; conception issue du modèle de tâches ; efficience prioritaire ; responsive ; éco-conception ; charte graphique FestiBed ; tests UI ; rapport d'évaluation le 21/01.</li>
+</ul>
+<h3>4.4 Patrons et composants <span class="tag ob">obligatoire</span></h3>
+<ul>
+  <li>3-tiers : client Web ↔ API REST <b>Kotlin Spring Boot réactif</b> ↔ Oracle ; Controllers / Services / DTO / Repositories ; transactions dans le backend ; schémas d'architecture, diagrammes de classes/séquence ; tests unitaires et d'intégration ; Sonar.</li>
+</ul>
+<div class="box warn"><b>À clarifier tôt :</b> le sujet impose « JPA » et « Spring <i>Reactive</i> ». JPA/Hibernate est bloquant ; Spring Data <b>R2DBC</b> (réactif) ne gère ni associations, ni héritage, ni lazy loading. Le modèle proposé fonctionne dans les deux cas : associations matérialisées par des clés étrangères, <b>aucun héritage persistant</b> (la spécialisation des comptes est traduite en T1 avec des rôles <code>@OneToOne @MapsId</code>).</div>
+<p><span class="tag bo">bonus</span> <b>Après validation des attentes principales</b> : modifier le panier, Back-Office complet, statistiques, interactions avancées — le modèle de données les supporte déjà.</p>
+</section>
+
+<section class="pagebreak">
+<h2>5. Règles métier → où et comment les garantir</h2>
+<p style="font-size:9.3pt">Le cours (« Contraintes d'intégrité ») rappelle que certaines contraintes ne sont pas exprimables dans le MCD mais le sont presque toutes au niveau physique (SQL, triggers, ou au pire le langage hôte). Principe retenu : <b>tout ce qui peut être déclaratif est porté par la base</b>, le reste par une transaction du service avec verrouillage explicite.</p>
+<table class="small">
+  <tr><th style="width:29%">Règle (cahier des charges)</th><th style="width:13%">Mécanisme</th><th>Mise en œuvre</th></tr>
+  <tr><td>Pas de Pass sans hébergement ni l'inverse ; capacité totale ≥ nb Pass</td><td>Cardinalités + service</td><td>SELECTION (1,n) SELECTION_HEBERGEMENT ; RESERVATION (1,n) PASS et (1,n) BON_HEBERGEMENT ; contrôle <code>Σ capacite_hebergement ≥ nb_pass_selection</code> à l'ajout et à la validation.</td></tr>
+  <tr><td>Un Pass couvre tout le festival</td><td>Modèle</td><td>PASS ne porte aucune date : il hérite de la période du festival.</td></tr>
+  <tr><td>Hébergement disponible toutes les nuits du festival</td><td>Requête + service</td><td>Une PERIODE_DISPONIBILITE couvre <code>[date_debut_festival, date_fin_festival[</code> et aucune NUITEE n'existe sur ces nuits.</td></tr>
+  <tr><td>Pas de double réservation d'un hébergement</td><td><b>Contrainte BD</b></td><td>Relation technique <b>NUITEE</b>, PK (<code>id_hebergement, date_nuit</code>) : la seconde transaction concurrente échoue (unicité) et est annulée.</td></tr>
+  <tr><td>Pas plus de Pass que le quota</td><td><b>Contrainte BD</b></td><td><code>CHECK (nb_pass_reserves BETWEEN 0 AND quota_pass)</code> + incrément du compteur dans la transaction de validation.</td></tr>
+  <tr><td>Quota non réductible sous les Pass réservés</td><td><b>Contrainte BD</b></td><td>Même CHECK ; <code>version_festival</code> (verrou optimiste) pour les éditions concurrentes.</td></tr>
+  <tr><td>Hébergeur : ne pas retirer / fermer une période réservée</td><td>Service + verrou</td><td><code>SELECT … FOR UPDATE</code> sur HEBERGEMENT puis refus s'il existe une NUITEE future hors des nouvelles périodes ; retrait = <code>statut_hebergement = 'RETIRE'</code>.</td></tr>
+  <tr><td>Sélection retirée après 15 min ; panier vide non validable</td><td>Modèle + tâche planifiée</td><td><code>date_expiration</code> ; sélections expirées ignorées ; purge périodique (index).</td></tr>
+  <tr><td>Une sélection par festival dans un panier</td><td><b>Contrainte BD</b></td><td><code>UNIQUE (id_panier, id_festival)</code>.</td></tr>
+  <tr><td>Re-vérification à la validation</td><td>Transaction</td><td>§ 9 : verrous en ordre déterministe, contrôles, insertions, commit ou rollback complet.</td></tr>
+  <tr><td>Signaler des festivals proches (même mois)</td><td>Requête</td><td>Avertissement non bloquant + NOTIFICATION <code>CHEVAUCHEMENT_RESERVATIONS</code>.</td></tr>
+  <tr><td>Désactivation d'un festival</td><td>Transaction</td><td><code>statut_festival = 'DESACTIVE'</code> ; réservations ANNULEE ; suppression des NUITEE ; NOTIFICATION ; paiements REMBOURSE ; hébergements inchangés.</td></tr>
+  <tr><td>Paiement prévu dans le modèle</td><td>Modèle</td><td>COMMANDE (0,n) REGLER PAIEMENT, statut <code>NON_GERE</code> dans le prototype.</td></tr>
+  <tr><td>Notation après le séjour</td><td>Contrainte + service</td><td>Identifiant (festivalier, festival) / (festivalier, établissement) ; <code>CHECK valeur BETWEEN 1 AND 5</code> ; inclusions Merise/2 CI-I1, CI-I2 vérifiées par le service.</td></tr>
+  <tr><td>Festivaliers de test non authentifiables</td><td><b>Contrainte BD</b></td><td><code>compte_test = 1 ⇔ fournisseur_auth = 'TEST'</code>.</td></tr>
+  <tr><td>Attributs camping / village cohérents avec la typologie</td><td><b>Contrainte BD</b></td><td>CHECK : <code>categorie_camping</code> seulement si <code>code_typologie = 'CAMPING'</code>, etc. (conséquence de la transformation T3).</td></tr>
+</table>
+</section>
+
+<section class="pagebreak">
+<h2>6. Analyse des données publiques et nettoyage attendu</h2>
+<h3 style="margin-top:2mm">6.1 Panorama des festivals — 3 136 lignes, 37 colonnes (UTF-8 avec BOM, « ; »)</h3>
+<table class="small">
+  <tr><th style="width:36%">Constat</th><th>Traitement attendu</th></tr>
+  <tr><td><code>N° Identification</code> : 38 vides, 138 codes génériques « XX999 » (125 lignes partagent 20 codes)</td><td>Pas identifiant → <code>id_festival</code> technique ; <code>code_identification</code> UNIQUE nullable (codes génériques → NULL).</td></tr>
+  <tr><td><code>Domaine</code> : 16 libellés pour 13 réels (casse)</td><td>Normaliser → DOMAINE (13).</td></tr>
+  <tr><td><code>Complément domaine</code> : 139 valeurs, 1 092 vides ; un même complément sous plusieurs domaines</td><td>Pas de DF complément → domaine : SOUS_DOMAINE indépendant (association PRECISER 0,1).</td></tr>
+  <tr><td><code>Périodicité</code> : 10 variantes de casse, 510 vides</td><td>Normaliser → PERIODICITE (0,1).</td></tr>
+  <tr><td>Dates : 339 absentes, éditions 2017-2020, 1 fin &lt; début, 201 festivals d'un jour, 442 de 15 jours ou plus</td><td>Conserver en <code>date_*_source</code> ; générer les dates de l'édition commercialisée ; prévoir des chevauchements.</td></tr>
+  <tr><td>Région / département / commune répétés ; colonnes dérivées (Dépt SK, Nom Département, Check édition, Mois indicatif en chiffre…)</td><td>DF code_insee → commune → département → région : éclater en COMMUNE, DEPARTEMENT, REGION ; supprimer les dérivées.</td></tr>
+  <tr><td>Département 17 libellé « Haute-Savoie », « 20 » pour la Corse, 21 codes INSEE à libellés multiples, 2 coordonnées manquantes</td><td>Corriger via le référentiel officiel des communes ; le code INSEE fait foi.</td></tr>
+  <tr><td><code>Autres communes</code> : texte libre multivalué</td><td>Non atomique (règle 3) → association FESTIVAL_COMMUNE alimentée par parsing.</td></tr>
+  <tr><td>8 colonnes « Soutenu en 2017/2018 par MC/CNC/CNL/CNV »</td><td>Groupe répétitif → association ternaire SOUTIEN (festival, organisme, année).</td></tr>
+</table>
+<h3>6.2 Établissements d'hébergement classés — 21 435 lignes, 17 colonnes</h3>
+<table class="small">
+  <tr><th style="width:36%">Constat</th><th>Traitement attendu</th></tr>
+  <tr><td><b>Aucune coordonnée géographique</b></td><td>Géocoder l'adresse (ex. API Adresse BAN, traitement par lot) → <code>latitude/longitude_etablissement</code> ; à défaut, centroïde de la commune.</td></tr>
+  <tr><td>6 468 communes citées (le jeu « festivals » n'en couvre que 1 568)</td><td>COMMUNE chargée depuis un référentiel complet (INSEE/IGN, data.gouv.fr).</td></tr>
+  <tr><td>Communes non normalisées (« PARIS » / « PARIS 9E ARRONDISSEMENT »), 2 communes vides, 1 CP vide, 1 CP à 4 chiffres</td><td>Résoudre (CP, libellé) → code INSEE ; CP sur 5 caractères.</td></tr>
+  <tr><td>« - » comme valeur nulle ; dates jj/mm/aaaa</td><td>NULL ; conversion.</td></tr>
+  <tr><td>6 typologies (dont AUBERGE COLLECTIVE), 7 classements</td><td>TYPOLOGIE_ETABLISSEMENT (code naturel) et CLASSEMENT.</td></tr>
+  <tr><td>Chambres / emplacements / unités / logements : <b>une seule</b> colonne renseignée, déterminée par la typologie</td><td>DF typologie → nature de l'unité : <code>nb_unites</code> + <code>unite_accueil</code> dans la typologie.</td></tr>
+  <tr><td><code>CATÉGORIE</code> seulement pour les campings ; <code>MENTION</code> et <code>TYPE DE SÉJOUR</code> seulement pour les villages de vacances</td><td>Valeurs nulles structurelles → <b>sous-entités</b> CAMPING et VILLAGE_VACANCES (spécialisation X) ; transformation T3 (§ 8.6).</td></tr>
+  <tr><td>1 doublon (nom, adresse, code postal)</td><td>Dédoublonner, puis UNIQUE.</td></tr>
+</table>
+<p class="box" style="font-size:9pt">Les entités des 4 scénarios sont présentes : Musilac (AD211), Camping International du Sierroz (73100), Jazz à Couches (BD054), Saint Rock (BD064), Hôtel des Arcades (71400 Autun).</p>
+</section>
+
+<section class="pagebreak">
+<h2>7. Choix de modélisation et hypothèses</h2>
+<table class="small">
+  <tr><th style="width:27%">Choix</th><th>Justification</th></tr>
+  <tr><td><b>Un hébergement = une unité réservable</b></td><td>« Un même hébergement peut être réservé pour plusieurs festivals lorsque les périodes ne se chevauchent pas » : une seule réservation à la fois par nuit.</td></tr>
+  <tr><td><b>Une réservation = un festival</b> ; une validation de panier crée une <b>COMMANDE</b> regroupant N réservations</td><td>« Toute réservation … pour un <i>même</i> festival » et « un panier peut contenir plusieurs festivals ». La COMMANDE porte date, montant et paiement ; la validation reste atomique.</td></tr>
+  <tr><td>BON_HEBERGEMENT et PASS sont des entités</td><td>Documents PDF numérotés du cahier des charges ; prix et dates figés au moment de la réservation (historique).</td></tr>
+  <tr><td>Compositions <code>(1,1)</code></td><td>PHOTO et PERIODE_DISPONIBILITE n'existent pas sans leur hébergement, SELECTION sans son panier, PASS et BON_HEBERGEMENT sans leur réservation : destruction en cascade (cours, « Composition »).</td></tr>
+  <tr><td>Spécialisation ETABLISSEMENT → CAMPING, VILLAGE_VACANCES (X)</td><td>Attributs propres à ces typologies ; exclusives, non totales, définies par un attribut → <b>T3</b> (cf. § 8.6).</td></tr>
+  <tr><td>Spécialisation COMPTE_INTERNE → ORGANISATEUR, HEBERGEUR (T)</td><td>Tout compte interne a au moins un rôle ; une personne peut cumuler les deux → <b>T1</b>, qualité des données.</td></tr>
+  <tr><td>FESTIVALIER hors de COMPTE_INTERNE</td><td>Authentification externe, comptes de test, cycle de vie différent.</td></tr>
+  <tr><td>NUITEE (relation technique, absente du MCD)</td><td>Traduction physique de la contrainte de non-chevauchement (CI2) en unicité déclarative ; ≈ 300 000 à 450 000 lignes (MOD).</td></tr>
+  <tr><td>Redondances maîtrisées : <code>nb_pass_reserves</code>, <code>note_moyenne_etablissement</code>, <code>nb_notes_etablissement</code></td><td>« Optimisation des coûts » du cours (dé-normalisation, duplication) : éviter d'agréger 100 000+ lignes à chaque recherche ; mises à jour dans la même transaction. Seules entorses à la 3FN, documentées.</td></tr>
+  <tr><td>Intervalles <code>[début, fin[</code></td><td>Nuits d'un festival du 19 au 20 = nuit du 19 ; hypothèse : un festival d'un jour réserve une nuit.</td></tr>
+  <tr><td>Identifiants techniques sauf codes officiels</td><td>Les codes sources ne sont pas fiables ; COMMUNE (INSEE), DEPARTEMENT et TYPOLOGIE_ETABLISSEMENT gardent un code naturel.</td></tr>
+  <tr><td>Statut FESTIVAL : BROUILLON / ACTIF / DESACTIVE</td><td>Un festival importé reste BROUILLON tant que dates et prix manquent (CHECK).</td></tr>
+</table>
+</section>
+
+<section class="pagebreak">
+<h2>8. Modèles de données</h2>
+<p>Notation du cours : <b>MCD</b> — entités en rectangles (identifiant souligné, attributs avec leur domaine), associations en cartouches arrondis avec leurs éventuels attributs, cardinalités (min,max) côté entité, <code>(1,1)</code> = composition, losange + flèche = spécialisation (X exclusion, T totalité), cercle jaune = contrainte entre associations (Merise/2). <b>MLD</b> — relations avec types, clé soulignée, flèche de la relation référençante vers la relation référencée étiquetée « clé externe = clé ».</p>
+<p class="legend"><span><i class="sw" style="background:#E0F7FA"></i>issu des sources publiques</span><span><i class="sw" style="background:#FFF8E1"></i>ajouté pour FestiBed</span><span><i class="sw" style="background:#E8F5E9"></i>association</span><span><i class="sw" style="background:#EEEEEE"></i>entité détaillée dans l'autre vue</span> — en gras : attribut ajouté à une entité des sources ; (calc.) : attribut calculé.</p>
+<p>Tous les MCD, MLD, le MPD et le formalisme textuel sont <b>générés à partir d'une spécification unique</b> (<code>out/outils/generer_modeles.py</code>) qui vérifie au passage les règles du cours : noms distincts, identifiants, et correspondance exacte entre chaque association x,1 du MCD et une clé étrangère du MLD (cardinalité minimale 1 ⇔ NOT NULL).</p>
+<h3>8.1 MLD rétro-conçu des sources publiques — notation textuelle</h3>
+<p>Clé soulignée ; <sup>?</sup> = valeur nulle autorisée. Les colonnes du CSV ont été réparties selon leurs dépendances fonctionnelles (§ 6) ; aucune donnée ajoutée par FestiBed.</p>
+<ul class='mld'>
+<li><b>REGION</b>(<u>id_region</u>, nom_region)</li>
+<li><b>DEPARTEMENT</b>(<u>code_departement</u>, nom_departement, id_region)</li>
+<li><b>COMMUNE</b>(<u>code_insee</u>, nom_commune, latitude_commune<sup>?</sup>, longitude_commune<sup>?</sup>, code_departement)</li>
+<li><b>DOMAINE</b>(<u>id_domaine</u>, libelle_domaine)</li>
+<li><b>SOUS_DOMAINE</b>(<u>id_sous_domaine</u>, libelle_sous_domaine)</li>
+<li><b>PERIODICITE</b>(<u>id_periodicite</u>, libelle_periodicite)</li>
+<li><b>ORGANISME_SOUTIEN</b>(<u>id_organisme</u>, sigle_organisme, libelle_organisme)</li>
+<li><b>FESTIVAL</b>(<u>id_festival</u>, code_identification<sup>?</sup>, nom_festival, site_web_festival<sup>?</sup>, date_creation_festival<sup>?</sup>, mois_habituel_debut, date_debut_source<sup>?</sup>, date_fin_source<sup>?</sup>, num_edition_2018<sup>?</sup>, num_edition_2019<sup>?</sup>, montant_soutien_2017<sup>?</sup>, commentaire_festival<sup>?</sup>, code_postal_festival, code_insee, id_domaine, id_sous_domaine<sup>?</sup>, id_periodicite<sup>?</sup>)</li>
+<li><b>FESTIVAL_COMMUNE</b>(<u>id_festival</u>, <u>code_insee</u>)</li>
+<li><b>SOUTIEN</b>(<u>id_festival</u>, <u>id_organisme</u>, <u>annee_soutien</u>)</li>
+<li><b>TYPOLOGIE_ETABLISSEMENT</b>(<u>code_typologie</u>, libelle_typologie, unite_accueil)</li>
+<li><b>CLASSEMENT</b>(<u>id_classement</u>, libelle_classement, nb_etoiles<sup>?</sup>)</li>
+<li><b>ETABLISSEMENT</b>(<u>id_etablissement</u>, nom_commercial, adresse_etablissement, code_postal_etablissement, site_internet<sup>?</sup>, date_classement, classement_proroge, capacite_accueil, nb_unites, categorie_camping<sup>?</sup>, mention_village<sup>?</sup>, type_sejour<sup>?</sup>, code_insee, code_typologie, id_classement)</li>
+</ul><p class='incl-title'><b>Dépendances d'inclusion (clés étrangères)</b></p><ul class='mld incl'>
+<li>DEPARTEMENT[id_region] ⊆ REGION[id_region]</li>
+<li>COMMUNE[code_departement] ⊆ DEPARTEMENT[code_departement]</li>
+<li>FESTIVAL[code_insee] ⊆ COMMUNE[code_insee]</li>
+<li>FESTIVAL[id_domaine] ⊆ DOMAINE[id_domaine]</li>
+<li>FESTIVAL[id_sous_domaine] ⊆ SOUS_DOMAINE[id_sous_domaine]</li>
+<li>FESTIVAL[id_periodicite] ⊆ PERIODICITE[id_periodicite]</li>
+<li>FESTIVAL_COMMUNE[id_festival] ⊆ FESTIVAL[id_festival]</li>
+<li>FESTIVAL_COMMUNE[code_insee] ⊆ COMMUNE[code_insee]</li>
+<li>SOUTIEN[id_festival] ⊆ FESTIVAL[id_festival]</li>
+<li>SOUTIEN[id_organisme] ⊆ ORGANISME_SOUTIEN[id_organisme]</li>
+<li>ETABLISSEMENT[code_insee] ⊆ COMMUNE[code_insee]</li>
+<li>ETABLISSEMENT[code_typologie] ⊆ TYPOLOGIE_ETABLISSEMENT[code_typologie]</li>
+<li>ETABLISSEMENT[id_classement] ⊆ CLASSEMENT[id_classement]</li>
+</ul>
+</section>
+
+<section class="fig">
+  <h3>Figure 1 — MLD rétro-conçu des sources publiques (3FN)</h3>
+  <div class="cap">Deux sources, un référentiel géographique commun (COMMUNE identifiée par le code INSEE). Groupes répétitifs éclatés (SOUTIEN, FESTIVAL_COMMUNE) ; colonnes dérivées supprimées ; unités d'accueil factorisées (<code>nb_unites</code> + <code>unite_accueil</code>).</div>
+  <img src="file:///C:/Users/ahmad/Desktop/projet_SI/Projetdbi/out/diagrammes/01_mld_sources_publiques.svg">
+</section>
+
+<section class="fig">
+  <h3>Figure 2 — MCD rétro-conçu des sources publiques (Merise)</h3>
+  <div class="cap">Rétro-conception du MLD de la fig. 1 : clés étrangères → associations ; FESTIVAL_COMMUNE et SOUTIEN → associations (SOUTIEN ternaire avec l'entité ANNEE) ; colonnes nulles selon la typologie → sous-entités CAMPING et VILLAGE_VACANCES (exclusion X).</div>
+  <img src="file:///C:/Users/ahmad/Desktop/projet_SI/Projetdbi/out/diagrammes/02_mcd_sources_publiques.svg">
+</section>
+
+<section class="fig">
+  <h3>Figure 3a — MCD global FestiBed, vue 1/2 : référentiels, offre, comptes</h3>
+  <div class="cap">MCD des sources (cyan) enrichi : attributs FestiBed sur FESTIVAL et ETABLISSEMENT (gras), comptes internes (spécialisation T), hébergements et leurs composants (PHOTO, PERIODE_DISPONIBILITE en composition).</div>
+  <img src="file:///C:/Users/ahmad/Desktop/projet_SI/Projetdbi/out/diagrammes/03a_mcd_global_offre.svg">
+</section>
+
+<section class="fig">
+  <h3>Figure 3b — MCD global FestiBed, vue 2/2 : panier, réservation, notation (Merise / Merise 2)</h3>
+  <div class="cap">FESTIVAL, HEBERGEMENT et ETABLISSEMENT (gris) sont détaillés en vue 1/2. Les cercles « I » sont des contraintes d'inclusion entre associations (CI-I1, CI-I2).</div>
+  <img src="file:///C:/Users/ahmad/Desktop/projet_SI/Projetdbi/out/diagrammes/03b_mcd_global_reservation.svg">
+</section>
+
+<section class="pagebreak">
+<h3>8.3 MCD global — formalisme textuel</h3>
+<p>« Seule la description textuelle est complète » : nom, sémantique, attributs avec domaine et identifiant pour les entités ; nom, sémantique, entités liées avec dimension et attributs pour les associations.</p>
+<h4>Entités</h4><table class='dico'><tr><th style='width:19%'>Entité</th><th>Sémantique</th><th style='width:46%'>Attributs (domaine) — identifiant souligné</th></tr>
+<tr><td><b>REGION</b></td><td>Région administrative française (dont outre-mer).</td><td><u>id_region</u> : Entier — Identifiant de la région<br>nom_region : Texte(60) — Nom officiel de la région</td></tr>
+<tr><td><b>DEPARTEMENT</b></td><td>Département français identifié par son code officiel (01…95, 2A, 2B, 971…).</td><td><u>code_departement</u> : Texte(3) — Code officiel du département<br>nom_departement : Texte(60) — Nom du département</td></tr>
+<tr><td><b>COMMUNE</b></td><td>Commune française identifiée par son code INSEE, avec son centroïde géographique.</td><td><u>code_insee</u> : Texte(5) — Code officiel géographique INSEE<br>nom_commune : Texte(100) — Libellé officiel de la commune<br>latitude_commune : Décimal(9,6) (facultatif) — Latitude WGS84 du centroïde (degrés)<br>longitude_commune : Décimal(9,6) (facultatif) — Longitude WGS84 du centroïde (degrés)</td></tr>
+<tr><td><b>DOMAINE</b></td><td>Grand domaine artistique d&#x27;une manifestation (type de festival).</td><td><u>id_domaine</u> : Entier — Identifiant du domaine<br>libelle_domaine : Texte(80) — Libellé normalisé (ex. Musiques actuelles)</td></tr>
+<tr><td><b>SOUS_DOMAINE</b></td><td>Style précisant le domaine (ex. Jazz, blues et musiques improvisées) ; indépendant du domaine dans la source.</td><td><u>id_sous_domaine</u> : Entier — Identifiant du sous-domaine<br>libelle_sous_domaine : Texte(80) — Libellé normalisé du style</td></tr>
+<tr><td><b>PERIODICITE</b></td><td>Rythme de tenue d&#x27;une manifestation.</td><td><u>id_periodicite</u> : Entier — Identifiant de la périodicité<br>libelle_periodicite : Texte(40) — Annuelle, biennale paire, biennale impaire…</td></tr>
+<tr><td><b>ORGANISME_SOUTIEN</b></td><td>Organisme public pouvant soutenir un festival (Ministère de la culture, CNC, CNL, CNV).</td><td><u>id_organisme</u> : Entier — Identifiant de l&#x27;organisme<br>sigle_organisme : Texte(10) — Sigle (MC, CNC, CNL, CNV)<br>libelle_organisme : Texte(80) — Nom complet de l&#x27;organisme</td></tr>
+<tr><td><b>FESTIVAL</b></td><td>Manifestation proposée dans FestiBed, issue du jeu public ou créée/complétée par un Organisateur.</td><td><u>id_festival</u> : Entier — Identifiant technique du festival<br>code_identification : Texte(10) (facultatif) — N° d&#x27;identification de la source (codes génériques mis à NULL)<br>nom_festival : Texte(200) — Nom de la manifestation<br>site_web_festival : Texte(300) (facultatif) — Adresse du site web<br>date_creation_festival : Date (facultatif) — Date de création de la manifestation<br>mois_habituel_debut : Entier — Mois habituel de début (1 à 12)<br>date_debut_source : Date (facultatif) — Date de début de l&#x27;édition décrite par la source<br>date_fin_source : Date (facultatif) — Date de fin de l&#x27;édition décrite par la source<br>num_edition_2018 : Entier (facultatif) — Numéro de l&#x27;édition 2018<br>num_edition_2019 : Entier (facultatif) — Numéro de l&#x27;édition 2019<br>montant_soutien_2017 : Entier (facultatif) — Soutien 2017 du ministère à la structure (euros)<br>commentaire_festival : Texte(4000) (facultatif) — Commentaire libre de la source<br>code_postal_festival : Texte(5) — Code postal de la commune principale<br>date_debut_festival : Date (facultatif) — Premier jour de l&#x27;édition commercialisée<br>date_fin_festival : Date (facultatif) — Dernier jour de l&#x27;édition commercialisée<br>prix_pass : Décimal(8,2) (facultatif) — Prix d&#x27;un Pass (euros TTC)<br>quota_pass : Entier — Nombre maximal de Pass alloués à FestiBed<br>nb_pass_reserves : Entier — calculé — Nombre de Pass des réservations confirmées (calculé)<br>statut_festival : Texte(10) — BROUILLON, ACTIF ou DESACTIVE<br>description_festival : Texte(4000) (facultatif) — Présentation rédigée par l&#x27;organisateur</td></tr>
+<tr><td><b>TYPOLOGIE_ETABLISSEMENT</b></td><td>Catégorie réglementaire d&#x27;établissement ; détermine la nature de ses unités d&#x27;accueil.</td><td><u>code_typologie</u> : Texte(20) — HOTEL, CAMPING, RESIDENCE, VILLAGE_VACANCES, PRL, AUBERGE<br>libelle_typologie : Texte(60) — Libellé de la source (ex. HÔTEL DE TOURISME)<br>unite_accueil : Texte(30) — Nature des unités comptées (chambre, emplacement, logement…)</td></tr>
+<tr><td><b>CLASSEMENT</b></td><td>Niveau de classement officiel d&#x27;un établissement.</td><td><u>id_classement</u> : Entier — Identifiant du classement<br>libelle_classement : Texte(40) — 1 à 5 étoiles, Aire naturelle, Auberge collective<br>nb_etoiles : Entier (facultatif) — Nombre d&#x27;étoiles (vide si non étoilé)</td></tr>
+<tr><td><b>ETABLISSEMENT</b></td><td>Lieu physique d&#x27;hébergement collectif classé, répertorié dans le jeu de données public.</td><td><u>id_etablissement</u> : Entier — Identifiant technique de l&#x27;établissement<br>nom_commercial : Texte(200) — Nom commercial<br>adresse_etablissement : Texte(300) — Numéro et voie<br>code_postal_etablissement : Texte(5) — Code postal<br>site_internet : Texte(300) (facultatif) — Adresse du site web<br>date_classement : Date — Date de la décision de classement<br>classement_proroge : Booléen — Classement prorogé (oui/non)<br>capacite_accueil : Entier — Capacité d&#x27;accueil totale (personnes)<br>nb_unites : Entier — Nombre d&#x27;unités d&#x27;accueil (nature : typologie)<br>latitude_etablissement : Décimal(9,6) (facultatif) — Latitude WGS84 (géocodage de l&#x27;adresse)<br>longitude_etablissement : Décimal(9,6) (facultatif) — Longitude WGS84 (géocodage de l&#x27;adresse)<br>note_moyenne_etablissement : Décimal(3,2) (facultatif) — calculé — Moyenne des notes (calculée)<br>nb_notes_etablissement : Entier — calculé — Nombre de notes (calculé)</td></tr>
+<tr><td><b>COMPTE_INTERNE</b> <span class='tag bo'>ajout</span></td><td>Compte d&#x27;authentification interne au Back-Office FestiBed.</td><td><u>id_compte</u> : Entier — Identifiant du compte<br>email_compte : Texte(254) — Adresse électronique de connexion<br>mot_de_passe_hash : Texte(100) — Empreinte du mot de passe (bcrypt)<br>nom_compte : Texte(80) — Nom du titulaire<br>prenom_compte : Texte(80) — Prénom du titulaire<br>telephone_compte : Texte(20) (facultatif) — Téléphone<br>date_creation_compte : DateHeure — Date de création du compte</td></tr>
+<tr><td><b>ORGANISATEUR</b> <span class='tag bo'>ajout</span></td><td>Compte interne responsable d&#x27;un ou plusieurs festivals.<br><i>Identifiant hérité de COMPTE_INTERNE (id_compte)</i></td><td>nom_structure : Texte(150) (facultatif) — Structure organisatrice (association, société…)</td></tr>
+<tr><td><b>HEBERGEUR</b> <span class='tag bo'>ajout</span></td><td>Compte interne responsable d&#x27;un ou plusieurs établissements d&#x27;hébergement.<br><i>Identifiant hérité de COMPTE_INTERNE (id_compte)</i></td><td>raison_sociale : Texte(150) (facultatif) — Raison sociale de l&#x27;exploitant</td></tr>
+<tr><td><b>FESTIVALIER</b> <span class='tag bo'>ajout</span></td><td>Utilisateur du FrontOffice, authentifié par un réseau social ou compte de test du peuplement.</td><td><u>id_festivalier</u> : Entier — Identifiant du festivalier<br>email_festivalier : Texte(254) — Adresse électronique<br>nom_festivalier : Texte(80) — Nom<br>prenom_festivalier : Texte(80) — Prénom<br>fournisseur_auth : Texte(10) — GOOGLE, FACEBOOK, GITHUB ou TEST<br>id_externe : Texte(128) — Identifiant chez le fournisseur (uid Firebase) ou identifiant généré test-NNNNNN<br>compte_test : Booléen — Compte généré pour les tests (non authentifiable)<br>date_inscription : DateHeure — Date de première connexion</td></tr>
+<tr><td><b>TYPE_HEBERGEMENT</b> <span class='tag bo'>ajout</span></td><td>Nature d&#x27;une offre réservable (chambre simple, chambre double, emplacement, bungalow…).</td><td><u>id_type_hebergement</u> : Entier — Identifiant du type<br>libelle_type_hebergement : Texte(60) — Libellé du type</td></tr>
+<tr><td><b>OPTION_HEBERGEMENT</b> <span class='tag bo'>ajout</span></td><td>Prestation complémentaire (petit-déjeuner, parking, wifi, accès PMR…).</td><td><u>id_option</u> : Entier — Identifiant de l&#x27;option<br>libelle_option : Texte(60) — Libellé de l&#x27;option</td></tr>
+<tr><td><b>HEBERGEMENT</b> <span class='tag bo'>ajout</span></td><td>Unité réservable proposée par un établissement à FestiBed, indépendamment de tout festival.</td><td><u>id_hebergement</u> : Entier — Identifiant de l&#x27;hébergement<br>libelle_hebergement : Texte(120) — Intitulé (ex. Chambre 12, Emplacement B4)<br>capacite_hebergement : Entier — Nombre maximal de personnes<br>prix_nuit : Décimal(8,2) — Prix d&#x27;une nuit (euros TTC)<br>description_hebergement : Texte(2000) (facultatif) — Description libre<br>statut_hebergement : Texte(10) — PUBLIE ou RETIRE</td></tr>
+<tr><td><b>PHOTO</b> <span class='tag bo'>ajout</span></td><td>Photographie illustrant un hébergement (composant de l&#x27;hébergement).</td><td><u>id_photo</u> : Entier — Identifiant de la photo<br>url_photo : Texte(500) — Emplacement du fichier image<br>legende_photo : Texte(200) (facultatif) — Légende<br>ordre_photo : Entier — Rang d&#x27;affichage</td></tr>
+<tr><td><b>PERIODE_DISPONIBILITE</b> <span class='tag bo'>ajout</span></td><td>Intervalle de nuits [début, fin[ pendant lequel l&#x27;hébergeur ouvre un hébergement à FestiBed (composant de l&#x27;hébergement).</td><td><u>id_periode</u> : Entier — Identifiant de la période<br>date_debut_dispo : Date — Première nuit disponible<br>date_fin_dispo : Date — Jour de départ (nuit exclue)</td></tr>
+<tr><td><b>PANIER</b> <span class='tag bo'>ajout</span></td><td>Sélection temporaire d&#x27;un festivalier, éventuellement anonyme.</td><td><u>id_panier</u> : Entier — Identifiant du panier<br>jeton_session : Texte(36) — Jeton (UUID) du navigateur pour un panier anonyme<br>date_creation_panier : DateHeure — Date de création<br>date_maj_panier : DateHeure — Date de dernière modification</td></tr>
+<tr><td><b>SELECTION</b> <span class='tag bo'>ajout</span></td><td>Élément du panier : pour un festival, le nombre de Pass demandés et les hébergements choisis (composant du panier).</td><td><u>id_selection</u> : Entier — Identifiant de la sélection<br>nb_pass_selection : Entier — Nombre de Pass demandés<br>date_ajout : DateHeure — Date d&#x27;ajout au panier<br>date_expiration : DateHeure — Date de retrait automatique (ajout + 15 min, paramétrable)</td></tr>
+<tr><td><b>COMMANDE</b> <span class='tag bo'>ajout</span></td><td>Résultat de la validation d&#x27;un panier ; regroupe une réservation par festival et porte le paiement.</td><td><u>id_commande</u> : Entier — Identifiant de la commande<br>numero_commande : Texte(20) — Numéro communiqué au festivalier<br>date_commande : DateHeure — Date de validation du panier<br>montant_commande : Décimal(10,2) — Montant total (euros TTC)<br>statut_commande : Texte(10) — VALIDEE, PAYEE ou ANNULEE</td></tr>
+<tr><td><b>PAIEMENT</b> <span class='tag bo'>ajout</span></td><td>Règlement (ou tentative) d&#x27;une commande ; non développé dans le prototype.</td><td><u>id_paiement</u> : Entier — Identifiant du paiement<br>montant_paiement : Décimal(10,2) — Montant réglé<br>moyen_paiement : Texte(10) (facultatif) — CARTE, VIREMENT ou AUTRE<br>statut_paiement : Texte(10) — NON_GERE, EN_ATTENTE, ACCEPTE, REFUSE, REMBOURSE<br>date_paiement : DateHeure (facultatif) — Date du règlement<br>reference_paiement : Texte(100) (facultatif) — Référence du prestataire de paiement</td></tr>
+<tr><td><b>RESERVATION</b> <span class='tag bo'>ajout</span></td><td>Réservation définitive de Pass et d&#x27;hébergements pour un même festival.</td><td><u>id_reservation</u> : Entier — Identifiant de la réservation<br>numero_reservation : Texte(20) — Numéro de réservation<br>statut_reservation : Texte(10) — CONFIRMEE ou ANNULEE<br>date_annulation : DateHeure (facultatif) — Date d&#x27;annulation<br>motif_annulation : Texte(300) (facultatif) — Motif (ex. festival désactivé)</td></tr>
+<tr><td><b>PASS</b> <span class='tag bo'>ajout</span></td><td>Droit d&#x27;accès individuel à un festival pour toute sa durée, édité en PDF (composant de la réservation).</td><td><u>id_pass</u> : Entier — Identifiant du Pass<br>numero_pass : Texte(20) — Numéro imprimé sur le Pass<br>prix_paye : Décimal(8,2) — Prix du Pass au moment de la réservation<br>date_emission_pass : DateHeure — Date d&#x27;émission</td></tr>
+<tr><td><b>BON_HEBERGEMENT</b> <span class='tag bo'>ajout</span></td><td>Document PDF attestant la réservation d&#x27;un hébergement pour les nuits d&#x27;un festival (composant de la réservation).</td><td><u>id_bon</u> : Entier — Identifiant du bon<br>numero_bon : Texte(20) — Numéro imprimé sur le bon<br>date_arrivee : Date — Première nuit réservée<br>date_depart : Date — Jour de départ<br>prix_sejour : Décimal(10,2) — Prix du séjour au moment de la réservation<br>date_emission_bon : DateHeure — Date d&#x27;émission</td></tr>
+<tr><td><b>NOTIFICATION</b> <span class='tag bo'>ajout</span></td><td>Message adressé à un festivalier (annulation, chevauchement, expiration).</td><td><u>id_notification</u> : Entier — Identifiant<br>type_notification : Texte(30) — ANNULATION_FESTIVAL, CHEVAUCHEMENT_RESERVATIONS, EXPIRATION_SELECTION<br>message_notification : Texte(1000) — Texte affiché<br>date_notification : DateHeure — Date d&#x27;émission<br>lue : Booléen — Notification lue</td></tr>
+<tr><td><b>ANNEE</b></td><td>Année civile (dimension temporelle du soutien).</td><td><u>annee_soutien</u> : Entier — Année civile</td></tr>
+<tr><td><b>CAMPING</b></td><td>Établissement de typologie camping.<br><i>Sous-entité de ETABLISSEMENT (X)</i></td><td>categorie_camping : Texte — TOURISME ou LOISIRS</td></tr>
+<tr><td><b>VILLAGE_VACANCES</b></td><td>Établissement de typologie village de vacances.<br><i>Sous-entité de ETABLISSEMENT (X)</i></td><td>mention_village : Texte — Mention<br>type_sejour : Texte — Formule de séjour</td></tr>
+</table>
+<h4>Associations</h4><table class='dico'><tr><th style='width:22%'>Association</th><th>Sémantique</th><th style='width:30%'>Entités liées (dimension)</th><th style='width:20%'>Attributs / traduction</th></tr>
+<tr><td><b>APPARTENIR</b></td><td>Rattachement d&#x27;un département à sa région.</td><td>DEPARTEMENT(1-1), REGION(0-n)</td><td>clé étrangère DEPARTEMENT.id_region</td></tr>
+<tr><td><b>SITUER</b></td><td>Rattachement d&#x27;une commune à son département.</td><td>COMMUNE(1-1), DEPARTEMENT(0-n)</td><td>clé étrangère COMMUNE.code_departement</td></tr>
+<tr><td><b>SE_DEROULER</b></td><td>Commune principale où se tient un festival.</td><td>FESTIVAL(1-1), COMMUNE(0-n)</td><td>clé étrangère FESTIVAL.code_insee</td></tr>
+<tr><td><b>RELEVER_DE</b></td><td>Domaine artistique d&#x27;un festival.</td><td>FESTIVAL(1-1), DOMAINE(0-n)</td><td>clé étrangère FESTIVAL.id_domaine</td></tr>
+<tr><td><b>PRECISER</b></td><td>Style précisant un festival.</td><td>FESTIVAL(0-1), SOUS_DOMAINE(0-n)</td><td>clé étrangère FESTIVAL.id_sous_domaine</td></tr>
+<tr><td><b>AVOIR_POUR_RYTHME</b></td><td>Périodicité d&#x27;un festival.</td><td>FESTIVAL(0-1), PERIODICITE(0-n)</td><td>clé étrangère FESTIVAL.id_periodicite</td></tr>
+<tr><td><b>LOCALISER</b></td><td>Commune où se trouve un établissement.</td><td>ETABLISSEMENT(1-1), COMMUNE(0-n)</td><td>clé étrangère ETABLISSEMENT.code_insee</td></tr>
+<tr><td><b>AVOIR_POUR_TYPOLOGIE</b></td><td>Typologie réglementaire d&#x27;un établissement.</td><td>ETABLISSEMENT(1-1), TYPOLOGIE_ETABLISSEMENT(0-n)</td><td>clé étrangère ETABLISSEMENT.code_typologie</td></tr>
+<tr><td><b>ETRE_CLASSE</b></td><td>Classement officiel d&#x27;un établissement.</td><td>ETABLISSEMENT(1-1), CLASSEMENT(0-n)</td><td>clé étrangère ETABLISSEMENT.id_classement</td></tr>
+<tr><td><b>ORGANISER</b></td><td>Responsabilité d&#x27;un organisateur sur un festival.</td><td>FESTIVAL(0-1), ORGANISATEUR(0-n)</td><td>clé étrangère FESTIVAL.id_organisateur</td></tr>
+<tr><td><b>GERER</b></td><td>Responsabilité d&#x27;un hébergeur sur un établissement.</td><td>ETABLISSEMENT(0-1), HEBERGEUR(0-n)</td><td>clé étrangère ETABLISSEMENT.id_hebergeur</td></tr>
+<tr><td><b>PROPOSER</b></td><td>Offre d&#x27;un hébergement par un établissement.</td><td>HEBERGEMENT(1-1), ETABLISSEMENT(0-n)</td><td>clé étrangère HEBERGEMENT.id_etablissement</td></tr>
+<tr><td><b>CATEGORISER</b></td><td>Type d&#x27;un hébergement.</td><td>HEBERGEMENT(1-1), TYPE_HEBERGEMENT(0-n)</td><td>clé étrangère HEBERGEMENT.id_type_hebergement</td></tr>
+<tr><td><b>ILLUSTRER</b></td><td>Photo d&#x27;un hébergement (composition).</td><td>PHOTO((1-1)), HEBERGEMENT(0-n)</td><td>clé étrangère PHOTO.id_hebergement</td></tr>
+<tr><td><b>OUVRIR</b></td><td>Période d&#x27;ouverture d&#x27;un hébergement (composition).</td><td>PERIODE_DISPONIBILITE((1-1)), HEBERGEMENT(0-n)</td><td>clé étrangère PERIODE_DISPONIBILITE.id_hebergement</td></tr>
+<tr><td><b>POSSEDER</b></td><td>Panier d&#x27;un festivalier authentifié.</td><td>PANIER(0-1), FESTIVALIER(0-n)</td><td>clé étrangère PANIER.id_festivalier</td></tr>
+<tr><td><b>CONTENIR</b></td><td>Sélection d&#x27;un panier (composition).</td><td>SELECTION((1-1)), PANIER(0-n)</td><td>clé étrangère SELECTION.id_panier</td></tr>
+<tr><td><b>CIBLER</b></td><td>Festival visé par une sélection.</td><td>SELECTION(1-1), FESTIVAL(0-n)</td><td>clé étrangère SELECTION.id_festival</td></tr>
+<tr><td><b>PASSER</b></td><td>Commande passée par un festivalier.</td><td>COMMANDE(1-1), FESTIVALIER(0-n)</td><td>clé étrangère COMMANDE.id_festivalier</td></tr>
+<tr><td><b>REGLER</b></td><td>Paiement d&#x27;une commande.</td><td>PAIEMENT(1-1), COMMANDE(0-n)</td><td>clé étrangère PAIEMENT.id_commande</td></tr>
+<tr><td><b>REGROUPER</b></td><td>Réservations issues d&#x27;une même commande.</td><td>RESERVATION(1-1), COMMANDE(1-n)</td><td>clé étrangère RESERVATION.id_commande</td></tr>
+<tr><td><b>CONCERNER</b></td><td>Festival d&#x27;une réservation.</td><td>RESERVATION(1-1), FESTIVAL(0-n)</td><td>clé étrangère RESERVATION.id_festival</td></tr>
+<tr><td><b>DONNER_ACCES</b></td><td>Pass d&#x27;une réservation (composition).</td><td>PASS((1-1)), RESERVATION(1-n)</td><td>clé étrangère PASS.id_reservation</td></tr>
+<tr><td><b>COMPRENDRE</b></td><td>Bon d&#x27;hébergement d&#x27;une réservation (composition).</td><td>BON_HEBERGEMENT((1-1)), RESERVATION(1-n)</td><td>clé étrangère BON_HEBERGEMENT.id_reservation</td></tr>
+<tr><td><b>OCCUPER</b></td><td>Hébergement occupé par un bon.</td><td>BON_HEBERGEMENT(1-1), HEBERGEMENT(0-n)</td><td>clé étrangère BON_HEBERGEMENT.id_hebergement</td></tr>
+<tr><td><b>RECEVOIR</b></td><td>Destinataire d&#x27;une notification.</td><td>NOTIFICATION(1-1), FESTIVALIER(0-n)</td><td>clé étrangère NOTIFICATION.id_festivalier</td></tr>
+<tr><td><b>SIGNALER</b></td><td>Réservation à l&#x27;origine d&#x27;une notification.</td><td>NOTIFICATION(0-1), RESERVATION(0-n)</td><td>clé étrangère NOTIFICATION.id_reservation</td></tr>
+<tr><td><b>FESTIVAL_COMMUNE</b></td><td>Fait qu&#x27;un festival se déroule aussi dans d&#x27;autres communes que sa commune principale.</td><td>FESTIVAL(0-n), COMMUNE(0-n)</td><td>—<br><i>relation FESTIVAL_COMMUNE</i></td></tr>
+<tr><td><b>SOUTIEN</b></td><td>Fait qu&#x27;un organisme a soutenu un festival une année donnée.</td><td>FESTIVAL(0-n), ORGANISME_SOUTIEN(0-n), ANNEE(0-n)</td><td>—<br><i>relation SOUTIEN</i></td></tr>
+<tr><td><b>HEBERGEMENT_OPTION</b></td><td>Fait qu&#x27;un hébergement inclut une option.</td><td>HEBERGEMENT(0-n), OPTION_HEBERGEMENT(0-n)</td><td>—<br><i>relation HEBERGEMENT_OPTION</i></td></tr>
+<tr><td><b>SELECTION_HEBERGEMENT</b></td><td>Fait qu&#x27;une sélection inclut un hébergement.</td><td>SELECTION(1-n), HEBERGEMENT(0-n)</td><td>—<br><i>relation SELECTION_HEBERGEMENT</i></td></tr>
+<tr><td><b>NOTE_FESTIVAL</b></td><td>Note attribuée par un festivalier à un festival après son séjour.</td><td>FESTIVALIER(0-n), FESTIVAL(0-n)</td><td>valeur_note_festival : Entier<br>commentaire_note_festival : Texte(1000)<br>date_note_festival : DateHeure<br><i>relation NOTE_FESTIVAL</i></td></tr>
+<tr><td><b>NOTE_ETABLISSEMENT</b></td><td>Note attribuée par un festivalier à un établissement après son séjour.</td><td>FESTIVALIER(0-n), ETABLISSEMENT(0-n)</td><td>valeur_note_etab : Entier<br>commentaire_note_etab : Texte(1000)<br>date_note_etab : DateHeure<br><i>relation NOTE_ETABLISSEMENT</i></td></tr>
+</table>
+<h4>Spécialisations et transformation retenue</h4><table class='dico'><tr><th style='width:22%'>Sur-entité</th><th style='width:24%'>Sous-entités</th><th style='width:9%'>Contrainte</th><th style='width:7%'>Transf.</th><th>Motivation (à documenter selon le cours)</th></tr>
+<tr><td>ETABLISSEMENT</td><td>CAMPING, VILLAGE_VACANCES</td><td>X</td><td>T3</td><td>Spécialisation exclusive non totale définie par un attribut (code_typologie) : T3 recommandé par le cours (une seule relation ETABLISSEMENT, attributs spécifiques nullables, discriminant = code_typologie, CHECK de cohérence). Priorité au temps de calcul : la recherche d&#x27;hébergements ne fait aucune jointure supplémentaire.</td></tr>
+<tr><td>COMPTE_INTERNE</td><td>ORGANISATEUR, HEBERGEUR</td><td>T</td><td>T1</td><td>Spécialisation totale mais non exclusive (une même personne peut être organisateur et hébergeur) : T1 (une relation par entité, dépendances d&#x27;inclusion ORGANISATEUR[id_compte] ⊆ COMPTE_INTERNE[id_compte]). Priorité à la qualité des données : les associations ORGANISER et GERER référencent exactement le bon rôle.</td></tr>
+</table>
+<h4>Contraintes d'intégrité non exprimables graphiquement</h4>
+<ol class="small">
+  <li><b>CI1 — cohérence capacité</b> : pour une SELECTION (et une RESERVATION), Σ <code>capacite_hebergement</code> des hébergements liés ≥ nombre de Pass.</li>
+  <li><b>CI2 — non-chevauchement</b> : deux BON_HEBERGEMENT non annulés d'un même HEBERGEMENT n'ont pas de nuit commune (→ NUITEE au niveau logique).</li>
+  <li><b>CI3 — disponibilité</b> : les nuits d'un bon sont incluses dans une PERIODE_DISPONIBILITE de l'hébergement ; les périodes d'un hébergement ne se chevauchent pas.</li>
+  <li><b>CI4 — période</b> : <code>date_arrivee</code>/<code>date_depart</code> d'un bon = dates du festival de la réservation au moment de la réservation.</li>
+  <li><b>CI5 — quota</b> : nombre de PASS des réservations CONFIRMEE d'un festival = <code>nb_pass_reserves</code> ≤ <code>quota_pass</code>.</li>
+  <li><b>CI6 — hébergement retiré</b> : un HEBERGEMENT RETIRE n'entre dans aucune nouvelle SELECTION et ne peut être retiré s'il a des nuits futures réservées.</li>
+  <li><b>CI7 — festival désactivé</b> : toutes ses réservations sont ANNULEE et chaque festivalier concerné reçoit une NOTIFICATION.</li>
+  <li><b>CI-I1</b> (I) — Inclusion : un festivalier ne note un festival que s&#x27;il existe une réservation CONFIRMEE de ce festivalier (PASSER ∘ REGROUPER) concernant ce festival (CONCERNER), terminée à la date de la note.</li><li><b>CI-I2</b> (I) — Inclusion : un festivalier ne note un établissement que s&#x27;il y a occupé un hébergement (OCCUPER ∘ PROPOSER) par une réservation CONFIRMEE terminée.</li>
+</ol>
+</section>
+
+<section class="pagebreak">
+<h3>8.4 MOD — Modèle Organisationnel des Données (QOCQ)</h3>
+<h4>Qui ? Matrice CLMS (Créer, Lire, Modifier, Supprimer) par poste de travail</h4>
+<table class="clms">
+  <tr><th>Entité / association</th><th>Festivalier (anonyme)</th><th>Festivalier (authentifié)</th><th>Organisateur</th><th>Hébergeur</th><th>Système (import, tâches planifiées)</th></tr>
+  <tr><td>Référentiels (REGION … CLASSEMENT, TYPE_HEBERGEMENT, OPTION)</td><td>L</td><td>L</td><td>L</td><td>L</td><td>C L M</td></tr>
+  <tr><td>FESTIVAL, FESTIVAL_COMMUNE, SOUTIEN</td><td>L</td><td>L</td><td>C L M (ses festivals ; désactivation, pas de suppression)</td><td>L</td><td>C L M</td></tr>
+  <tr><td>ETABLISSEMENT</td><td>L</td><td>L</td><td>—</td><td>L M (les siens)</td><td>C L M</td></tr>
+  <tr><td>HEBERGEMENT, PHOTO, HEBERGEMENT_OPTION, PERIODE_DISPONIBILITE</td><td>L</td><td>L</td><td>—</td><td>C L M S (les siens, sous CI6 ; retrait logique)</td><td>C (peuplement)</td></tr>
+  <tr><td>COMPTE_INTERNE, ORGANISATEUR, HEBERGEUR</td><td>—</td><td>—</td><td>C L M S (son compte)</td><td>C L M S (son compte)</td><td>C (peuplement)</td></tr>
+  <tr><td>FESTIVALIER</td><td>—</td><td>C L M (son profil)</td><td>L (participants à ses festivals)</td><td>L (clients de ses établissements)</td><td>C (comptes de test)</td></tr>
+  <tr><td>PANIER, SELECTION, SELECTION_HEBERGEMENT</td><td>C L M S</td><td>C L M S</td><td>—</td><td>—</td><td>S (purge des expirés)</td></tr>
+  <tr><td>COMMANDE, RESERVATION, PASS, BON_HEBERGEMENT, NUITEE</td><td>—</td><td>C L (les siennes)</td><td>L (ses festivals) ; M statut via désactivation</td><td>L (ses hébergements)</td><td>C M (peuplement, annulations)</td></tr>
+  <tr><td>PAIEMENT</td><td>—</td><td>C L</td><td>—</td><td>—</td><td>M (remboursement)</td></tr>
+  <tr><td>NOTE_FESTIVAL, NOTE_ETABLISSEMENT</td><td>L (agrégats)</td><td>C L M</td><td>L (ses festivals)</td><td>L (ses établissements)</td><td>M (agrégats calculés)</td></tr>
+  <tr><td>NOTIFICATION</td><td>—</td><td>L M (lue)</td><td>—</td><td>—</td><td>C</td></tr>
+</table>
+<h4>Où ?</h4>
+<p>Toutes les données sont <b>centralisées</b> dans une base Oracle unique (serveur de production eCloud), accédée uniquement par le serveur métier Kotlin ; aucune donnée persistante côté client (le jeton de panier anonyme est seulement un identifiant de session). Les PDF (Pass, bons) sont régénérables à partir des données et ne sont pas stockés.</p>
+<h4>Combien ? Volumétrie cible (base des choix d'index et de la taille des tables)</h4>
+<table class="small">
+  <tr><th>Relation</th><th style="width:20%">Volume</th><th>Origine / hypothèse</th></tr>
+  <tr><td>COMMUNE / DEPARTEMENT / REGION</td><td>≈ 35 000 / 101 / 18</td><td>Référentiel officiel complet</td></tr>
+  <tr><td>FESTIVAL (+ FESTIVAL_COMMUNE, SOUTIEN)</td><td>3 136 (≈ 1 000, ≈ 500)</td><td>Jeu public</td></tr>
+  <tr><td>ETABLISSEMENT</td><td>21 435</td><td>Jeu public</td></tr>
+  <tr><td>HEBERGEMENT</td><td>≈ 100 000</td><td>≈ 5 unités publiées par établissement (synthétique)</td></tr>
+  <tr><td>PERIODE_DISPONIBILITE / PHOTO</td><td>≈ 200 000 / ≈ 150 000</td><td>2 périodes et 1-2 photos par hébergement</td></tr>
+  <tr><td>FESTIVALIER</td><td>≈ 50 000</td><td>Comptes de test, ≈ 2 commandes chacun</td></tr>
+  <tr><td>COMMANDE / RESERVATION</td><td>≈ 80 000 / <b>≥ 100 000</b></td><td>Exigence du cahier des charges</td></tr>
+  <tr><td>PASS</td><td>≈ 200 000</td><td>≈ 2 Pass par réservation</td></tr>
+  <tr><td>BON_HEBERGEMENT / NUITEE</td><td>≈ 110 000 / ≈ 350 000</td><td>≈ 1,1 bon par réservation, ≈ 3 nuits par festival</td></tr>
+  <tr><td>PANIER / SELECTION</td><td>quelques centaines</td><td>Données éphémères (15 min)</td></tr>
+</table>
+<div class="box warn"><b>Conséquence à anticiper pour le peuplement</b> : 100 000 réservations × ≈ 2 Pass ≈ 200 000 Pass. Avec 3 136 festivals et au moins 50 % du quota réservé, il faut un <b>quota moyen d'environ 100 Pass</b> (≈ 313 600 Pass offerts, ≈ 64 % réservés). Le minimum de 30 Pass ne suffit donc que pour les petits festivals ; prévoir 300 à 1 000 Pass pour les grands.</div>
+<h4>Quand ?</h4>
+<ul>
+  <li>Référentiels et données publiques : chargés une fois au démarrage du projet, rechargeables (script d'import idempotent).</li>
+  <li>PANIER/SELECTION : créés en continu, durée de vie 15 min, purge planifiée chaque minute.</li>
+  <li>COMMANDE, RESERVATION, PASS, BON, NUITEE : créés à chaque validation (pic avant l'été) ; jamais supprimés (annulation logique) ; archivage annuel des éditions terminées (les NUITEE passées peuvent être purgées).</li>
+  <li>NOTE_* : après la date de fin du festival ; agrégats recalculés à chaque note.</li>
+</ul>
+</section>
+
+<section class="fig">
+  <h3>Figure 4a — Modèle technique UML (JPA), vue 1/2 : référentiels, offre et comptes</h3>
+  <div class="cap">Propriété Kotlin = attribut du MCD en camelCase (<code>nom_festival</code> → <code>nomFestival</code>). <code>@Version</code> pour le verrouillage optimiste du Back-Office. Spécialisation T des comptes : rôles <code>@OneToOne @MapsId</code> (pas d'héritage Kotlin).</div>
+  <img src="file:///C:/Users/ahmad/Desktop/projet_SI/Projetdbi/out/diagrammes/04a_uml_technique_offre.svg">
+</section>
+
+<section class="fig">
+  <h3>Figure 4b — Modèle technique UML (JPA), vue 2/2 : panier et réservation</h3>
+  <div class="cap">Compositions UML = compositions Merise <code>(1,1)</code> (cascade). Méthodes métier portées par le domaine : <code>Selection.estCoherente()</code>, <code>Selection.estExpiree()</code>, <code>BonHebergement.nuits()</code>, <code>Reservation.annuler()</code>.</div>
+  <img src="file:///C:/Users/ahmad/Desktop/projet_SI/Projetdbi/out/diagrammes/04b_uml_technique_reservation.svg">
+</section>
+
+<section class="pagebreak">
+<h3>8.5 MCD, diagramme de classes et MLD : différences (acquis du cours)</h3>
+<table class="small">
+  <tr><th style="width:18%"></th><th>MCD Merise</th><th>Diagramme de classes UML technique</th><th>MLD relationnel</th></tr>
+  <tr><td>Objet</td><td>Données persistantes du SI, indépendamment de toute technologie</td><td>Classes Kotlin persistantes et leur mapping JPA</td><td>Relations (tables) et dépendances d'inclusion</td></tr>
+  <tr><td>Liens</td><td>Associations nommées, éventuellement porteuses d'attributs, n-aires</td><td>Associations navigables (sens), compositions ; une association porteuse devient une classe (<code>NoteFestival</code>)</td><td>Clés étrangères ; relation propre pour les associations x,n–y,n</td></tr>
+  <tr><td>Cardinalités</td><td>(min,max) côté entité</td><td>Multiplicités côté opposé (<code>0..1</code>, <code>*</code>)</td><td>NOT NULL / UNIQUE sur la clé externe</td></tr>
+  <tr><td>Spécialisation</td><td>Sous-entités avec contraintes X / T</td><td>Héritage ou rôle (choix de la transformation)</td><td>T1 à T4 selon priorité données / calcul</td></tr>
+  <tr><td>Comportement</td><td>Aucun</td><td>Méthodes métier (<code>estCoherente()</code>…)</td><td>Aucun (CHECK, triggers au niveau MPD)</td></tr>
+  <tr><td>Exemple FestiBed</td><td>FESTIVAL (0,n) CONCERNER (1,1) RESERVATION</td><td><code>Reservation "*" --&gt; "1" Festival</code></td><td>RESERVATION[id_festival] ⊆ FESTIVAL[id_festival]</td></tr>
+</table>
+</section>
+
+<section class="fig">
+  <h3>Figure 5a — MLD global (3FN), vue 1/2 : référentiels, offre, comptes</h3>
+  <div class="cap">Chaque flèche porte l'égalité « clé externe = clé ». Types physiques Oracle indiqués (repris à l'identique dans le MPD).</div>
+  <img src="file:///C:/Users/ahmad/Desktop/projet_SI/Projetdbi/out/diagrammes/05a_mld_global_offre.svg">
+</section>
+
+<section class="fig">
+  <h3>Figure 5b — MLD global (3FN), vue 2/2 : panier, réservation, notation</h3>
+  <div class="cap">NUITEE référence BON_HEBERGEMENT par une clé externe composée (<code>id_bon, id_hebergement</code>) : la nuit bloquée concerne forcément l'hébergement du bon.</div>
+  <img src="file:///C:/Users/ahmad/Desktop/projet_SI/Projetdbi/out/diagrammes/05b_mld_global_reservation.svg">
+</section>
+
+<section class="pagebreak">
+<h3>8.6 MLD global — transformation du MCD</h3>
+<h4>Règles de passage appliquées (cours « MCD vers MLD relationnel »)</h4>
+<table class="small">
+  <tr><th style="width:22%">Cas</th><th style="width:38%">Règle</th><th>Application FestiBed</th></tr>
+  <tr><td>Entité</td><td>Une relation, de clé l'identifiant</td><td>Toutes les entités (sauf ANNEE, CAMPING, VILLAGE_VACANCES, voir ci-dessous)</td></tr>
+  <tr><td>Association x,1 – y,n</td><td>Clé externe dans la relation côté (x,1), avec les attributs de l'association</td><td>27 associations, ex. CONCERNER → <code>RESERVATION.id_festival</code> ; cardinalité 0,1 → clé externe nullable (ORGANISER, GERER, PRECISER, POSSEDER, SIGNALER)</td></tr>
+  <tr><td>Association x,n – y,n (ou n-aire)</td><td>Relation propre : clés des entités + attributs, clé minimale</td><td>FESTIVAL_COMMUNE, HEBERGEMENT_OPTION, SELECTION_HEBERGEMENT, NOTE_FESTIVAL, NOTE_ETABLISSEMENT ; SOUTIEN (ternaire : l'entité ANNEE se réduit à l'attribut <code>annee_soutien</code> de la clé)</td></tr>
+  <tr><td>Composition (1,1)</td><td>Clé externe NOT NULL + suppression en cascade</td><td><code>ON DELETE CASCADE</code> pour PHOTO, PERIODE_DISPONIBILITE, SELECTION, PASS, BON_HEBERGEMENT (identifiant technique conservé pour l'ORM)</td></tr>
+  <tr><td>Spécialisation</td><td>T1 à T4 : choix à documenter (méthode et motivation)</td><td>Voir le tableau des spécialisations au § 8.3 : <b>T3</b> pour ETABLISSEMENT (discriminant <code>code_typologie</code>, CHECK de cohérence) ; <b>T1</b> pour COMPTE_INTERNE (ORGANISATEUR[id_compte] ⊆ COMPTE_INTERNE[id_compte])</td></tr>
+  <tr><td>Optimisation (« évaluation des coûts »)</td><td>Dé-normalisation / duplication justifiées par la volumétrie du MOD</td><td><code>nb_pass_reserves</code>, <code>note_moyenne_etablissement</code>, <code>nb_notes_etablissement</code> ; relation technique NUITEE ; colonnes <code>version_*</code> pour la concurrence</td></tr>
+</table>
+<h4>Notation textuelle du MLD global (35 relations)</h4>
+<ul class='mld'>
+<li><b>REGION</b>(<u>id_region</u>, nom_region)</li>
+<li><b>DEPARTEMENT</b>(<u>code_departement</u>, nom_departement, id_region)</li>
+<li><b>COMMUNE</b>(<u>code_insee</u>, nom_commune, latitude_commune<sup>?</sup>, longitude_commune<sup>?</sup>, code_departement)</li>
+<li><b>DOMAINE</b>(<u>id_domaine</u>, libelle_domaine)</li>
+<li><b>SOUS_DOMAINE</b>(<u>id_sous_domaine</u>, libelle_sous_domaine)</li>
+<li><b>PERIODICITE</b>(<u>id_periodicite</u>, libelle_periodicite)</li>
+<li><b>ORGANISME_SOUTIEN</b>(<u>id_organisme</u>, sigle_organisme, libelle_organisme)</li>
+<li><b>FESTIVAL</b>(<u>id_festival</u>, code_identification<sup>?</sup>, nom_festival, site_web_festival<sup>?</sup>, date_creation_festival<sup>?</sup>, mois_habituel_debut, date_debut_source<sup>?</sup>, date_fin_source<sup>?</sup>, num_edition_2018<sup>?</sup>, num_edition_2019<sup>?</sup>, montant_soutien_2017<sup>?</sup>, commentaire_festival<sup>?</sup>, code_postal_festival, code_insee, id_domaine, id_sous_domaine<sup>?</sup>, id_periodicite<sup>?</sup>, id_organisateur<sup>?</sup>, date_debut_festival<sup>?</sup>, date_fin_festival<sup>?</sup>, prix_pass<sup>?</sup>, quota_pass, nb_pass_reserves, statut_festival, description_festival<sup>?</sup>, version_festival)</li>
+<li><b>FESTIVAL_COMMUNE</b>(<u>id_festival</u>, <u>code_insee</u>)</li>
+<li><b>SOUTIEN</b>(<u>id_festival</u>, <u>id_organisme</u>, <u>annee_soutien</u>)</li>
+<li><b>TYPOLOGIE_ETABLISSEMENT</b>(<u>code_typologie</u>, libelle_typologie, unite_accueil)</li>
+<li><b>CLASSEMENT</b>(<u>id_classement</u>, libelle_classement, nb_etoiles<sup>?</sup>)</li>
+<li><b>ETABLISSEMENT</b>(<u>id_etablissement</u>, nom_commercial, adresse_etablissement, code_postal_etablissement, site_internet<sup>?</sup>, date_classement, classement_proroge, capacite_accueil, nb_unites, categorie_camping<sup>?</sup>, mention_village<sup>?</sup>, type_sejour<sup>?</sup>, code_insee, code_typologie, id_classement, id_hebergeur<sup>?</sup>, latitude_etablissement<sup>?</sup>, longitude_etablissement<sup>?</sup>, note_moyenne_etablissement<sup>?</sup>, nb_notes_etablissement)</li>
+<li><b>COMPTE_INTERNE</b>(<u>id_compte</u>, email_compte, mot_de_passe_hash, nom_compte, prenom_compte, telephone_compte<sup>?</sup>, date_creation_compte)</li>
+<li><b>ORGANISATEUR</b>(<u>id_compte</u>, nom_structure<sup>?</sup>)</li>
+<li><b>HEBERGEUR</b>(<u>id_compte</u>, raison_sociale<sup>?</sup>)</li>
+<li><b>FESTIVALIER</b>(<u>id_festivalier</u>, email_festivalier, nom_festivalier, prenom_festivalier, fournisseur_auth, id_externe, compte_test, date_inscription)</li>
+<li><b>TYPE_HEBERGEMENT</b>(<u>id_type_hebergement</u>, libelle_type_hebergement)</li>
+<li><b>OPTION_HEBERGEMENT</b>(<u>id_option</u>, libelle_option)</li>
+<li><b>HEBERGEMENT</b>(<u>id_hebergement</u>, libelle_hebergement, capacite_hebergement, prix_nuit, description_hebergement<sup>?</sup>, statut_hebergement, id_etablissement, id_type_hebergement, version_hebergement)</li>
+<li><b>HEBERGEMENT_OPTION</b>(<u>id_hebergement</u>, <u>id_option</u>)</li>
+<li><b>PHOTO</b>(<u>id_photo</u>, url_photo, legende_photo<sup>?</sup>, ordre_photo, id_hebergement)</li>
+<li><b>PERIODE_DISPONIBILITE</b>(<u>id_periode</u>, date_debut_dispo, date_fin_dispo, id_hebergement)</li>
+<li><b>PANIER</b>(<u>id_panier</u>, jeton_session, date_creation_panier, date_maj_panier, id_festivalier<sup>?</sup>)</li>
+<li><b>SELECTION</b>(<u>id_selection</u>, nb_pass_selection, date_ajout, date_expiration, id_panier, id_festival)</li>
+<li><b>SELECTION_HEBERGEMENT</b>(<u>id_selection</u>, <u>id_hebergement</u>)</li>
+<li><b>COMMANDE</b>(<u>id_commande</u>, numero_commande, date_commande, montant_commande, statut_commande, id_festivalier)</li>
+<li><b>PAIEMENT</b>(<u>id_paiement</u>, montant_paiement, moyen_paiement<sup>?</sup>, statut_paiement, date_paiement<sup>?</sup>, reference_paiement<sup>?</sup>, id_commande)</li>
+<li><b>RESERVATION</b>(<u>id_reservation</u>, numero_reservation, statut_reservation, date_annulation<sup>?</sup>, motif_annulation<sup>?</sup>, id_commande, id_festival)</li>
+<li><b>PASS</b>(<u>id_pass</u>, numero_pass, prix_paye, date_emission_pass, id_reservation)</li>
+<li><b>BON_HEBERGEMENT</b>(<u>id_bon</u>, numero_bon, date_arrivee, date_depart, prix_sejour, date_emission_bon, id_reservation, id_hebergement)</li>
+<li><b>NUITEE</b>(<u>id_hebergement</u>, <u>date_nuit</u>, id_bon)</li>
+<li><b>NOTE_FESTIVAL</b>(<u>id_festivalier</u>, <u>id_festival</u>, valeur_note_festival, commentaire_note_festival<sup>?</sup>, date_note_festival)</li>
+<li><b>NOTE_ETABLISSEMENT</b>(<u>id_festivalier</u>, <u>id_etablissement</u>, valeur_note_etab, commentaire_note_etab<sup>?</sup>, date_note_etab)</li>
+<li><b>NOTIFICATION</b>(<u>id_notification</u>, type_notification, message_notification, date_notification, lue, id_festivalier, id_reservation<sup>?</sup>)</li>
+</ul><p class='incl-title'><b>Dépendances d'inclusion (clés étrangères)</b></p><ul class='mld incl'>
+<li>DEPARTEMENT[id_region] ⊆ REGION[id_region]</li>
+<li>COMMUNE[code_departement] ⊆ DEPARTEMENT[code_departement]</li>
+<li>FESTIVAL[code_insee] ⊆ COMMUNE[code_insee]</li>
+<li>FESTIVAL[id_domaine] ⊆ DOMAINE[id_domaine]</li>
+<li>FESTIVAL[id_sous_domaine] ⊆ SOUS_DOMAINE[id_sous_domaine]</li>
+<li>FESTIVAL[id_periodicite] ⊆ PERIODICITE[id_periodicite]</li>
+<li>FESTIVAL[id_organisateur] ⊆ ORGANISATEUR[id_compte]</li>
+<li>FESTIVAL_COMMUNE[id_festival] ⊆ FESTIVAL[id_festival]</li>
+<li>FESTIVAL_COMMUNE[code_insee] ⊆ COMMUNE[code_insee]</li>
+<li>SOUTIEN[id_festival] ⊆ FESTIVAL[id_festival]</li>
+<li>SOUTIEN[id_organisme] ⊆ ORGANISME_SOUTIEN[id_organisme]</li>
+<li>ETABLISSEMENT[code_insee] ⊆ COMMUNE[code_insee]</li>
+<li>ETABLISSEMENT[code_typologie] ⊆ TYPOLOGIE_ETABLISSEMENT[code_typologie]</li>
+<li>ETABLISSEMENT[id_classement] ⊆ CLASSEMENT[id_classement]</li>
+<li>ETABLISSEMENT[id_hebergeur] ⊆ HEBERGEUR[id_compte]</li>
+<li>ORGANISATEUR[id_compte] ⊆ COMPTE_INTERNE[id_compte]</li>
+<li>HEBERGEUR[id_compte] ⊆ COMPTE_INTERNE[id_compte]</li>
+<li>HEBERGEMENT[id_etablissement] ⊆ ETABLISSEMENT[id_etablissement]</li>
+<li>HEBERGEMENT[id_type_hebergement] ⊆ TYPE_HEBERGEMENT[id_type_hebergement]</li>
+<li>HEBERGEMENT_OPTION[id_hebergement] ⊆ HEBERGEMENT[id_hebergement]</li>
+<li>HEBERGEMENT_OPTION[id_option] ⊆ OPTION_HEBERGEMENT[id_option]</li>
+<li>PHOTO[id_hebergement] ⊆ HEBERGEMENT[id_hebergement]</li>
+<li>PERIODE_DISPONIBILITE[id_hebergement] ⊆ HEBERGEMENT[id_hebergement]</li>
+<li>PANIER[id_festivalier] ⊆ FESTIVALIER[id_festivalier]</li>
+<li>SELECTION[id_panier] ⊆ PANIER[id_panier]</li>
+<li>SELECTION[id_festival] ⊆ FESTIVAL[id_festival]</li>
+<li>SELECTION_HEBERGEMENT[id_selection] ⊆ SELECTION[id_selection]</li>
+<li>SELECTION_HEBERGEMENT[id_hebergement] ⊆ HEBERGEMENT[id_hebergement]</li>
+<li>COMMANDE[id_festivalier] ⊆ FESTIVALIER[id_festivalier]</li>
+<li>PAIEMENT[id_commande] ⊆ COMMANDE[id_commande]</li>
+<li>RESERVATION[id_commande] ⊆ COMMANDE[id_commande]</li>
+<li>RESERVATION[id_festival] ⊆ FESTIVAL[id_festival]</li>
+<li>PASS[id_reservation] ⊆ RESERVATION[id_reservation]</li>
+<li>BON_HEBERGEMENT[id_reservation] ⊆ RESERVATION[id_reservation]</li>
+<li>BON_HEBERGEMENT[id_hebergement] ⊆ HEBERGEMENT[id_hebergement]</li>
+<li>NUITEE[id_hebergement] ⊆ HEBERGEMENT[id_hebergement]</li>
+<li>NUITEE[id_bon] ⊆ BON_HEBERGEMENT[id_bon]</li>
+<li>NOTE_FESTIVAL[id_festivalier] ⊆ FESTIVALIER[id_festivalier]</li>
+<li>NOTE_FESTIVAL[id_festival] ⊆ FESTIVAL[id_festival]</li>
+<li>NOTE_ETABLISSEMENT[id_festivalier] ⊆ FESTIVALIER[id_festivalier]</li>
+<li>NOTE_ETABLISSEMENT[id_etablissement] ⊆ ETABLISSEMENT[id_etablissement]</li>
+<li>NOTIFICATION[id_festivalier] ⊆ FESTIVALIER[id_festivalier]</li>
+<li>NOTIFICATION[id_reservation] ⊆ RESERVATION[id_reservation]</li>
+</ul>
+<h4>Vérification de la normalisation</h4>
+<ul>
+  <li><b>FN1</b> : aucun attribut non atomique (autres communes, soutiens, options, photos, hébergements d'une sélection → relations dédiées).</li>
+  <li><b>FN2</b> : dans les relations à clé composée (SOUTIEN, FESTIVAL_COMMUNE, HEBERGEMENT_OPTION, SELECTION_HEBERGEMENT, NUITEE, NOTE_*), les attributs non clés dépendent de toute la clé (DF élémentaires).</li>
+  <li><b>FN3</b> : pas de dépendance transitive (département et région via la commune, nature de l'unité via la typologie, festivalier d'une réservation via sa commande). Comme le rappelle le cours, un MCD respectant les règles de DF donne un MLD normalisé par les transformations ci-dessus. Exceptions : les trois attributs calculés, documentés.</li>
+</ul>
+</section>
+
+<section class="pagebreak">
+<h3>8.7 MPD Oracle et optimisation</h3>
+<p>Le MPD (<code>out/sql/mpd_oracle.sql</code>) traduit le MLD : types, <code>PRIMARY KEY</code>, <code>FOREIGN KEY</code>, contraintes nommées (<code>CONSTRAINT …</code>), <code>CHECK</code> pour les sous-types de domaines et les contraintes inter-attributs, identifiants <code>GENERATED BY DEFAULT AS IDENTITY</code>, colonne virtuelle <code>pass_disponibles</code>. Les tables sont créées dans l'ordre des dépendances (tri topologique).</p>
+<p class="box"><b>Vérification effectuée</b> sur H2 en mode Oracle : les 35 tables et leurs 144 contraintes se créent sans erreur ; avec le scénario de Jeff inséré, la base refuse un 3<sup>e</sup> Pass pour un quota de 2 et une baisse du quota sous les Pass réservés (<code>CK_FESTIVAL_4</code>), la réservation d'une nuit déjà prise (<code>PK_NUITEE</code>) et une mention « village » sur un camping (<code>CK_ETABLISSEMENT_5</code>). Le script reste à rejouer sur l'instance Oracle du projet.</p>
+<p>Extrait :</p>
+<pre>CREATE TABLE ETABLISSEMENT (
+  id_etablissement               NUMBER(10) GENERATED BY DEFAULT AS IDENTITY NOT NULL,
+  nom_commercial                 VARCHAR2(200) NOT NULL,
+  adresse_etablissement          VARCHAR2(300) NOT NULL,
+  code_postal_etablissement      VARCHAR2(5) NOT NULL,
+  site_internet                  VARCHAR2(300),
+  date_classement                DATE NOT NULL,
+  classement_proroge             NUMBER(1) DEFAULT 0 NOT NULL,
+  capacite_accueil               NUMBER(6) NOT NULL,
+  nb_unites                      NUMBER(5) NOT NULL,
+  categorie_camping              VARCHAR2(10),
+  mention_village                VARCHAR2(30),
+  type_sejour                    VARCHAR2(30),
+  code_insee                     CHAR(5) NOT NULL,
+  code_typologie                 VARCHAR2(20) NOT NULL,
+  id_classement                  NUMBER(10) NOT NULL,
+  id_hebergeur                   NUMBER(10),
+  latitude_etablissement         NUMBER(9,6),
+  longitude_etablissement        NUMBER(9,6),
+  note_moyenne_etablissement     NUMBER(3,2),
+  nb_notes_etablissement         NUMBER(8) DEFAULT 0 NOT NULL,
+  CONSTRAINT PK_ETABLISSEMENT PRIMARY KEY (id_etablissement),
+  CONSTRAINT FK_ETABLISSEMENT_CODE_INSEE FOREIGN KEY (code_insee) REFERENCES COMMUNE (code_insee),
+  CONSTRAINT FK_ETABLISSEMENT_CODE_TYPOLOGIE FOREIGN KEY (code_typologie) REFERENCES TYPOLOGIE_ETABLISSEMENT (code_typologie),
+  CONSTRAINT FK_ETABLISSEMENT_ID_CLASSEMENT FOREIGN KEY (id_classement) REFERENCES CLASSEMENT (id_classement),
+  CONSTRAINT FK_ETABLISSEMENT_ID_HEBERGEUR FOREIGN KEY (id_hebergeur) REFERENCES HEBERGEUR (id_compte),
+  CONSTRAINT CK_ETABLISSEMENT_1 CHECK (classement_proroge IN (0,1)),
+  CONSTRAINT CK_ETABLISSEMENT_2 CHECK (capacite_accueil &gt; 0),
+  CONSTRAINT CK_ETABLISSEMENT_3 CHECK (nb_unites &gt;= 0),
+  CONSTRAINT CK_ETABLISSEMENT_4 CHECK (categorie_camping IS NULL OR (code_typologie = &#x27;CAMPING&#x27; AND categorie_camping IN (&#x27;TOURISME&#x27;,&#x27;LOISIRS&#x27;))),
+  CONSTRAINT CK_ETABLISSEMENT_5 CHECK (mention_village IS NULL OR (code_typologie = &#x27;VILLAGE_VACANCES&#x27; AND mention_village IN (&#x27;NON&#x27;,&#x27;HEBERGEMENT_DISPERSE&#x27;,&#x27;HEBERGEMENT_LEGER&#x27;,&#x27;HEBERGEMENT_LEGER_ET_DISPERSE&#x27;))),
+  CONSTRAINT CK_ETABLISSEMENT_6 CHECK (type_sejour IS NULL OR (code_typologie = &#x27;VILLAGE_VACANCES&#x27; AND type_sejour IN (&#x27;FORMULE_PENSION&#x27;,&#x27;FORMULE_LOCATION&#x27;,&#x27;FORMULE_LOCATION_PENSION&#x27;))),
+  CONSTRAINT CK_ETABLISSEMENT_7 CHECK (note_moyenne_etablissement BETWEEN 1 AND 5),
+  CONSTRAINT CK_ETABLISSEMENT_8 CHECK (nb_notes_etablissement &gt;= 0),
+  CONSTRAINT UK_ETABLISSEMENT_9 UNIQUE (nom_commercial, adresse_etablissement, code_postal_etablissement)
+);
+CREATE TABLE NUITEE (
+  id_hebergement                 NUMBER(10) NOT NULL,
+  date_nuit                      DATE NOT NULL,
+  id_bon                         NUMBER(10) NOT NULL,
+  CONSTRAINT PK_NUITEE PRIMARY KEY (id_hebergement, date_nuit),
+  CONSTRAINT FK_NUITEE_ID_HEBERGEMENT FOREIGN KEY (id_hebergement) REFERENCES HEBERGEMENT (id_hebergement),
+  CONSTRAINT FK_NUITEE_1 FOREIGN KEY (id_bon, id_hebergement) REFERENCES BON_HEBERGEMENT (id_bon, id_hebergement) ON DELETE CASCADE
+);</pre>
+<h4>Index (cours : « Index », « Optimisation par index »)</h4>
+<p>Index B-tree secondaires sur <b>toutes les clés étrangères</b> (Oracle ne les crée pas ; sans eux une modification du parent verrouille la table fille), et index dédiés aux requêtes critiques :</p>
+<table class="small"><tr><th style="width:55%">Index</th><th>Requête servie</th></tr><tr><td><code>FESTIVAL (statut_festival, date_debut_festival, date_fin_festival)</code></td><td>Recherche de festivals par période</td></tr><tr><td><code>FESTIVAL (statut_festival, pass_disponibles)</code></td><td>Festivals ayant encore des Pass (colonne virtuelle)</td></tr><tr><td><code>FESTIVAL (id_domaine, id_sous_domaine)</code></td><td>Recherche par type / style</td></tr><tr><td><code>COMMUNE (latitude_commune, longitude_commune)</code></td><td>Pré-filtre géographique (boîte englobante)</td></tr><tr><td><code>ETABLISSEMENT (latitude_etablissement, longitude_etablissement)</code></td><td>Hébergements proches d&#x27;un festival</td></tr><tr><td><code>ETABLISSEMENT (code_typologie, id_classement)</code></td><td>Filtres typologie / classement</td></tr><tr><td><code>HEBERGEMENT (id_etablissement, statut_hebergement, capacite_hebergement)</code></td><td>Hébergements publiés d&#x27;un établissement</td></tr><tr><td><code>PERIODE_DISPONIBILITE (id_hebergement, date_debut_dispo, date_fin_dispo)</code></td><td>Disponibilité sur la période du festival</td></tr><tr><td><code>BON_HEBERGEMENT (id_hebergement, date_arrivee)</code></td><td>Retrait d&#x27;hébergement, statistiques hébergeur</td></tr><tr><td><code>RESERVATION (id_festival, statut_reservation)</code></td><td>Désactivation d&#x27;un festival, statistiques organisateur</td></tr><tr><td><code>COMMANDE (id_festivalier, date_commande)</code></td><td>Historique et chevauchements d&#x27;un festivalier</td></tr><tr><td><code>COMMANDE (date_commande)</code></td><td>Statistiques hebdomadaires</td></tr><tr><td><code>SELECTION (date_expiration)</code></td><td>Purge des sélections expirées</td></tr></table>
+<pre>-- Hébergements libres pour un festival (:d1, :d2 = dates du festival), proches, triés par note
+SELECT h.id_hebergement, h.libelle_hebergement, h.capacite_hebergement, h.prix_nuit,
+       e.nom_commercial, e.note_moyenne_etablissement
+  FROM HEBERGEMENT h JOIN ETABLISSEMENT e ON e.id_etablissement = h.id_etablissement
+ WHERE h.statut_hebergement = 'PUBLIE'
+   AND e.latitude_etablissement  BETWEEN :latMin AND :latMax
+   AND e.longitude_etablissement BETWEEN :lonMin AND :lonMax
+   AND EXISTS (SELECT 1 FROM PERIODE_DISPONIBILITE p WHERE p.id_hebergement = h.id_hebergement
+                AND p.date_debut_dispo &lt;= :d1 AND p.date_fin_dispo &gt;= :d2)
+   AND NOT EXISTS (SELECT 1 FROM NUITEE n WHERE n.id_hebergement = h.id_hebergement
+                AND n.date_nuit &gt;= :d1 AND n.date_nuit &lt; :d2)
+ ORDER BY e.note_moyenne_etablissement DESC NULLS LAST
+ FETCH FIRST 50 ROWS ONLY;</pre>
+</section>
+
+<section class="pagebreak">
+<h2>9. Transactions et concurrence déduites du modèle</h2>
+<pre>BEGIN  -- Oracle READ COMMITTED + verrous explicites, une seule transaction (@Transactional du service)
+ 1. Charger le panier ; ignorer les sélections expirées ; si vide → échec "panier vide"
+ 2. Pour chaque festival (trié par id_festival : ordre fixe = pas d'interblocage) :
+      UPDATE FESTIVAL SET nb_pass_reserves = nb_pass_reserves + :n
+       WHERE id_festival = :f AND statut_festival = 'ACTIF'
+      -- 0 ligne → festival indisponible ; violation du CHECK → plus assez de Pass
+ 3. Pour chaque hébergement (trié par id_hebergement) :
+      SELECT ... FROM HEBERGEMENT WHERE id_hebergement = :h AND statut_hebergement = 'PUBLIE' FOR UPDATE
+      vérifier qu'une PERIODE_DISPONIBILITE couvre [date_debut_festival, date_fin_festival[ ; vérifier CI1
+ 4. INSERT COMMANDE, RESERVATION(s), PASS (×n), BON_HEBERGEMENT(s)
+ 5. INSERT NUITEE pour chaque nuit   -- violation de PK = nuit prise par un concurrent
+ 6. INSERT PAIEMENT (statut_paiement = 'NON_GERE') ; supprimer le panier (cascade sur ses sélections)
+COMMIT -- toute erreur aux étapes 2 à 6 ⇒ ROLLBACK complet, message explicite au festivalier</pre>
+<p>Deux niveaux de protection : les verrous (<code>FOR UPDATE</code>, UPDATE conditionnel) sérialisent les validations concurrentes sur les mêmes ressources sans bloquer les autres ; les contraintes déclaratives (CHECK quota, PK de NUITEE) garantissent la cohérence même si un chemin de code oublie un contrôle. <code>SERIALIZABLE</code> est déconseillé sous Oracle (ORA-08177 sous charge). En BPMN, cette transaction correspond au sous-processus « Transaction » de « Valider un panier » (§ 3.4).</p>
+<p><b>Test attendu</b> : N threads valident simultanément le même hébergement / festival → exactement un succès, les autres échouent proprement, base cohérente (scénario 3).</p>
+
+<h2>10. Points à faire valider par les enseignants</h2>
+<ol>
+  <li><b>JPA ou R2DBC ?</b> Le modèle fonctionne dans les deux cas ; préciser lequel est attendu.</li>
+  <li><b>Festival d'un seul jour</b> (201 cas) : une nuit réservée ? (hypothèse : oui).</li>
+  <li><b>Panier multi-festivals</b> : validation tout ou rien (hypothèse retenue) ou partielle ?</li>
+  <li><b>Hébergement = unité unique</b> (hypothèse) plutôt qu'un type avec stock.</li>
+  <li><b>Festivals de 15 jours ou plus</b> (442) : hébergement imposé sur toute la durée, ou exclusion ?</li>
+  <li><b>Géocodage des établissements</b> et référentiel communes externe : acceptés ?</li>
+  <li><b>Volumétrie</b> : quota moyen ≈ 100 Pass nécessaire pour atteindre 100 000 réservations (MOD).</li>
+  <li><b>Vocabulaire</b> ajouté : Commande, Sélection, Nuitée, Compte interne.</li>
+  <li><b>Spécialisations</b> : comptes non exclusifs (T, transformation T1) et CAMPING / VILLAGE_VACANCES (X, T3) conformes aux attentes ?</li>
+  <li><b>Dates du sujet</b> : « du 16/10/2026 au 22/01/2026 » → 22/01/2027.</li>
+</ol>
+<div class="box">Prochaines étapes : (1) faire valider ce modèle à la revue du 21/10 ; (2) écrire les textes structurés puis les BPMN (Camunda) des deux processus ; (3) lancer immédiatement le nettoyage/import (§ 6) ; (4) générer les données synthétiques selon la volumétrie du MOD.</div>
+</section>
+
+</body>
+</html>

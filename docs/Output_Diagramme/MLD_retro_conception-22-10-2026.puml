@@ -1,0 +1,139 @@
+@startuml MLD_retro_conception
+' =============================================================================
+'  FestiBed - Groupe 3 - MLD issu de MCD_retro_conception_Festibed.loo
+'  (données sources : panorama des festivals + hébergements classés)
+'  Clé primaire soulignée, # clé étrangère, [0..1] = peut être NULL
+'  Héritages :
+'   - Etablissement : une table par sous-type, clé primaire = clé étrangère
+'     vers ETABLISSEMENT (JOINED).
+'   - Festival (domaines / compléments de domaine) : sous-types sans attribut
+'     ni association propre -> remontés dans FESTIVAL sous forme d'attributs
+'     (domaine, complementDomaine).
+' =============================================================================
+hide circle
+hide methods
+hide stereotype
+skinparam classAttributeIconSize 0
+skinparam linetype polyline
+skinparam nodesep 40
+skinparam ranksep 50
+skinparam defaultFontSize 16
+skinparam class {
+  FontSize 18
+  FontStyle bold
+  AttributeFontSize 16
+  BackgroundColor #FFFDE7
+  BorderColor #555555
+  ArrowColor black
+}
+
+' ===== Géographie =====
+entity "REGION" as Region {
+  <u>idRegion</u> : INT
+  --
+  nomRegion : VARCHAR(30)
+}
+
+entity "DEPARTEMENT" as Departement {
+  <u>codeDepartement</u> : VARCHAR(3)
+  --
+  nomDepartement : VARCHAR(50)
+  #idRegion : INT
+}
+
+entity "COMMUNE" as Commune {
+  <u>codeInsee</u> : VARCHAR(5)
+  --
+  nomCommune : VARCHAR(40)
+  latitude : DECIMAL(12,9)
+  longitude : DECIMAL(12,9)
+  #codeDepartement : VARCHAR(3)
+}
+
+' ===== Festivals =====
+entity "FESTIVAL" as Festival {
+  <u>idFestival</u> : INT
+  --
+  nomFestival : VARCHAR(100)
+  domaine : VARCHAR(40)
+  complementDomaine : VARCHAR(70) [0..1]
+  periodicite : VARCHAR(30) [0..1]
+  moisDebut : BYTE
+  siteWebFestival : VARCHAR(150)
+  numIdentification : VARCHAR(50)
+  dateCreation : DATE
+  codePostalFestival : VARCHAR(5)
+  dateDebutAncien : DATE
+  dateFinAncien : DATE
+  #codeInsee : VARCHAR(5)
+}
+
+' ===== Établissements =====
+entity "ETABLISSEMENT" as Etablissement {
+  <u>idEtablissement</u> : INT
+  --
+  nomCommercial : VARCHAR(80)
+  adresse : VARCHAR(80)
+  codePostalEtablissement : VARCHAR(5)
+  nomCommuneEtablissement : VARCHAR(50)
+  siteWebEtablissement : VARCHAR(350)
+  capaciteAccueil : INT
+  classement : VARCHAR(50)
+  dateClassement : DATE
+  classementProroge : LOGICAL
+}
+
+entity "HOTEL_DE_TOURISME" as Hotel {
+  <u>#idEtablissement</u> : INT
+  --
+  nbChambresHotel : INT
+}
+
+entity "AUBERGE_COLLECTIVE" as Auberge {
+  <u>#idEtablissement</u> : INT
+  --
+  nbChambresAuberge : INT
+}
+
+entity "CAMPING" as Camping {
+  <u>#idEtablissement</u> : INT
+  --
+  categorie : VARCHAR(10)
+  nbEmplacementsCamping : INT
+}
+
+entity "PARC_RESIDENTIEL_DE_LOISIRS" as Parc {
+  <u>#idEtablissement</u> : INT
+  --
+  nbEmplacementsParc : INT
+}
+
+entity "VILLAGE_DE_VACANCES" as Village {
+  <u>#idEtablissement</u> : INT
+  --
+  mention : VARCHAR(30)
+  typeSejour : VARCHAR(30)
+  nbLogements : INT
+}
+
+entity "RESIDENCE_DE_TOURISME" as Residence {
+  <u>#idEtablissement</u> : INT
+  --
+  nbUnitesHabitation : INT
+}
+
+' ===== Clés étrangères =====
+' Écrites « table du dessus -- table du dessous » pour fixer la mise en page.
+Festival -- Commune
+Commune -- Departement
+Departement -- Region
+
+Etablissement -- Hotel
+Etablissement -- Auberge
+Etablissement -- Camping
+Etablissement -- Parc
+Etablissement -- Village
+Etablissement -- Residence
+
+Festival -[hidden]right- Etablissement
+@enduml
