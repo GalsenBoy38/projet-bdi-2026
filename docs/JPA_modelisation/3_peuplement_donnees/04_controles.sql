@@ -44,7 +44,16 @@ WHERE (SELECT COUNT(*) FROM HOTEL_DE_TOURISME x WHERE x.idEtablissement = e.idEt
     + (SELECT COUNT(*) FROM CAMPING x WHERE x.idEtablissement = e.idEtablissement)
     + (SELECT COUNT(*) FROM PARC_RESIDENTIEL_DE_LOISIRS x WHERE x.idEtablissement = e.idEtablissement)
     + (SELECT COUNT(*) FROM VILLAGE_DE_VACANCES x WHERE x.idEtablissement = e.idEtablissement)
-    + (SELECT COUNT(*) FROM RESIDENCE_DE_TOURISME x WHERE x.idEtablissement = e.idEtablissement) <> 1;
+    + (SELECT COUNT(*) FROM RESIDENCE_DE_TOURISME x WHERE x.idEtablissement = e.idEtablissement)
+    + (SELECT COUNT(*) FROM ETABLISSEMENT_NON_CLASSE x WHERE x.idEtablissement = e.idEtablissement) <> 1;
+
+-- 7 bis. Classement renseigné pour les classés, NULL pour les non classés (OSM)
+SELECT 'anomalies classement' AS controle, COUNT(*) AS valeur
+FROM ETABLISSEMENT e
+WHERE (e.classement IS NULL
+       AND NOT EXISTS (SELECT 1 FROM ETABLISSEMENT_NON_CLASSE x WHERE x.idEtablissement = e.idEtablissement))
+   OR (e.classement IS NOT NULL
+       AND EXISTS (SELECT 1 FROM ETABLISSEMENT_NON_CLASSE x WHERE x.idEtablissement = e.idEtablissement));
 
 -- 8. Chaque utilisateur a exactement un rôle
 SELECT 'anomalies role utilisateur' AS controle, COUNT(*) AS valeur
@@ -67,3 +76,10 @@ FROM FESTIVAL a JOIN FESTIVAL b ON a.idFestival < b.idFestival
 -- 11. Établissements non géocodés (information)
 SELECT 'etablissements sans coordonnees' AS controle, COUNT(*) AS valeur
 FROM ETABLISSEMENT WHERE latitudeEtablissement IS NULL;
+
+-- 12. Apport d'OpenStreetMap (information)
+SELECT 'etablissements non classes (OSM)' AS controle, COUNT(*) AS valeur FROM ETABLISSEMENT_NON_CLASSE;
+SELECT 'etablissements classes rapproches d OSM' AS controle, COUNT(*) AS valeur
+FROM ETABLISSEMENT WHERE classement IS NOT NULL AND osmRef IS NOT NULL;
+SELECT 'etablissements avec telephone' AS controle, COUNT(*) AS valeur
+FROM ETABLISSEMENT WHERE telephoneEtablissement IS NOT NULL;

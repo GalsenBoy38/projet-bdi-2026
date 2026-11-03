@@ -154,7 +154,10 @@ def jeu_essai():
     etab_dept = {}
     for e in T["ETABLISSEMENT"]:
         etab_dept[e["idEtablissement"]] = e["codePostalEtablissement"][:2]
-    H |= set([k for k, _ in libres.most_common() if etab_dept[k[0]] in ("71", "73")][:40])
+    non_classes = {x["idEtablissement"] for x in T["ETABLISSEMENT_NON_CLASSE"]}
+    proches = [k for k, _ in libres.most_common() if etab_dept[k[0]] in ("71", "73")]
+    H |= set([k for k in proches if k[0] not in non_classes][:30])
+    H |= set([k for k in proches if k[0] in non_classes][:20])      # chambres d'hôtes, gîtes… (OSM)
     E = {k[0] for k in H}
 
     nuitees = []
@@ -197,7 +200,7 @@ def jeu_essai():
     orga_ids = {f["idOrganisateur"] for f in festivals if f["idOrganisateur"]} | {"1"}
     heb_ids = {e["idUtilisateur"] for e in etabs if e["idUtilisateur"]} | {str(len(T["ORGANISATEUR"]) + 1)}
     tous_ids = festivaliers_ids | orga_ids | heb_ids
-    communes = {f["codeInsee"] for f in festivals}
+    communes = {f["codeInsee"] for f in festivals} | {e["codeInsee"] for e in etabs if e["codeInsee"]}
     depts = {comm[c]["codeDepartement"] for c in communes}
     regions = {d["idRegion"] for d in T["DEPARTEMENT"] if d["codeDepartement"] in depts}
 
@@ -221,7 +224,7 @@ def jeu_essai():
         "NOTATION_FESTIVAL": notes_f, "NOTATION_ETABLISSEMENT": notes_e,
     }
     for st in ("HOTEL_DE_TOURISME", "AUBERGE_COLLECTIVE", "CAMPING", "PARC_RESIDENTIEL_DE_LOISIRS",
-               "VILLAGE_DE_VACANCES", "RESIDENCE_DE_TOURISME"):
+               "VILLAGE_DE_VACANCES", "RESIDENCE_DE_TOURISME", "ETABLISSEMENT_NON_CLASSE"):
         J[st] = [x for x in T[st] if x["idEtablissement"] in E]
     return J, sc, fest
 

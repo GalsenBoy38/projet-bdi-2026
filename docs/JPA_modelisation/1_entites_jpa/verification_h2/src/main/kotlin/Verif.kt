@@ -31,7 +31,8 @@ val CLASSES = listOf(
     HebergeurEntity::class, RegionEntity::class, DepartementEntity::class, CommuneEntity::class, FestivalEntity::class,
     NotationFestivalEntity::class, EtablissementEntity::class, HotelDeTourismeEntity::class, AubergeCollectiveEntity::class,
     CampingEntity::class, ParcResidentielDeLoisirsEntity::class, VillageDeVacancesEntity::class,
-    ResidenceDeTourismeEntity::class, NotationEtablissementEntity::class, HebergementEntity::class,
+    ResidenceDeTourismeEntity::class, EtablissementNonClasseEntity::class, NotationEtablissementEntity::class,
+    HebergementEntity::class,
     OptionHebergementEntity::class, PhotoHebergementEntity::class, NuiteeEntity::class,
     ReservationEntity::class, SelectionEntity::class, PassEntity::class, PaiementEntity::class,
 )
@@ -99,6 +100,9 @@ fun main(args: Array<String>) {
         check(f.commune.departement.region.nomRegion == "Auvergne-Rhône-Alpes", "Musilac -> ${f.commune.nomCommune} -> ${f.commune.departement.nomDepartement} -> ${f.commune.departement.region.nomRegion}, ${f.passDisponibles} Pass disponibles")
         val sierroz = s.createQuery("from EtablissementEntity e where e.nomCommercial = 'CAMPING INTERNATIONAL DU SIERROZ'", EtablissementEntity::class.java).singleResult
         check(sierroz is CampingEntity && sierroz.categorie != null, "polymorphisme JOINED : ${sierroz::class.simpleName}, catégorie ${(sierroz as CampingEntity).categorie}, ${sierroz.latitudeEtablissement}/${sierroz.longitudeEtablissement}")
+        check(sierroz.estClasse && sierroz.commune != null, "établissement classé -> commune ${sierroz.commune?.nomCommune} (${sierroz.commune?.codeInsee}), OSM ${sierroz.osmRef}, tél. ${sierroz.telephoneEtablissement}")
+        val nonClasse = s.createQuery("from EtablissementNonClasseEntity e join fetch e.commune", EtablissementNonClasseEntity::class.java).setMaxResults(1).singleResult
+        check(!nonClasse.estClasse && nonClasse.osmRef != null, "établissement non classé (OSM) : ${nonClasse.nomCommercial}, ${nonClasse.typeNonClasse}, ${nonClasse.commune?.nomCommune}, ${nonClasse.osmRef}")
         val h = s.find(HebergementEntity::class.java, HebergementId(sierroz.id, "H001"))
         check(h != null && h.capaciteHebergement == 2, "Hebergement par clé composée : $h, options=${h?.options?.size}, photos=${h?.photos?.size}")
         val nuits = s.createQuery("from NuiteeEntity n where n.hebergement = :h and n.selection is null order by n.id.dateNuitee", NuiteeEntity::class.java)

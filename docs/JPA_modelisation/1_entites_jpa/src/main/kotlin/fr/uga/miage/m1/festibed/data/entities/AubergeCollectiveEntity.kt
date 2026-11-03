@@ -17,7 +17,9 @@ class AubergeCollectiveEntity(
     adresse: String,
     codePostalEtablissement: String,
     nomCommuneEtablissement: String,
+    commune: CommuneEntity? = null,
     telephoneEtablissement: String? = null,
+    emailEtablissement: String? = null,
     siteWebEtablissement: String? = null,
     capaciteAccueil: Int,
     classement: Classement,
@@ -25,12 +27,13 @@ class AubergeCollectiveEntity(
     classementProroge: Boolean = false,
     latitudeEtablissement: BigDecimal? = null,
     longitudeEtablissement: BigDecimal? = null,
+    osmRef: String? = null,
     hebergeur: HebergeurEntity? = null,
 
     @Column(name = "nbChambresAuberge", nullable = false)
     var nbChambresAuberge: Int,
 ) : EtablissementEntity(
-    id, nomCommercial, adresse, codePostalEtablissement, nomCommuneEtablissement, telephoneEtablissement,
-    siteWebEtablissement, capaciteAccueil, classement, dateClassement, classementProroge,
-    latitudeEtablissement, longitudeEtablissement, hebergeur,
+    id, nomCommercial, adresse, codePostalEtablissement, nomCommuneEtablissement, commune, telephoneEtablissement,
+    emailEtablissement, siteWebEtablissement, capaciteAccueil, classement, dateClassement, classementProroge,
+    latitudeEtablissement, longitudeEtablissement, osmRef, hebergeur,
 )

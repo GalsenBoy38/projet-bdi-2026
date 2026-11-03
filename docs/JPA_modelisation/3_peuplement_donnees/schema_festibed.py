@@ -1,10 +1,12 @@
 """FestiBed - Groupe 3 - Schéma relationnel (source unique).
 
 Ce module décrit une seule fois les tables du modèle JPA (MLD GLOBAL FINAL du 22/10/2026
-+ améliorations JPA). Tout le reste en est généré, ce qui évite les incohérences :
++ améliorations JPA + intégration OpenStreetMap du 03/11/2026). Tout le reste en est généré,
+ce qui évite les incohérences :
   - le DDL Oracle et le DDL H2 (01_schema_oracle.sql / 01_schema_h2.sql),
   - les en-têtes des CSV de peuplement et les fichiers de contrôle SQL*Loader,
-  - les gabarits Excel et la conversion Excel -> INSERT.
+  - les gabarits Excel et la conversion Excel -> INSERT,
+  - le MLD PlantUML (docs/Output_Diagramme/MLD_GLOBAL_FINAL.puml, voir generer_mld.py).
 
 Types abstraits :
   id        identifiant technique   Long        Oracle NUMBER(19)       H2 BIGINT
@@ -36,7 +38,10 @@ ENUMS = {
     "MentionVillage": ["NON", "HEBERGEMENT_DISPERSE", "HEBERGEMENT_LEGER",
                        "HEBERGEMENT_LEGER_ET_DISPERSE"],
     "TypeSejour": ["FORMULE_PENSION", "FORMULE_LOCATION", "FORMULE_LOCATION_PENSION"],
-    "TypeHebergement": ["CHAMBRE_SIMPLE", "CHAMBRE_DOUBLE", "EMPLACEMENT_DE_CAMPING", "BUNGALOW"],
+    "TypeNonClasse": ["HOTEL", "MOTEL", "CHAMBRE_D_HOTES", "GITE_CHALET", "APPARTEMENT",
+                      "AUBERGE_DE_JEUNESSE", "CAMPING", "AIRE_DE_CAMPING_CAR", "REFUGE_GARDE"],
+    "TypeHebergement": ["CHAMBRE_SIMPLE", "CHAMBRE_DOUBLE", "EMPLACEMENT_DE_CAMPING", "BUNGALOW",
+                        "LOGEMENT_ENTIER", "LIT_EN_DORTOIR"],
     "StatutSelection": ["CONFIRMEE", "ANNULEE"],
     "StatutPaiement": ["NON_GERE", "EN_ATTENTE", "ACCEPTE", "REFUSE", "REMBOURSE"],
 }
@@ -106,19 +111,28 @@ TABLES = [
         index=[["dateDebutFestival", "dateFinFestival"], ["codeInsee"], ["domaine"], ["idOrganisateur"]],
         seq="SEQ_FESTIVAL"),
     Table("ETABLISSEMENT", MIX, [
-        C("idEtablissement", "id"), C("nomCommercial", "str(80)"), C("adresse", "str(80)"),
+        C("idEtablissement", "id"), C("nomCommercial", "str(100)"),
+        C("adresse", "str(80)", True, desc="Classés : CSV ; OSM : géocodage inverse BAN (NULL si aucune adresse proche)"),
         C("codePostalEtablissement", "str(5)"), C("nomCommuneEtablissement", "str(50)"),
-        C("telephoneEtablissement", "str(30)", True, desc="ABSENT de la source"),
-        C("siteWebEtablissement", "str(350)", True), C("capaciteAccueil", "int"),
-        C("classement", "str(50)", enum="Classement"), C("dateClassement", "date"),
-        C("classementProroge", "bool"),
-        C("latitudeEtablissement", "dec(12,9)", True, desc="Géocodage BAN"),
-        C("longitudeEtablissement", "dec(12,9)", True, desc="Géocodage BAN"),
+        C("codeInsee", "str(5)", True, desc="OSM « Code Commune » ou code INSEE renvoyé par la BAN"),
+        C("telephoneEtablissement", "str(30)", True, desc="OSM (premier numéro)"),
+        C("emailEtablissement", "str(150)", True, desc="OSM (premier e-mail)"),
+        C("siteWebEtablissement", "str(350)", True), C("capaciteAccueil", "int",
+                                                        desc="Non classés sans capacité OSM : estimation (voir l'étude)"),
+        C("classement", "str(50)", True, enum="Classement", desc="NULL = établissement non classé (OSM)"),
+        C("dateClassement", "date", True), C("classementProroge", "bool", True),
+        C("latitudeEtablissement", "dec(12,9)", True, desc="Point OSM, sinon géocodage BAN"),
+        C("longitudeEtablissement", "dec(12,9)", True, desc="Point OSM, sinon géocodage BAN"),
+        C("osmRef", "str(25)", True, desc="Objet OpenStreetMap rapproché (« node/123 », « relation/456 »)"),
         C("noteMoyenne", "dec(3,2)", True, desc="Dénormalisé : moyenne des notations"),
         C("nbNotes", "int", defaut="0"), C("idUtilisateur", "id", True)],
-        pk=["idEtablissement"], fk=[(["idUtilisateur"], "HEBERGEUR", ["idUtilisateur"])],
-        checks=["capaciteAccueil > 0", "noteMoyenne BETWEEN 1 AND 5", "nbNotes >= 0"],
-        index=[["latitudeEtablissement", "longitudeEtablissement"], ["codePostalEtablissement"], ["idUtilisateur"]],
+        pk=["idEtablissement"], uk=[["osmRef"]],
+        fk=[(["codeInsee"], "COMMUNE", ["codeInsee"]), (["idUtilisateur"], "HEBERGEUR", ["idUtilisateur"])],
+        checks=["capaciteAccueil > 0", "noteMoyenne BETWEEN 1 AND 5", "nbNotes >= 0",
+                "(classement IS NULL AND dateClassement IS NULL AND classementProroge IS NULL) OR "
+                "(classement IS NOT NULL AND dateClassement IS NOT NULL AND classementProroge IS NOT NULL)"],
+        index=[["latitudeEtablissement", "longitudeEtablissement"], ["codePostalEtablissement"], ["idUtilisateur"],
+               ["codeInsee"]],
         seq="SEQ_ETABLISSEMENT"),
     Table("HOTEL_DE_TOURISME", PUB, [C("idEtablissement", "id"), C("nbChambresHotel", "int")],
           pk=["idEtablissement"], fk=[(["idEtablissement"], "ETABLISSEMENT", ["idEtablissement"])]),
@@ -134,6 +148,14 @@ TABLES = [
           pk=["idEtablissement"], fk=[(["idEtablissement"], "ETABLISSEMENT", ["idEtablissement"])]),
     Table("RESIDENCE_DE_TOURISME", PUB, [C("idEtablissement", "id"), C("nbUnitesHabitation", "int")],
           pk=["idEtablissement"], fk=[(["idEtablissement"], "ETABLISSEMENT", ["idEtablissement"])]),
+    Table("ETABLISSEMENT_NON_CLASSE", PUB, [
+        C("idEtablissement", "id"), C("typeNonClasse", "str(30)", enum="TypeNonClasse", desc="OSM « Type »"),
+        C("nbEtoilesDeclarees", "num(1)", True, desc="OSM « Nombre étoiles » : déclaratif, pas un classement officiel"),
+        C("nbChambres", "int", True), C("nbLits", "int", True)],
+        pk=["idEtablissement"], fk=[(["idEtablissement"], "ETABLISSEMENT", ["idEtablissement"])],
+        checks=["nbEtoilesDeclarees BETWEEN 1 AND 5", "nbChambres > 0", "nbLits > 0"],
+        index=[["typeNonClasse"]],
+        desc="Hébergement touristique recensé par OpenStreetMap mais absent de la liste des établissements classés"),
     Table("OPTION_HEBERGEMENT", SYN, [C("idOptionHebergement", "id"), C("libelleOptionHebergement", "str(50)")],
           pk=["idOptionHebergement"], uk=[["libelleOptionHebergement"]], seq="SEQ_OPTION_HEBERGEMENT"),
     Table("HEBERGEMENT", SYN, [

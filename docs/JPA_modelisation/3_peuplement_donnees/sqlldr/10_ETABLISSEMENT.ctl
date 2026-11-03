@@ -6,11 +6,13 @@ APPEND INTO TABLE ETABLISSEMENT
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
   idEtablissement,
-  nomCommercial CHAR(320),
+  nomCommercial CHAR(400),
   adresse CHAR(320),
   codePostalEtablissement CHAR(20),
   nomCommuneEtablissement CHAR(200),
+  codeInsee CHAR(20),
   telephoneEtablissement CHAR(120),
+  emailEtablissement CHAR(600),
   siteWebEtablissement CHAR(1400),
   capaciteAccueil,
   classement CHAR(200),
@@ -18,6 +20,7 @@ FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
   classementProroge,
   latitudeEtablissement,
   longitudeEtablissement,
+  osmRef CHAR(100),
   noteMoyenne,
   nbNotes,
   idUtilisateur

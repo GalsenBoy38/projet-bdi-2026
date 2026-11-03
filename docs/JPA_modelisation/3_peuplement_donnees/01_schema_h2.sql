@@ -110,27 +110,33 @@ CREATE TABLE FESTIVAL (
 
 CREATE TABLE ETABLISSEMENT (
   idEtablissement                  BIGINT NOT NULL,
-  nomCommercial                    VARCHAR(80) NOT NULL,
-  adresse                          VARCHAR(80) NOT NULL,
+  nomCommercial                    VARCHAR(100) NOT NULL,
+  adresse                          VARCHAR(80),
   codePostalEtablissement          VARCHAR(5) NOT NULL,
   nomCommuneEtablissement          VARCHAR(50) NOT NULL,
+  codeInsee                        VARCHAR(5),
   telephoneEtablissement           VARCHAR(30),
+  emailEtablissement               VARCHAR(150),
   siteWebEtablissement             VARCHAR(350),
   capaciteAccueil                  INTEGER NOT NULL,
-  classement                       VARCHAR(50) NOT NULL,
-  dateClassement                   DATE NOT NULL,
-  classementProroge                BOOLEAN NOT NULL,
+  classement                       VARCHAR(50),
+  dateClassement                   DATE,
+  classementProroge                BOOLEAN,
   latitudeEtablissement            NUMERIC(12,9),
   longitudeEtablissement           NUMERIC(12,9),
+  osmRef                           VARCHAR(25),
   noteMoyenne                      NUMERIC(3,2),
   nbNotes                          INTEGER DEFAULT 0 NOT NULL,
   idUtilisateur                    BIGINT,
   CONSTRAINT PK_ETABLISSEMENT PRIMARY KEY (idEtablissement),
-  CONSTRAINT FK_ETABLISSEMENT_1 FOREIGN KEY (idUtilisateur) REFERENCES HEBERGEUR (idUtilisateur),
+  CONSTRAINT UK_ETABLISSEMENT_1 UNIQUE (osmRef),
+  CONSTRAINT FK_ETABLISSEMENT_1 FOREIGN KEY (codeInsee) REFERENCES COMMUNE (codeInsee),
+  CONSTRAINT FK_ETABLISSEMENT_2 FOREIGN KEY (idUtilisateur) REFERENCES HEBERGEUR (idUtilisateur),
   CONSTRAINT CK_ETABLISSEMENT_1 CHECK (capaciteAccueil > 0),
   CONSTRAINT CK_ETABLISSEMENT_2 CHECK (noteMoyenne BETWEEN 1 AND 5),
   CONSTRAINT CK_ETABLISSEMENT_3 CHECK (nbNotes >= 0),
-  CONSTRAINT CK_ETABLISSEMENT_4 CHECK (classement IN ('UNE_ETOILE', 'DEUX_ETOILES', 'TROIS_ETOILES', 'QUATRE_ETOILES', 'CINQ_ETOILES', 'AUBERGE_COLLECTIVE', 'AIRE_NATURELLE'))
+  CONSTRAINT CK_ETABLISSEMENT_4 CHECK ((classement IS NULL AND dateClassement IS NULL AND classementProroge IS NULL) OR (classement IS NOT NULL AND dateClassement IS NOT NULL AND classementProroge IS NOT NULL)),
+  CONSTRAINT CK_ETABLISSEMENT_5 CHECK (classement IN ('UNE_ETOILE', 'DEUX_ETOILES', 'TROIS_ETOILES', 'QUATRE_ETOILES', 'CINQ_ETOILES', 'AUBERGE_COLLECTIVE', 'AIRE_NATURELLE'))
 );
 
 CREATE TABLE HOTEL_DE_TOURISME (
@@ -181,6 +187,20 @@ CREATE TABLE RESIDENCE_DE_TOURISME (
   CONSTRAINT FK_RESIDENCE_DE_TOURISME_1 FOREIGN KEY (idEtablissement) REFERENCES ETABLISSEMENT (idEtablissement)
 );
 
+CREATE TABLE ETABLISSEMENT_NON_CLASSE (
+  idEtablissement                  BIGINT NOT NULL,
+  typeNonClasse                    VARCHAR(30) NOT NULL,
+  nbEtoilesDeclarees               INTEGER,
+  nbChambres                       INTEGER,
+  nbLits                           INTEGER,
+  CONSTRAINT PK_ETABLISSEMENT_NON_CLASSE PRIMARY KEY (idEtablissement),
+  CONSTRAINT FK_ETABLISSEMENT_NON_CLASSE_1 FOREIGN KEY (idEtablissement) REFERENCES ETABLISSEMENT (idEtablissement),
+  CONSTRAINT CK_ETABLISSEMENT_NON_CLASSE_1 CHECK (nbEtoilesDeclarees BETWEEN 1 AND 5),
+  CONSTRAINT CK_ETABLISSEMENT_NON_CLASSE_2 CHECK (nbChambres > 0),
+  CONSTRAINT CK_ETABLISSEMENT_NON_CLASSE_3 CHECK (nbLits > 0),
+  CONSTRAINT CK_ETABLISSEMENT_NON_CLASSE_4 CHECK (typeNonClasse IN ('HOTEL', 'MOTEL', 'CHAMBRE_D_HOTES', 'GITE_CHALET', 'APPARTEMENT', 'AUBERGE_DE_JEUNESSE', 'CAMPING', 'AIRE_DE_CAMPING_CAR', 'REFUGE_GARDE'))
+);
+
 CREATE TABLE OPTION_HEBERGEMENT (
   idOptionHebergement              BIGINT NOT NULL,
   libelleOptionHebergement         VARCHAR(50) NOT NULL,
@@ -200,7 +220,7 @@ CREATE TABLE HEBERGEMENT (
   CONSTRAINT FK_HEBERGEMENT_1 FOREIGN KEY (idEtablissement) REFERENCES ETABLISSEMENT (idEtablissement),
   CONSTRAINT CK_HEBERGEMENT_1 CHECK (capaciteHebergement > 0),
   CONSTRAINT CK_HEBERGEMENT_2 CHECK (prixNuitHebergement >= 0),
-  CONSTRAINT CK_HEBERGEMENT_3 CHECK (typeHebergement IN ('CHAMBRE_SIMPLE', 'CHAMBRE_DOUBLE', 'EMPLACEMENT_DE_CAMPING', 'BUNGALOW'))
+  CONSTRAINT CK_HEBERGEMENT_3 CHECK (typeHebergement IN ('CHAMBRE_SIMPLE', 'CHAMBRE_DOUBLE', 'EMPLACEMENT_DE_CAMPING', 'BUNGALOW', 'LOGEMENT_ENTIER', 'LIT_EN_DORTOIR'))
 );
 
 CREATE TABLE PHOTO_HEBERGEMENT (
@@ -311,6 +331,8 @@ CREATE INDEX IX_FESTIVAL_4 ON FESTIVAL (idOrganisateur);
 CREATE INDEX IX_ETABLISSEMENT_1 ON ETABLISSEMENT (latitudeEtablissement, longitudeEtablissement);
 CREATE INDEX IX_ETABLISSEMENT_2 ON ETABLISSEMENT (codePostalEtablissement);
 CREATE INDEX IX_ETABLISSEMENT_3 ON ETABLISSEMENT (idUtilisateur);
+CREATE INDEX IX_ETABLISSEMENT_4 ON ETABLISSEMENT (codeInsee);
+CREATE INDEX IX_ETABLISSEMENT_NON_CLASSE_1 ON ETABLISSEMENT_NON_CLASSE (typeNonClasse);
 CREATE INDEX IX_PHOTO_HEBERGEMENT_1 ON PHOTO_HEBERGEMENT (idEtablissement, numeroHebergement);
 CREATE INDEX IX_EQUIPEMENT_1 ON EQUIPEMENT (idOptionHebergement);
 CREATE INDEX IX_RESERVATION_1 ON RESERVATION (idUtilisateur);

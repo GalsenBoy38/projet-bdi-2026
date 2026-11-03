@@ -16,25 +16,32 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import java.math.BigDecimal
 import java.time.LocalDate
 
 /**
- * Établissement d'hébergement classé (jeu public). Héritage JOINED : une table par typologie.
+ * Établissement d'hébergement. Héritage JOINED : une table par typologie officielle (établissements
+ * classés) + ETABLISSEMENT_NON_CLASSE (lieux recensés par OpenStreetMap).
  * Classe abstraite (pas data class) : Kotlin interdit d'hériter d'une data class.
  *
- * Performance : une requête polymorphe joint les 6 sous-tables ; pour la recherche d'hébergements,
+ * classement, dateClassement et classementProroge sont tous trois renseignés (classé) ou tous trois NULL
+ * (non classé) : contrainte CHECK du schéma. Les sous-classes classées les exigent dans leur constructeur.
+ *
+ * Performance : une requête polymorphe joint les 7 sous-tables ; pour la recherche d'hébergements,
  * HebergementRepository.rechercherDisponibles utilise une projection DTO.
  */
 @Entity
 @Table(
     name = "ETABLISSEMENT",
+    uniqueConstraints = [UniqueConstraint(name = "UK_ETABLISSEMENT_1", columnNames = ["osmRef"])],
     indexes = [
         Index(name = "IX_ETABLISSEMENT_1", columnList = "latitudeEtablissement, longitudeEtablissement"),
         Index(name = "IX_ETABLISSEMENT_2", columnList = "codePostalEtablissement"),
         Index(name = "IX_ETABLISSEMENT_3", columnList = "idUtilisateur"),
+        Index(name = "IX_ETABLISSEMENT_4", columnList = "codeInsee"),
     ],
 )
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -45,11 +52,12 @@ abstract class EtablissementEntity(
     @Column(name = "idEtablissement", nullable = false)
     val id: Long? = null,
 
-    @Column(name = "nomCommercial", nullable = false, length = 80)
+    @Column(name = "nomCommercial", nullable = false, length = 100)
     var nomCommercial: String,
 
-    @Column(name = "adresse", nullable = false, length = 80)
-    var adresse: String,
+    /** NULL pour un lieu OSM sans adresse à moins de 200 m (refuge, camping isolé…). */
+    @Column(name = "adresse", length = 80)
+    var adresse: String? = null,
 
     @Column(name = "codePostalEtablissement", nullable = false, length = 5)
     var codePostalEtablissement: String,
@@ -57,9 +65,17 @@ abstract class EtablissementEntity(
     @Column(name = "nomCommuneEtablissement", nullable = false, length = 50)
     var nomCommuneEtablissement: String,
 
-    /** Absent du jeu public : NULL tant que l'hébergeur ne l'a pas renseigné. */
+    /** Commune INSEE (OSM ou géocodage BAN) ; nomCommuneEtablissement reste le libellé postal. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "codeInsee")
+    var commune: CommuneEntity? = null,
+
+    /** Premier numéro OSM ; NULL si l'établissement n'est pas dans OSM ou n'y a pas de numéro. */
     @Column(name = "telephoneEtablissement", length = 30)
     var telephoneEtablissement: String? = null,
+
+    @Column(name = "emailEtablissement", length = 150)
+    var emailEtablissement: String? = null,
 
     @Column(name = "siteWebEtablissement", length = 350)
     var siteWebEtablissement: String? = null,
@@ -69,26 +85,32 @@ abstract class EtablissementEntity(
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "classement", nullable = false, length = 50)
-    var classement: Classement,
+    @Column(name = "classement", length = 50)
+    var classement: Classement? = null,
 
-    @Column(name = "dateClassement", nullable = false)
-    var dateClassement: LocalDate,
+    @Column(name = "dateClassement")
+    var dateClassement: LocalDate? = null,
 
-    @Column(name = "classementProroge", nullable = false)
-    var classementProroge: Boolean = false,
+    @Column(name = "classementProroge")
+    var classementProroge: Boolean? = null,
 
-    /** Coordonnées obtenues par géocodage BAN (absentes du CSV public). */
+    /** Point OSM si l'établissement y est recensé, sinon géocodage BAN de l'adresse. */
     @Column(name = "latitudeEtablissement", precision = 12, scale = 9)
     var latitudeEtablissement: BigDecimal? = null,
 
     @Column(name = "longitudeEtablissement", precision = 12, scale = 9)
     var longitudeEtablissement: BigDecimal? = null,
 
+    /** Objet OpenStreetMap correspondant (« node/123 », « relation/456 »), pour les mises à jour. */
+    @Column(name = "osmRef", length = 25)
+    var osmRef: String? = null,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idUtilisateur")
     var hebergeur: HebergeurEntity? = null,
 ) {
+    val estClasse: Boolean get() = classement != null
+
     /**
      * Moyenne des notations, dénormalisée pour le filtre « note de l'établissement ».
      * LECTURE SEULE pour JPA : mise à jour par EtablissementRepository.ajouterNote (UPDATE atomique).

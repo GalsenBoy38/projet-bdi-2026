@@ -1,21 +1,30 @@
 Festivals : 20 régions, 104 départements, 1568 communes (69 codes INSEE à plusieurs libellés -> libellé le plus fréquent)
 Festivals : 3136 ; sous-domaine hors enum -> NULL : 1665 ; périodicité NULL : 513 ; sans date ancienne (date tirée dans le mois habituel) : 339 ; domaines inconnus : {}
-Établissements : 21435 lignes, 5 doublons supprimés
-Établissements : 21430 chargés, 0 rejetés (CP/commune introuvables), 699 sans coordonnées fiables (score BAN < 0,4 ou non géocodés)
-Sélections : 126605, Pass : 219880, nuitées : 662848 (hébergement supplémentaire ouvert 517 fois)
+Établissements classés : 21435 lignes, 5 doublons supprimés
+Établissements classés : 21430 chargés, 0 rejetés (CP/commune introuvables), 699 sans coordonnées BAN fiables (score < 0,4 ou non géocodés)
+OSM : 52042 lieux retenus, écartés : {'sans nom': 7018, 'refuges non gardés (non réservables)': 1143}
+OSM : 16186 établissements classés sur 21430 retrouvés dans OSM ; complétés : {'coordonnées absentes de la BAN': 406, 'téléphone': 7041, 'e-mail': 3673, 'site web': 48}
+OSM : 35294 établissements non classés ajoutés (16186 déjà classés, 562 doublons, 0 sans code postal), dont 2319 sans adresse à moins de 200 m ; {'CHAMBRE_D_HOTES': 8141, 'HOTEL': 7752, 'GITE_CHALET': 5893, 'APPARTEMENT': 4333, 'CAMPING': 3944, 'AIRE_DE_CAMPING_CAR': 3439, 'AUBERGE_DE_JEUNESSE': 1064, 'REFUGE_GARDE': 639, 'MOTEL': 89}
+Géographie complétée pour les établissements : {'communes': 12065}, code INSEE inconnu : 3
+Sélections : 126687, Pass : 220247, nuitées : 682643 (hébergement supplémentaire ouvert 98 fois)
 Contrôles :
-  [OK] au moins 100 000 réservations (112977)
+  [OK] au moins 100 000 réservations (113168)
   [OK] chaque festival propose au moins 30 Pass
   [OK] nbPassVendus = nombre réel de Pass
   [OK] au moins la moitié du quota réservée, jamais plus que le quota
   [OK] réservation groupée : chaque sélection a des nuitées dont la capacité couvre ses Pass
   [OK] les nuitées réservées sont des nuits du festival
   [OK] des festivals d'un même département se chevauchent
-  [OK] nuitées libres disponibles pour les tests (432751 / 662848)
-  [OK] établissements géocodés (20731 / 21430)
+  [OK] nuitées libres disponibles pour les tests (452626 / 682643)
+  [OK] établissements géocodés (56431 / 56724)
+  [OK] chaque établissement a exactement un sous-type
+  [OK] classement renseigné pour les classés seulement (21430 classés, 35294 non classés)
+  [OK] code INSEE des établissements présent dans COMMUNE
+  [OK] un objet OSM correspond à un seul établissement (51480 rapprochés)
+  [OK] téléphones renseignés grâce à OSM (18339 / 56724)
   [OK] numéros de réservation uniques
-  [OK] scénario : Musilac du 2027-07-12 au 2027-07-15, 24 Pass disponibles
-  [OK] scénario : JAZZ A COUCHES du 2027-07-04 au 2027-07-07, 23 Pass disponibles
-  [OK] scénario : SAINT ROCK du 2027-07-13 au 2027-07-14, 22 Pass disponibles
-Volumes : REGION=20, DEPARTEMENT=104, COMMUNE=1568, UTILISATEUR=50000, FESTIVALIER=47000, UTILISATEUR_BACKOFFICE=3000, ORGANISATEUR=500, HEBERGEUR=2500, FESTIVAL=3136, ETABLISSEMENT=21430, HOTEL_DE_TOURISME=13303, AUBERGE_COLLECTIVE=116, CAMPING=5712, PARC_RESIDENTIEL_DE_LOISIRS=168, VILLAGE_DE_VACANCES=544, RESIDENCE_DE_TOURISME=1587, OPTION_HEBERGEMENT=10, HEBERGEMENT=46058, PHOTO_HEBERGEMENT=61539, EQUIPEMENT=91990, RESERVATION=112977, PAIEMENT=112977, SELECTION=126605, PASS=219880, NUITEE=662848, NOTATION_FESTIVAL=30000, NOTATION_ETABLISSEMENT=30000
-Terminé en 24 s
+  [OK] scénario : Musilac du 2027-07-12 au 2027-07-15, 19 Pass disponibles
+  [OK] scénario : JAZZ A COUCHES du 2027-07-04 au 2027-07-07, 22 Pass disponibles
+  [OK] scénario : SAINT ROCK du 2027-07-13 au 2027-07-14, 27 Pass disponibles
+Volumes : REGION=20, DEPARTEMENT=104, COMMUNE=13633, UTILISATEUR=50000, FESTIVALIER=47000, UTILISATEUR_BACKOFFICE=3000, ORGANISATEUR=500, HEBERGEUR=2500, FESTIVAL=3136, ETABLISSEMENT=56724, HOTEL_DE_TOURISME=13303, AUBERGE_COLLECTIVE=116, CAMPING=5712, PARC_RESIDENTIEL_DE_LOISIRS=168, VILLAGE_DE_VACANCES=544, RESIDENCE_DE_TOURISME=1587, ETABLISSEMENT_NON_CLASSE=35294, OPTION_HEBERGEMENT=10, HEBERGEMENT=111584, PHOTO_HEBERGEMENT=148890, EQUIPEMENT=222937, RESERVATION=113168, PAIEMENT=113168, SELECTION=126687, PASS=220247, NUITEE=682643, NOTATION_FESTIVAL=30000, NOTATION_ETABLISSEMENT=30000
+Terminé en 37 s

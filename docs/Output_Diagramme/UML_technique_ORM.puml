@@ -1,18 +1,19 @@
 @startuml UML_technique_ORM
 ' =============================================================================
 '  FestiBed - Groupe 3 - UML technique (modèle ORM / JPA)
-'  Source : MCD_GLOBAL_FINAL-20-10-2026.loo  ->  MLD_GLOBAL_FINAL-22-10-2026
-'  Règles de passage :
-'   - Références d'objets et listes (pas d'identifiants de jointure).
-'   - Héritages avec attributs ou associations propres -> classes Java
-'     (@Inheritance JOINED) : Utilisateur, Utilisateur_backoffice, Etablissement.
-'   - Sous-types sans attribut -> TYPE (enum) dans la classe mère :
-'       Festival    : domaine / sousDomaine
-'       Hebergement : typeHebergement
-'   - Compositions (losange plein) : Etablissement ◆ Hebergement ◆ Nuitee,
-'     Reservation ◆ Selection ; clés composées en @EmbeddedId (+ @MapsId).
+'  Reflète les entités Kotlin de docs/JPA_modelisation/1_entites_jpa (03/11/2026) :
+'   - Héritages JOINED : Utilisateur, UtilisateurBackoffice, Etablissement
+'     (6 typologies classées + EtablissementNonClasse issu d'OpenStreetMap).
+'   - Relations UNIDIRECTIONNELLES (flèche = sens de navigation) : pas de
+'     collections inverses ; @OneToMany seulement pour les compositions.
+'   - Compositions (losange plein, cascade ALL + orphanRemoval) :
+'     Reservation ◆ Selection ◆ Pass, Hebergement ◆ PhotoHebergement.
+'   - Clés composées en @EmbeddedId (+ @MapsId).
+'   - Festival.nbPassVendus et Etablissement.noteMoyenne / nbNotes : lecture
+'     seule pour JPA, modifiés par UPDATE atomiques (stratégie de concurrence).
 '   - Nuitee.selection = null -> nuitée libre.
-'   - Equipement (n,n sans attribut) -> @ManyToMany (table EQUIPEMENT).
+'   - Etablissement : classement / dateClassement / classementProroge
+'     renseignés pour les classés, NULL pour les non classés.
 ' =============================================================================
 
 !define CONCRETE_COLOR #FFF9C4
@@ -40,167 +41,155 @@ title Diagramme UML technique - FestiBed (modèle ORM / JPA)
 
 ' ====== UTILISATEURS ======
 abstract class Utilisateur {
-    - idUtilisateur: Long
+    - id: Long
     - nom: String
     - email: String
 }
 
 class Festivalier {
-    - fournisseurAuth: String
-    - identifiantExterneFestivalier: String
-    - reservations: List<Reservation>
-    - notationsFestival: List<NotationFestival>
-    - notationsEtablissement: List<NotationEtablissement>
+    - fournisseurAuth: String [0..1]
+    - identifiantExterneFestivalier: String [0..1]
 }
 
 abstract class UtilisateurBackoffice {
     - motDePasseHache: String
 }
 
-class Organisateur {
-    - festivals: List<Festival>
-}
-
-class Hebergeur {
-    - etablissements: List<Etablissement>
-}
+class Organisateur
+class Hebergeur
 
 ' ====== GEOGRAPHIE ======
 class Region {
-    - idRegion: Long
+    - id: Long
     - nomRegion: String
-    - departements: List<Departement>
 }
 
 class Departement {
     - codeDepartement: String
     - nomDepartement: String
-    - region: Region
-    - communes: List<Commune>
 }
 
 class Commune {
     - codeInsee: String
     - nomCommune: String
-    - latitude: BigDecimal
-    - longitude: BigDecimal
-    - departement: Departement
-    - festivals: List<Festival>
+    - latitude: BigDecimal [0..1]
+    - longitude: BigDecimal [0..1]
 }
 
 ' ====== FESTIVALS ======
 class Festival {
-    - idFestival: Long
+    - id: Long
     - nomFestival: String
     - domaine: Domaine
-    - sousDomaine: SousDomaine
-    - periodicite: Periodicite
-    - moisDebut: Byte
-    - siteWebFestival: String
-    - numIdentification: String
-    - dateCreation: LocalDate
+    - sousDomaine: SousDomaine [0..1]
+    - periodicite: Periodicite [0..1]
+    - moisDebut: Int
+    - siteWebFestival: String [0..1]
+    - numIdentification: String [0..1]
+    - dateCreation: LocalDate [0..1]
     - codePostalFestival: String
-    - dateDebutAncien: LocalDate
-    - dateFinAncien: LocalDate
+    - dateDebutAncien: LocalDate [0..1]
+    - dateFinAncien: LocalDate [0..1]
     - dateDebutFestival: LocalDate
     - dateFinFestival: LocalDate
-    - quotaPass: Integer
+    - quotaPass: Int
+    - nbPassVendus: Int {readOnly}
     - prixPass: BigDecimal
     - actifFestival: Boolean
-    - commune: Commune
-    - organisateur: Organisateur
-    - passes: List<Pass>
-    - notations: List<NotationFestival>
+    --
+    + passDisponibles: Int
 }
 
 class NotationFestival {
     - id: NotationFestivalId
-    - festival: Festival
-    - festivalier: Festivalier
-    - noteFestival: Integer
+    - noteFestival: Int
     - dateNoteFestival: LocalDate
 }
 
-class NotationFestivalId {
+class NotationFestivalId <<Embeddable>> {
     - idFestival: Long
-    - idFestivalier: Long
+    - idUtilisateur: Long
 }
 
 ' ====== ETABLISSEMENTS ======
 abstract class Etablissement {
-    - idEtablissement: Long
+    - id: Long
     - nomCommercial: String
-    - adresse: String
+    - adresse: String [0..1]
     - codePostalEtablissement: String
     - nomCommuneEtablissement: String
-    - telephoneEtablissement: String
-    - siteWebEtablissement: String
-    - capaciteAccueil: Integer
-    - classement: Classement
-    - dateClassement: LocalDate
-    - classementProroge: Boolean
-    - latitudeEtablissement: BigDecimal
-    - longitudeEtablissement: BigDecimal
-    - hebergeur: Hebergeur
-    - hebergements: List<Hebergement>
-    - notations: List<NotationEtablissement>
+    - telephoneEtablissement: String [0..1]
+    - emailEtablissement: String [0..1]
+    - siteWebEtablissement: String [0..1]
+    - capaciteAccueil: Int
+    - classement: Classement [0..1]
+    - dateClassement: LocalDate [0..1]
+    - classementProroge: Boolean [0..1]
+    - latitudeEtablissement: BigDecimal [0..1]
+    - longitudeEtablissement: BigDecimal [0..1]
+    - osmRef: String [0..1]
+    - noteMoyenne: BigDecimal [0..1] {readOnly}
+    - nbNotes: Int {readOnly}
+    --
+    + estClasse: Boolean
 }
 
 class HotelDeTourisme {
-    - nbChambresHotel: Integer
+    - nbChambresHotel: Int
 }
 
 class AubergeCollective {
-    - nbChambresAuberge: Integer
+    - nbChambresAuberge: Int
 }
 
 class Camping {
-    - categorie: CategorieCamping
-    - nbEmplacementsCamping: Integer
+    - categorie: CategorieCamping [0..1]
+    - nbEmplacementsCamping: Int
 }
 
 class ParcResidentielDeLoisirs {
-    - nbEmplacementsParc: Integer
+    - nbEmplacementsParc: Int
 }
 
 class VillageDeVacances {
-    - mention: MentionVillage
-    - typeSejour: TypeSejour
-    - nbLogements: Integer
+    - mention: MentionVillage [0..1]
+    - typeSejour: TypeSejour [0..1]
+    - nbLogements: Int
 }
 
 class ResidenceDeTourisme {
-    - nbUnitesHabitation: Integer
+    - nbUnitesHabitation: Int
+}
+
+class EtablissementNonClasse {
+    - typeNonClasse: TypeNonClasse
+    - nbEtoilesDeclarees: Int [0..1]
+    - nbChambres: Int [0..1]
+    - nbLits: Int [0..1]
 }
 
 class NotationEtablissement {
     - id: NotationEtablissementId
-    - etablissement: Etablissement
-    - festivalier: Festivalier
-    - noteEtablissement: Integer
+    - noteEtablissement: Int
     - dateNoteEtablissement: LocalDate
 }
 
-class NotationEtablissementId {
+class NotationEtablissementId <<Embeddable>> {
     - idEtablissement: Long
-    - idFestivalier: Long
+    - idUtilisateur: Long
 }
 
 ' ====== HEBERGEMENTS ======
 class Hebergement {
     - id: HebergementId
     - typeHebergement: TypeHebergement
-    - capaciteHebergement: Integer
+    - capaciteHebergement: Int
     - prixNuitHebergement: BigDecimal
-    - descriptionHebergement: String
+    - descriptionHebergement: String [0..1]
     - actifHebergement: Boolean
-    - etablissement: Etablissement
-    - nuitees: List<Nuitee>
-    - photos: List<PhotoHebergement>
-    - options: List<OptionHebergement>
 }
 
-class HebergementId {
+class HebergementId <<Embeddable>> {
     - idEtablissement: Long
     - numeroHebergement: String
 }
@@ -208,23 +197,22 @@ class HebergementId {
 class Nuitee {
     - id: NuiteeId
     - prixNuitee: BigDecimal
-    - hebergement: Hebergement
-    - selection: Selection
+    --
+    + libre: Boolean
 }
 
-class NuiteeId {
+class NuiteeId <<Embeddable>> {
     - hebergementId: HebergementId
     - dateNuitee: LocalDate
 }
 
 class PhotoHebergement {
-    - idPhotoHebergement: Long
+    - id: Long
     - urlPhotoHebergement: String
-    - hebergement: Hebergement
 }
 
 class OptionHebergement {
-    - idOptionHebergement: Long
+    - id: Long
     - libelleOptionHebergement: String
 }
 
@@ -232,33 +220,25 @@ class OptionHebergement {
 class Reservation {
     - numeroReservation: String
     - dateReservation: LocalDateTime
-    - festivalier: Festivalier
-    - selections: List<Selection>
-    - paiement: Paiement
 }
 
 class Selection {
-    - idSelection: Long
+    - id: Long
     - prixPassSelection: BigDecimal
-    - statutSelection: String
-    - reservation: Reservation
-    - passes: List<Pass>
-    - nuitees: List<Nuitee>
+    - statutSelection: StatutSelection
 }
 
 class Pass {
-    - idPass: Long
+    - id: Long
     - codePass: String
-    - festival: Festival
-    - selection: Selection
 }
 
 class Paiement {
-    - numTransaction: String
+    - id: Long
+    - numTransaction: String [0..1]
     - montantPaiement: BigDecimal
-    - datePaiement: LocalDateTime
-    - statutPaiement: String
-    - reservation: Reservation
+    - datePaiement: LocalDateTime [0..1]
+    - statutPaiement: StatutPaiement
 }
 
 ' ====== ENUMERATIONS ======
@@ -295,19 +275,14 @@ enum Periodicite {
     IRREGULIERE
 }
 
-enum TypeHebergement {
-    CHAMBRE_SIMPLE
-    CHAMBRE_DOUBLE
-    EMPLACEMENT_DE_CAMPING
-    BUNGALOW
-}
-
 enum Classement {
     UNE_ETOILE
     DEUX_ETOILES
     TROIS_ETOILES
     QUATRE_ETOILES
     CINQ_ETOILES
+    AUBERGE_COLLECTIVE
+    AIRE_NATURELLE
 }
 
 enum CategorieCamping {
@@ -328,8 +303,41 @@ enum TypeSejour {
     FORMULE_LOCATION_PENSION
 }
 
-' ====== HERITAGE ======
-' Écrit « classe du dessus -- classe du dessous » pour fixer la mise en page
+enum TypeNonClasse {
+    HOTEL
+    MOTEL
+    CHAMBRE_D_HOTES
+    GITE_CHALET
+    APPARTEMENT
+    AUBERGE_DE_JEUNESSE
+    CAMPING
+    AIRE_DE_CAMPING_CAR
+    REFUGE_GARDE
+}
+
+enum TypeHebergement {
+    CHAMBRE_SIMPLE
+    CHAMBRE_DOUBLE
+    EMPLACEMENT_DE_CAMPING
+    BUNGALOW
+    LOGEMENT_ENTIER
+    LIT_EN_DORTOIR
+}
+
+enum StatutSelection {
+    CONFIRMEE
+    ANNULEE
+}
+
+enum StatutPaiement {
+    NON_GERE
+    EN_ATTENTE
+    ACCEPTE
+    REFUSE
+    REMBOURSE
+}
+
+' ====== HERITAGE (JOINED) ======
 UtilisateurBackoffice <|-- Organisateur
 UtilisateurBackoffice --|> Utilisateur
 UtilisateurBackoffice <|-- Hebergeur
@@ -341,9 +349,9 @@ Camping --|> Etablissement
 ParcResidentielDeLoisirs --|> Etablissement
 VillageDeVacances --|> Etablissement
 ResidenceDeTourisme --|> Etablissement
+EtablissementNonClasse --|> Etablissement
 
-
-' ====== ORDRE GAUCHE -> DROITE (liens invisibles, mise en page seulement) ======
+' ====== ORDRE GAUCHE -> DROITE (mise en page seulement) ======
 Organisateur -[hidden]right- Utilisateur
 Utilisateur -[hidden]right- Hebergeur
 Hebergeur -[hidden]right- HotelDeTourisme
@@ -352,37 +360,35 @@ AubergeCollective -[hidden]right- Camping
 Camping -[hidden]right- ParcResidentielDeLoisirs
 ParcResidentielDeLoisirs -[hidden]right- VillageDeVacances
 VillageDeVacances -[hidden]right- ResidenceDeTourisme
+ResidenceDeTourisme -[hidden]right- EtablissementNonClasse
 Festival -[hidden]right- Festivalier
 Festivalier -[hidden]right- Etablissement
-NotationFestival -[hidden]right- Reservation
-Reservation -[hidden]right- NotationEtablissement
-Nuitee -[hidden]right- PhotoHebergement
-PhotoHebergement -[hidden]right- OptionHebergement
 
-' ====== RELATIONS ======
-Organisateur "0..1" -- "0..*" Festival : Organisation
-Hebergeur "0..1" -- "0..*" Etablissement : Gestion
+' ====== RELATIONS (navigables dans le sens de la flèche) ======
+Festival "0..*" --> "0..1" Organisateur : organisateur
+Etablissement "0..*" --> "0..1" Hebergeur : hebergeur
 
-Festival "0..*" -- "1" Commune : Deroulement
-Commune "1..*" -- "1" Departement : Contenance
-Departement "1..*" -- "1" Region : Constitution
+Festival "0..*" --> "1" Commune : commune
+Etablissement "0..*" --> "0..1" Commune : commune
+Commune "0..*" --> "1" Departement : departement
+Departement "0..*" --> "1" Region : region
 
-Festival "1" -- "0..*" NotationFestival
-Festivalier "1" -- "0..*" NotationFestival
-Festivalier "1" -- "0..*" Reservation : Effectuation
-Festivalier "1" -- "0..*" NotationEtablissement
-Etablissement "1" -- "0..*" NotationEtablissement
+NotationFestival "0..*" --> "1" Festival : festival
+NotationFestival "0..*" --> "1" Festivalier : festivalier
+NotationEtablissement "0..*" --> "1" Etablissement : etablissement
+NotationEtablissement "0..*" --> "1" Festivalier : festivalier
 
-Reservation "1" *-- "1..*" Selection : Composition
-Reservation "1" -- "0..1" Paiement : Reglement
-Selection "1" -- "1..*" Pass : Delivrance
-Festival "1" -- "0..*" Pass : Allocation
+Reservation "0..*" --> "1" Festivalier : festivalier
+Reservation "1" *--> "1..*" Selection : selections
+Selection "0..*" --> "1" Festival : festival
+Selection "1" *--> "1..*" Pass : passes
+Paiement "0..1" --> "1" Reservation : reservation
 
-Etablissement "1" *-- "0..*" Hebergement : Proposition
-Selection "0..1" -- "1..*" Nuitee : Occupation
-Hebergement "1" *-- "0..*" Nuitee : Disponibilite
-Hebergement "1" -- "0..*" PhotoHebergement : Illustration
-Hebergement "0..*" -- "0..*" OptionHebergement : Equipement
+Hebergement "0..*" --> "1" Etablissement : etablissement
+Hebergement "1" *--> "0..*" PhotoHebergement : photos
+Hebergement "0..*" --> "0..*" OptionHebergement : options\n(EQUIPEMENT)
+Nuitee "0..*" --> "1" Hebergement : hebergement
+Nuitee "0..*" --> "0..1" Selection : selection
 
 ' ====== CLES COMPOSEES (@EmbeddedId) ======
 NotationFestival *-- NotationFestivalId
@@ -391,17 +397,17 @@ Hebergement *-- HebergementId
 Nuitee *-- NuiteeId
 NuiteeId ..> HebergementId
 
-' ====== TYPES ENUMERES (sur les côtés) ======
-' Gauche : énumérations du Festival
+' ====== TYPES ENUMERES ======
 Periodicite <.right. Festival
 SousDomaine <.right. Festival
-SousDomaine .right.> Domaine
 Domaine <.right. Festival
-' Droite : énumérations des établissements et hébergements
 Etablissement .right.> Classement
 CategorieCamping <.. Camping
 TypeSejour <.. VillageDeVacances
 MentionVillage <.. VillageDeVacances
+TypeNonClasse <.. EtablissementNonClasse
 Hebergement .right.> TypeHebergement
+Selection ..> StatutSelection
+Paiement ..> StatutPaiement
 
 @enduml

@@ -1,7 +1,8 @@
 @startuml MLD_retro_conception
 ' =============================================================================
 '  FestiBed - Groupe 3 - MLD issu de MCD_retro_conception_Festibed.loo
-'  (données sources : panorama des festivals + hébergements classés)
+'  (données sources : panorama des festivals + hébergements classés
+'   + hébergements touristiques OpenStreetMap, ajoutés le 03/11/2026)
 '  Clé primaire soulignée, # clé étrangère, [0..1] = peut être NULL
 '  Héritages :
 '   - Etablissement : une table par sous-type, clé primaire = clé étrangère
@@ -9,6 +10,10 @@
 '   - Festival (domaines / compléments de domaine) : sous-types sans attribut
 '     ni association propre -> remontés dans FESTIVAL sous forme d'attributs
 '     (domaine, complementDomaine).
+'   - LIEU_OSM : un objet OpenStreetMap tourism=* (osm-france-tourism-
+'     accommodation.csv). Il référence la commune par son code INSEE ;
+'     son rapprochement avec ETABLISSEMENT (même lieu) se fait par le nom
+'     et la position, il n'existe pas de clé commune dans les sources.
 ' =============================================================================
 hide circle
 hide methods
@@ -122,9 +127,35 @@ entity "RESIDENCE_DE_TOURISME" as Residence {
   nbUnitesHabitation : INT
 }
 
+' ===== OpenStreetMap =====
+entity "LIEU_OSM" as LieuOsm {
+  <u>osmRef</u> : VARCHAR(25)
+  --
+  typeOsm : VARCHAR(20)
+  nom : VARCHAR(100) [0..1]
+  enseigne : VARCHAR(170) [0..1]
+  accesHandicapes : VARCHAR(15) [0..1]
+  heuresOuverture : VARCHAR(220) [0..1]
+  nbEtoiles : SMALLINT [0..1]
+  nbChambres : INT [0..1]
+  nbLits : INT [0..1]
+  accesInternet : VARCHAR(15) [0..1]
+  capacite : INT [0..1]
+  siteWeb : VARCHAR(255) [0..1]
+  telephone : VARCHAR(90) [0..1]
+  email : VARCHAR(70) [0..1]
+  latitude : DECIMAL(12,9)
+  longitude : DECIMAL(12,9)
+  dateCreationOsm : DATETIME [0..1]
+  dateMiseAJourOsm : DATE [0..1]
+  wikidata : VARCHAR(10) [0..1]
+  #codeInsee : VARCHAR(5)
+}
+
 ' ===== Clés étrangères =====
 ' Écrites « table du dessus -- table du dessous » pour fixer la mise en page.
 Festival -- Commune
+LieuOsm -- Commune
 Commune -- Departement
 Departement -- Region
 

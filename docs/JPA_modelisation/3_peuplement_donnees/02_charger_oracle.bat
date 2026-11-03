@@ -20,17 +20,18 @@ sqlldr userid=%1 control=sqlldr\13_CAMPING.ctl log=logs\CAMPING.log bad=logs\CAM
 sqlldr userid=%1 control=sqlldr\14_PARC_RESIDENTIEL_DE_LOISIRS.ctl log=logs\PARC_RESIDENTIEL_DE_LOISIRS.log bad=logs\PARC_RESIDENTIEL_DE_LOISIRS.bad || goto erreur
 sqlldr userid=%1 control=sqlldr\15_VILLAGE_DE_VACANCES.ctl log=logs\VILLAGE_DE_VACANCES.log bad=logs\VILLAGE_DE_VACANCES.bad || goto erreur
 sqlldr userid=%1 control=sqlldr\16_RESIDENCE_DE_TOURISME.ctl log=logs\RESIDENCE_DE_TOURISME.log bad=logs\RESIDENCE_DE_TOURISME.bad || goto erreur
-sqlldr userid=%1 control=sqlldr\17_OPTION_HEBERGEMENT.ctl log=logs\OPTION_HEBERGEMENT.log bad=logs\OPTION_HEBERGEMENT.bad || goto erreur
-sqlldr userid=%1 control=sqlldr\18_HEBERGEMENT.ctl log=logs\HEBERGEMENT.log bad=logs\HEBERGEMENT.bad || goto erreur
-sqlldr userid=%1 control=sqlldr\19_PHOTO_HEBERGEMENT.ctl log=logs\PHOTO_HEBERGEMENT.log bad=logs\PHOTO_HEBERGEMENT.bad || goto erreur
-sqlldr userid=%1 control=sqlldr\20_EQUIPEMENT.ctl log=logs\EQUIPEMENT.log bad=logs\EQUIPEMENT.bad || goto erreur
-sqlldr userid=%1 control=sqlldr\21_RESERVATION.ctl log=logs\RESERVATION.log bad=logs\RESERVATION.bad || goto erreur
-sqlldr userid=%1 control=sqlldr\22_PAIEMENT.ctl log=logs\PAIEMENT.log bad=logs\PAIEMENT.bad || goto erreur
-sqlldr userid=%1 control=sqlldr\23_SELECTION.ctl log=logs\SELECTION.log bad=logs\SELECTION.bad || goto erreur
-sqlldr userid=%1 control=sqlldr\24_PASS.ctl log=logs\PASS.log bad=logs\PASS.bad || goto erreur
-sqlldr userid=%1 control=sqlldr\25_NUITEE.ctl log=logs\NUITEE.log bad=logs\NUITEE.bad || goto erreur
-sqlldr userid=%1 control=sqlldr\26_NOTATION_FESTIVAL.ctl log=logs\NOTATION_FESTIVAL.log bad=logs\NOTATION_FESTIVAL.bad || goto erreur
-sqlldr userid=%1 control=sqlldr\27_NOTATION_ETABLISSEMENT.ctl log=logs\NOTATION_ETABLISSEMENT.log bad=logs\NOTATION_ETABLISSEMENT.bad || goto erreur
+sqlldr userid=%1 control=sqlldr\17_ETABLISSEMENT_NON_CLASSE.ctl log=logs\ETABLISSEMENT_NON_CLASSE.log bad=logs\ETABLISSEMENT_NON_CLASSE.bad || goto erreur
+sqlldr userid=%1 control=sqlldr\18_OPTION_HEBERGEMENT.ctl log=logs\OPTION_HEBERGEMENT.log bad=logs\OPTION_HEBERGEMENT.bad || goto erreur
+sqlldr userid=%1 control=sqlldr\19_HEBERGEMENT.ctl log=logs\HEBERGEMENT.log bad=logs\HEBERGEMENT.bad || goto erreur
+sqlldr userid=%1 control=sqlldr\20_PHOTO_HEBERGEMENT.ctl log=logs\PHOTO_HEBERGEMENT.log bad=logs\PHOTO_HEBERGEMENT.bad || goto erreur
+sqlldr userid=%1 control=sqlldr\21_EQUIPEMENT.ctl log=logs\EQUIPEMENT.log bad=logs\EQUIPEMENT.bad || goto erreur
+sqlldr userid=%1 control=sqlldr\22_RESERVATION.ctl log=logs\RESERVATION.log bad=logs\RESERVATION.bad || goto erreur
+sqlldr userid=%1 control=sqlldr\23_PAIEMENT.ctl log=logs\PAIEMENT.log bad=logs\PAIEMENT.bad || goto erreur
+sqlldr userid=%1 control=sqlldr\24_SELECTION.ctl log=logs\SELECTION.log bad=logs\SELECTION.bad || goto erreur
+sqlldr userid=%1 control=sqlldr\25_PASS.ctl log=logs\PASS.log bad=logs\PASS.bad || goto erreur
+sqlldr userid=%1 control=sqlldr\26_NUITEE.ctl log=logs\NUITEE.log bad=logs\NUITEE.bad || goto erreur
+sqlldr userid=%1 control=sqlldr\27_NOTATION_FESTIVAL.ctl log=logs\NOTATION_FESTIVAL.log bad=logs\NOTATION_FESTIVAL.bad || goto erreur
+sqlldr userid=%1 control=sqlldr\28_NOTATION_ETABLISSEMENT.ctl log=logs\NOTATION_ETABLISSEMENT.log bad=logs\NOTATION_ETABLISSEMENT.bad || goto erreur
 echo Chargement termine. Executer ensuite 03_sequences_oracle.sql puis 04_controles.sql.
 exit /b 0
 :erreur

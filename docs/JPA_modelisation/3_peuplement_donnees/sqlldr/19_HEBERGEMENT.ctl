@@ -1,11 +1,15 @@
 OPTIONS (SKIP=1, ROWS=5000, BINDSIZE=20000000, READSIZE=20000000, ERRORS=0)
 LOAD DATA
 CHARACTERSET AL32UTF8
-INFILE 'csv/20_EQUIPEMENT.csv'
-APPEND INTO TABLE EQUIPEMENT
+INFILE 'csv/19_HEBERGEMENT.csv'
+APPEND INTO TABLE HEBERGEMENT
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
   idEtablissement,
   numeroHebergement CHAR(40),
-  idOptionHebergement
+  typeHebergement CHAR(120),
+  capaciteHebergement,
+  prixNuitHebergement,
+  descriptionHebergement CHAR(2000),
+  actifHebergement
 )

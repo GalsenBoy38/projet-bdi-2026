@@ -42,3 +42,7 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Fichiers de verrouillage Office et caches d'outils de modélisation
+~$*
+*.loo.objs.pkl
