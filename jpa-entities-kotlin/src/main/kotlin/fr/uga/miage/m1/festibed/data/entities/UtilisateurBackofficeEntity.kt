@@ -1,0 +1,18 @@
+package fr.uga.miage.m1.festibed.data.entities
+
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
+import java.util.UUID
+
+@Entity
+@Table(name = "utilisateur_backoffice")
+abstract class UtilisateurBackofficeEntity(
+    id: UUID? = null,
+    nom: String,
+    email: String,
+
+    /** Hash BCrypt (Spring Security), jamais le mot de passe en clair. */
+    @Column(name = "mot_de_passe_hache", nullable = false, length = 100)
+    var motDePasseHache: String,
+) : UtilisateurEntity(id, nom, email)

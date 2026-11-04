@@ -1,0 +1,915 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kmad-model SYSTEM "file:KMADModelJT.dtd">
+<kmad-model version="1.3">
+    <project classkmad="project.Project" id-project-information="K2" idkmad="K1">
+        <projectinformation classkmad="project.GeneralInformation" idkmad="K2">
+            <projectinformation-compagny>Projet_BDI</projectinformation-compagny>
+        </projectinformation>
+    </project>
+    <task classkmad="tache.Task" id-task-point="K3" id-task-subtasks-list="K53 K61 K99 " idkmad="K100">
+        <task-name>Passer une réservation à FestiBed</task-name>
+        <task-numero>Racine   </task-numero>
+        <task-observation/>
+        <task-executant>ABS</task-executant>
+        <task-modality>COGN</task-modality>
+        <task-optional>false</task-optional>
+        <task-interruptible>false</task-interruptible>
+        <task-decomposition>SEQ</task-decomposition>
+        <task-precondition>true</task-precondition>
+        <task-effetsdebord>void</task-effetsdebord>
+        <task-iteration>[1]</task-iteration>
+        <point classkmad="tache.Point" idkmad="K3">
+            <point-x>4716</point-x>
+            <point-y>0</point-y>
+        </point>
+        <task classkmad="tache.Task" id-task-point="K4" id-task-subtasks-list="K24 K26 K46 K52 " idkmad="K53">
+            <task-name>Constituer le panier</task-name>
+            <task-numero>1</task-numero>
+            <task-observation/>
+            <task-executant>ABS</task-executant>
+            <task-modality>COGN</task-modality>
+            <task-optional>false</task-optional>
+            <task-interruptible>false</task-interruptible>
+            <task-decomposition>SEQ</task-decomposition>
+            <task-precondition>true</task-precondition>
+            <task-effetsdebord>void</task-effetsdebord>
+            <task-iteration>[1]</task-iteration>
+            <point classkmad="tache.Point" idkmad="K4">
+                <point-x>2860</point-x>
+                <point-y>230</point-y>
+            </point>
+            <task classkmad="tache.Task" id-task-point="K5" id-task-subtasks-list="K17 K21 K23 " idkmad="K24">
+                <task-name>Rechercher un festival</task-name>
+                <task-numero>1.1</task-numero>
+                <task-observation/>
+                <task-executant>ABS</task-executant>
+                <task-modality>COGN</task-modality>
+                <task-optional>false</task-optional>
+                <task-interruptible>false</task-interruptible>
+                <task-decomposition>SEQ</task-decomposition>
+                <task-precondition>true</task-precondition>
+                <task-effetsdebord>void</task-effetsdebord>
+                <task-iteration>[1]</task-iteration>
+                <point classkmad="tache.Point" idkmad="K5">
+                    <point-x>1170</point-x>
+                    <point-y>460</point-y>
+                </point>
+                <task classkmad="tache.Task" id-task-point="K6" id-task-subtasks-list="K8 K10 K12 K14 K16 " idkmad="K17">
+                    <task-name>Saisir les critères de recherche</task-name>
+                    <task-numero>1.1.1</task-numero>
+                    <task-observation/>
+                    <task-executant>ABS</task-executant>
+                    <task-modality>COGN</task-modality>
+                    <task-optional>false</task-optional>
+                    <task-interruptible>false</task-interruptible>
+                    <task-decomposition>ALT</task-decomposition>
+                    <task-precondition>true</task-precondition>
+                    <task-effetsdebord>void</task-effetsdebord>
+                    <task-iteration>[1]</task-iteration>
+                    <task-descriptioniteration>tant que il veut</task-descriptioniteration>
+                    <point classkmad="tache.Point" idkmad="K6">
+                        <point-x>520</point-x>
+                        <point-y>690</point-y>
+                    </point>
+                    <task classkmad="tache.Task" id-task-point="K7" idkmad="K8">
+                        <task-name>Saisir un nom de festival</task-name>
+                        <task-numero>1.1.1.1</task-numero>
+                        <task-observation/>
+                        <task-executant>INT</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K7">
+                            <point-x>2</point-x>
+                            <point-y>920</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K9" idkmad="K10">
+                        <task-name>Saisir une localisation</task-name>
+                        <task-numero>1.1.1.2</task-numero>
+                        <task-observation/>
+                        <task-executant>INT</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K9">
+                            <point-x>260</point-x>
+                            <point-y>920</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K11" idkmad="K12">
+                        <task-name>Saisir une période</task-name>
+                        <task-numero>1.1.1.3</task-numero>
+                        <task-observation/>
+                        <task-executant>INT</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K11">
+                            <point-x>520</point-x>
+                            <point-y>920</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K13" idkmad="K14">
+                        <task-name>Saisir un type de manifestation</task-name>
+                        <task-numero>1.1.1.4</task-numero>
+                        <task-observation/>
+                        <task-executant>INT</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K13">
+                            <point-x>780</point-x>
+                            <point-y>920</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K15" idkmad="K16">
+                        <task-name>Saisir un prix maximum</task-name>
+                        <task-numero>1.1.1.5</task-numero>
+                        <task-observation/>
+                        <task-executant>INT</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K15">
+                            <point-x>1212</point-x>
+                            <point-y>920</point-y>
+                        </point>
+                    </task>
+                </task>
+                <task classkmad="tache.Task" id-task-point="K20" idkmad="K21">
+                    <task-name>Afficher les festivals ayant des Pass disponibles</task-name>
+                    <task-numero>1.1.2</task-numero>
+                    <task-observation/>
+                    <task-executant>SYS</task-executant>
+                    <task-modality>COGN</task-modality>
+                    <task-optional>false</task-optional>
+                    <task-interruptible>false</task-interruptible>
+                    <task-decomposition>LEAF</task-decomposition>
+                    <task-precondition>true</task-precondition>
+                    <task-effetsdebord>void</task-effetsdebord>
+                    <task-iteration>[1]</task-iteration>
+                    <point classkmad="tache.Point" idkmad="K20">
+                        <point-x>1002</point-x>
+                        <point-y>690</point-y>
+                    </point>
+                </task>
+                <task classkmad="tache.Task" id-task-point="K22" idkmad="K23">
+                    <task-name>Choisir un festival</task-name>
+                    <task-numero>1.1.3</task-numero>
+                    <task-observation/>
+                    <task-executant>INT</task-executant>
+                    <task-modality>COGN</task-modality>
+                    <task-optional>false</task-optional>
+                    <task-interruptible>false</task-interruptible>
+                    <task-decomposition>LEAF</task-decomposition>
+                    <task-precondition>card($FestivalsAffiches) &gt; 0</task-precondition>
+                    <task-descriptionprecondition>Au moins un festival est affiché</task-descriptionprecondition>
+                    <task-effetsdebord>void</task-effetsdebord>
+                    <task-iteration>[1]</task-iteration>
+                    <point classkmad="tache.Point" idkmad="K22">
+                        <point-x>1637</point-x>
+                        <point-y>690</point-y>
+                    </point>
+                </task>
+            </task>
+            <task classkmad="tache.Task" id-task-point="K25" idkmad="K26">
+                <task-name>Saisir le nombre de Pass</task-name>
+                <task-numero>1.2</task-numero>
+                <task-observation/>
+                <task-executant>INT</task-executant>
+                <task-modality>COGN</task-modality>
+                <task-optional>false</task-optional>
+                <task-interruptible>false</task-interruptible>
+                <task-decomposition>LEAF</task-decomposition>
+                <task-precondition>true</task-precondition>
+                <task-descriptionprecondition>Le nombre de pass saisi doit être inférieur ou égal au quota de pass restant pour le festival</task-descriptionprecondition>
+                <task-effetsdebord>void</task-effetsdebord>
+                <task-iteration>[1]</task-iteration>
+                <task-descriptioniteration>tant que le nombre de pass saisit est inférieur au nombre de pass restant pour le festival</task-descriptioniteration>
+                <point classkmad="tache.Point" idkmad="K25">
+                    <point-x>2080</point-x>
+                    <point-y>460</point-y>
+                </point>
+            </task>
+            <task classkmad="tache.Task" id-task-point="K27" id-task-subtasks-list="K39 K43 K45 " idkmad="K46">
+                <task-name>Choisir les hébergements</task-name>
+                <task-numero>1.3</task-numero>
+                <task-observation/>
+                <task-executant>ABS</task-executant>
+                <task-modality>COGN</task-modality>
+                <task-optional>false</task-optional>
+                <task-interruptible>false</task-interruptible>
+                <task-decomposition>SEQ</task-decomposition>
+                <task-precondition>true</task-precondition>
+                <task-effetsdebord>void</task-effetsdebord>
+                <task-iteration>[1]</task-iteration>
+                <point classkmad="tache.Point" idkmad="K27">
+                    <point-x>3510</point-x>
+                    <point-y>460</point-y>
+                </point>
+                <task classkmad="tache.Task" id-task-point="K28" id-task-subtasks-list="K30 K32 K34 K36 K38 " idkmad="K39">
+                    <task-name>Choisir les critéres d'hébergements</task-name>
+                    <task-numero>1.3.1</task-numero>
+                    <task-observation/>
+                    <task-executant>ABS</task-executant>
+                    <task-modality>COGN</task-modality>
+                    <task-optional>false</task-optional>
+                    <task-interruptible>false</task-interruptible>
+                    <task-decomposition>ALT</task-decomposition>
+                    <task-precondition>true</task-precondition>
+                    <task-effetsdebord>void</task-effetsdebord>
+                    <task-iteration>[1]</task-iteration>
+                    <task-descriptioniteration>tant que il veut choisir Héébergement</task-descriptioniteration>
+                    <point classkmad="tache.Point" idkmad="K28">
+                        <point-x>2860</point-x>
+                        <point-y>690</point-y>
+                    </point>
+                    <task classkmad="tache.Task" id-task-point="K29" idkmad="K30">
+                        <task-name>Choisir par type d'hébergement</task-name>
+                        <task-numero>1.3.1.1</task-numero>
+                        <task-observation/>
+                        <task-executant>INT</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K29">
+                            <point-x>2214</point-x>
+                            <point-y>920</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K31" idkmad="K32">
+                        <task-name>Choisir par localisation</task-name>
+                        <task-numero>1.3.1.2</task-numero>
+                        <task-observation/>
+                        <task-executant>INT</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K31">
+                            <point-x>2536</point-x>
+                            <point-y>920</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K33" idkmad="K34">
+                        <task-name>Choisir par prix</task-name>
+                        <task-numero>1.3.1.3</task-numero>
+                        <task-observation/>
+                        <task-executant>INT</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K33">
+                            <point-x>2795</point-x>
+                            <point-y>920</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K35" idkmad="K36">
+                        <task-name>Choisir par note de l'établissement</task-name>
+                        <task-numero>1.3.1.4</task-numero>
+                        <task-observation/>
+                        <task-executant>INT</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K35">
+                            <point-x>3040</point-x>
+                            <point-y>920</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K37" idkmad="K38">
+                        <task-name>Choisir par capacité</task-name>
+                        <task-numero>1.3.1.5</task-numero>
+                        <task-observation/>
+                        <task-executant>INT</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K37">
+                            <point-x>3356</point-x>
+                            <point-y>920</point-y>
+                        </point>
+                    </task>
+                </task>
+                <task classkmad="tache.Task" id-task-point="K42" idkmad="K43">
+                    <task-name>Afficher les hébergements disponibles</task-name>
+                    <task-numero>1.3.2</task-numero>
+                    <task-observation/>
+                    <task-executant>SYS</task-executant>
+                    <task-modality>COGN</task-modality>
+                    <task-optional>false</task-optional>
+                    <task-interruptible>false</task-interruptible>
+                    <task-decomposition>LEAF</task-decomposition>
+                    <task-precondition>true</task-precondition>
+                    <task-effetsdebord>void</task-effetsdebord>
+                    <task-iteration>[1]</task-iteration>
+                    <point classkmad="tache.Point" idkmad="K42">
+                        <point-x>3471</point-x>
+                        <point-y>690</point-y>
+                    </point>
+                </task>
+                <task classkmad="tache.Task" id-task-point="K44" id-task-subtasks-list="K273 K276 " idkmad="K45">
+                    <task-name>Choisir un hébergement</task-name>
+                    <task-numero>1.3.3</task-numero>
+                    <task-observation/>
+                    <task-executant>ABS</task-executant>
+                    <task-modality>COGN</task-modality>
+                    <task-optional>false</task-optional>
+                    <task-interruptible>false</task-interruptible>
+                    <task-decomposition>SEQ</task-decomposition>
+                    <task-precondition>true</task-precondition>
+                    <task-descriptionprecondition>Au moins un hébergement disponible est affiché</task-descriptionprecondition>
+                    <task-effetsdebord>void</task-effetsdebord>
+                    <task-iteration>[1]</task-iteration>
+                    <task-descriptioniteration>tant que je veut hébergement</task-descriptioniteration>
+                    <point classkmad="tache.Point" idkmad="K44">
+                        <point-x>4061</point-x>
+                        <point-y>690</point-y>
+                    </point>
+                    <task classkmad="tache.Task" id-task-point="K272" idkmad="K273">
+                        <task-name>Sélectionner hébergement</task-name>
+                        <task-numero>1.3.3.1</task-numero>
+                        <task-observation/>
+                        <task-executant>INT</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K272">
+                            <point-x>3868</point-x>
+                            <point-y>883</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K275" idkmad="K276">
+                        <task-name>Choisir nuitée</task-name>
+                        <task-numero>1.3.3.2</task-numero>
+                        <task-observation/>
+                        <task-executant>INT</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <task-descriptioniteration>tant que veut date</task-descriptioniteration>
+                        <point classkmad="tache.Point" idkmad="K275">
+                            <point-x>4265</point-x>
+                            <point-y>883</point-y>
+                        </point>
+                    </task>
+                </task>
+            </task>
+            <task classkmad="tache.Task" id-task-point="K47" idkmad="K52">
+                <task-name>Ajouter la sélection au panier</task-name>
+                <task-numero>1.4</task-numero>
+                <task-observation/>
+                <task-executant>INT</task-executant>
+                <task-modality>COGN</task-modality>
+                <task-optional>false</task-optional>
+                <task-interruptible>false</task-interruptible>
+                <task-decomposition>LEAF</task-decomposition>
+                <task-precondition>true</task-precondition>
+                <task-descriptionprecondition>au moins 1 Pass, et une capacité des hébergements ≥ au nombre de Pass</task-descriptionprecondition>
+                <task-effetsdebord>void</task-effetsdebord>
+                <task-iteration>[1]</task-iteration>
+                <point classkmad="tache.Point" idkmad="K47">
+                    <point-x>4550</point-x>
+                    <point-y>460</point-y>
+                </point>
+            </task>
+        </task>
+        <task classkmad="tache.Task" id-task-point="K54" id-task-subtasks-list="K56 K58 " idkmad="K61">
+            <task-name>Ajuster le panier</task-name>
+            <task-numero>2</task-numero>
+            <task-observation/>
+            <task-executant>INT</task-executant>
+            <task-modality>COGN</task-modality>
+            <task-optional>true</task-optional>
+            <task-interruptible>false</task-interruptible>
+            <task-decomposition>SEQ</task-decomposition>
+            <task-precondition>true</task-precondition>
+            <task-descriptionprecondition>le panier contient au moins une sélection</task-descriptionprecondition>
+            <task-effetsdebord>void</task-effetsdebord>
+            <task-iteration>[1]</task-iteration>
+            <point classkmad="tache.Point" idkmad="K54">
+                <point-x>5200</point-x>
+                <point-y>230</point-y>
+            </point>
+            <task classkmad="tache.Task" id-task-point="K55" idkmad="K56">
+                <task-name>Consulter le panier</task-name>
+                <task-numero>2.1</task-numero>
+                <task-observation/>
+                <task-executant>INT</task-executant>
+                <task-modality>COGN</task-modality>
+                <task-optional>false</task-optional>
+                <task-interruptible>false</task-interruptible>
+                <task-decomposition>LEAF</task-decomposition>
+                <task-precondition>true</task-precondition>
+                <task-effetsdebord>void</task-effetsdebord>
+                <task-iteration>[1]</task-iteration>
+                <point classkmad="tache.Point" idkmad="K55">
+                    <point-x>4956</point-x>
+                    <point-y>460</point-y>
+                </point>
+            </task>
+            <task classkmad="tache.Task" id-task-point="K57" idkmad="K58">
+                <task-name>Modifier la sélection</task-name>
+                <task-numero>2.2</task-numero>
+                <task-observation>Fonctionnalité bonus du cahier des charges</task-observation>
+                <task-executant>INT</task-executant>
+                <task-modality>COGN</task-modality>
+                <task-optional>false</task-optional>
+                <task-interruptible>false</task-interruptible>
+                <task-decomposition>LEAF</task-decomposition>
+                <task-precondition>true</task-precondition>
+                <task-effetsdebord>void</task-effetsdebord>
+                <task-iteration>[1]</task-iteration>
+                <point classkmad="tache.Point" idkmad="K57">
+                    <point-x>5397</point-x>
+                    <point-y>460</point-y>
+                </point>
+            </task>
+        </task>
+        <task classkmad="tache.Task" id-task-point="K62" id-task-subtasks-list="K70 K76 K97 " idkmad="K99">
+            <task-name>Valider le panier</task-name>
+            <task-numero>3</task-numero>
+            <task-observation/>
+            <task-executant>ABS</task-executant>
+            <task-modality>COGN</task-modality>
+            <task-optional>false</task-optional>
+            <task-interruptible>false</task-interruptible>
+            <task-decomposition>SEQ</task-decomposition>
+            <task-precondition>true</task-precondition>
+            <task-effetsdebord>void</task-effetsdebord>
+            <task-iteration>[1]</task-iteration>
+            <point classkmad="tache.Point" idkmad="K62">
+                <point-x>6573</point-x>
+                <point-y>230</point-y>
+            </point>
+            <task classkmad="tache.Task" id-task-point="K65" id-task-subtasks-list="K67 K69 " idkmad="K70">
+                <task-name>S'identifier</task-name>
+                <task-numero>3.1</task-numero>
+                <task-observation/>
+                <task-executant>ABS</task-executant>
+                <task-modality>COGN</task-modality>
+                <task-optional>false</task-optional>
+                <task-interruptible>false</task-interruptible>
+                <task-decomposition>ALT</task-decomposition>
+                <task-precondition>true</task-precondition>
+                <task-effetsdebord>void</task-effetsdebord>
+                <task-iteration>[1]</task-iteration>
+                <point classkmad="tache.Point" idkmad="K65">
+                    <point-x>5955</point-x>
+                    <point-y>460</point-y>
+                </point>
+                <task classkmad="tache.Task" id-task-point="K66" idkmad="K67">
+                    <task-name>S'authentifier avec un compte de réseau social</task-name>
+                    <task-numero>3.1.1</task-numero>
+                    <task-observation/>
+                    <task-executant>INT</task-executant>
+                    <task-modality>COGN</task-modality>
+                    <task-optional>false</task-optional>
+                    <task-interruptible>false</task-interruptible>
+                    <task-decomposition>LEAF</task-decomposition>
+                    <task-precondition>true</task-precondition>
+                    <task-effetsdebord>void</task-effetsdebord>
+                    <task-iteration>[1]</task-iteration>
+                    <point classkmad="tache.Point" idkmad="K66">
+                        <point-x>5580</point-x>
+                        <point-y>690</point-y>
+                    </point>
+                </task>
+                <task classkmad="tache.Task" id-task-point="K68" idkmad="K69">
+                    <task-name>Saisir une adresse email (validation anonyme)</task-name>
+                    <task-numero>3.1.2</task-numero>
+                    <task-observation/>
+                    <task-executant>INT</task-executant>
+                    <task-modality>COGN</task-modality>
+                    <task-optional>false</task-optional>
+                    <task-interruptible>false</task-interruptible>
+                    <task-decomposition>LEAF</task-decomposition>
+                    <task-precondition>true</task-precondition>
+                    <task-effetsdebord>void</task-effetsdebord>
+                    <task-iteration>[1]</task-iteration>
+                    <point classkmad="tache.Point" idkmad="K68">
+                        <point-x>6099</point-x>
+                        <point-y>690</point-y>
+                    </point>
+                </task>
+            </task>
+            <task classkmad="tache.Task" id-task-point="K71" idkmad="K76">
+                <task-name>Consulter le récapitulatif</task-name>
+                <task-numero>3.2</task-numero>
+                <task-observation/>
+                <task-executant>INT</task-executant>
+                <task-modality>COGN</task-modality>
+                <task-optional>false</task-optional>
+                <task-interruptible>false</task-interruptible>
+                <task-decomposition>LEAF</task-decomposition>
+                <task-precondition>true</task-precondition>
+                <task-effetsdebord>void</task-effetsdebord>
+                <task-iteration>[1]</task-iteration>
+                <point classkmad="tache.Point" idkmad="K71">
+                    <point-x>6589</point-x>
+                    <point-y>460</point-y>
+                </point>
+            </task>
+            <task classkmad="tache.Task" id-task-point="K80" id-task-subtasks-list="K82 K84 K93 " idkmad="K97">
+                <task-name>Confirmer la réservation</task-name>
+                <task-numero>3.3</task-numero>
+                <task-observation/>
+                <task-executant>ABS</task-executant>
+                <task-modality>COGN</task-modality>
+                <task-optional>false</task-optional>
+                <task-interruptible>false</task-interruptible>
+                <task-decomposition>SEQ</task-decomposition>
+                <task-precondition>true</task-precondition>
+                <task-effetsdebord>void</task-effetsdebord>
+                <task-iteration>[1]</task-iteration>
+                <point classkmad="tache.Point" idkmad="K80">
+                    <point-x>7439</point-x>
+                    <point-y>460</point-y>
+                </point>
+                <task classkmad="tache.Task" id-task-point="K81" idkmad="K82">
+                    <task-name>Confirmer la validation</task-name>
+                    <task-numero>3.3.1</task-numero>
+                    <task-observation/>
+                    <task-executant>INT</task-executant>
+                    <task-modality>COGN</task-modality>
+                    <task-optional>false</task-optional>
+                    <task-interruptible>false</task-interruptible>
+                    <task-decomposition>LEAF</task-decomposition>
+                    <task-precondition>true</task-precondition>
+                    <task-descriptionprecondition>Le panier contient au moins une sélection (un panier vide ne peut pas être validé)</task-descriptionprecondition>
+                    <task-effetsdebord>void</task-effetsdebord>
+                    <task-iteration>[1]</task-iteration>
+                    <point classkmad="tache.Point" idkmad="K81">
+                        <point-x>7050</point-x>
+                        <point-y>883</point-y>
+                    </point>
+                </task>
+                <task classkmad="tache.Task" id-task-point="K83" idkmad="K84">
+                    <task-name>Payer</task-name>
+                    <task-numero>3.3.2</task-numero>
+                    <task-observation>Paiement prévu dans le modèle mais non développé dans le prototype</task-observation>
+                    <task-executant>INT</task-executant>
+                    <task-modality>COGN</task-modality>
+                    <task-optional>false</task-optional>
+                    <task-interruptible>false</task-interruptible>
+                    <task-decomposition>LEAF</task-decomposition>
+                    <task-precondition>true</task-precondition>
+                    <task-descriptionprecondition>tant que sélection disponible</task-descriptionprecondition>
+                    <task-effetsdebord>void</task-effetsdebord>
+                    <task-iteration>[1]</task-iteration>
+                    <point classkmad="tache.Point" idkmad="K83">
+                        <point-x>7654</point-x>
+                        <point-y>883</point-y>
+                    </point>
+                </task>
+                <task classkmad="tache.Task" id-task-point="K88" id-task-subtasks-list="K342 K90 K345 K92 " idkmad="K93">
+                    <task-name>Recevoir la réservation</task-name>
+                    <task-numero>3.3.3</task-numero>
+                    <task-observation/>
+                    <task-executant>ABS</task-executant>
+                    <task-modality>COGN</task-modality>
+                    <task-optional>false</task-optional>
+                    <task-interruptible>false</task-interruptible>
+                    <task-decomposition>SEQ</task-decomposition>
+                    <task-precondition>true</task-precondition>
+                    <task-descriptionprecondition>Tous les Pass et hébergements étaient encore disponibles (transaction validée)</task-descriptionprecondition>
+                    <task-effetsdebord>void</task-effetsdebord>
+                    <task-iteration>[1]</task-iteration>
+                    <point classkmad="tache.Point" idkmad="K88">
+                        <point-x>8103</point-x>
+                        <point-y>883</point-y>
+                    </point>
+                    <task classkmad="tache.Task" id-task-point="K341" idkmad="K342">
+                        <task-name>Générer les pass et les bons hébergements en pdf</task-name>
+                        <task-numero>3.3.3.1</task-numero>
+                        <task-observation/>
+                        <task-executant>SYS</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K341">
+                            <point-x>7689</point-x>
+                            <point-y>1254</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K89" idkmad="K90">
+                        <task-name>Afficher reservation confirmer</task-name>
+                        <task-numero>3.3.3.2</task-numero>
+                        <task-observation/>
+                        <task-executant>SYS</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-descriptionprecondition>paiement accépté</task-descriptionprecondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K89">
+                            <point-x>8172</point-x>
+                            <point-y>1254</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K344" idkmad="K345">
+                        <task-name>Envoyer reservation par mail</task-name>
+                        <task-numero>3.3.3.3</task-numero>
+                        <task-observation/>
+                        <task-executant>SYS</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K344">
+                            <point-x>8574</point-x>
+                            <point-y>1254</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K91" idkmad="K92">
+                        <task-name>Télécharger les Pass et les bons d'hébergement</task-name>
+                        <task-numero>3.3.3.4</task-numero>
+                        <task-observation/>
+                        <task-executant>INT</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K91">
+                            <point-x>8928</point-x>
+                            <point-y>1254</point-y>
+                        </point>
+                    </task>
+                </task>
+            </task>
+        </task>
+    </task>
+    <abstractobject classkmad="metaobjet.ObjetAbstrait" idkmad="K150">
+        <abstractobject-name>Festival</abstractobject-name>
+        <abstractobject-description>Festival proposé dans FestiBed</abstractobject-description>
+        <group classkmad="metaobjet.Groupe" id-group-abstractobject="K150" id-group-agregat="K173" idkmad="K171">
+            <agregat classkmad="metaobjet.EnsembleAg" idkmad="K173">
+                <id-agregat-concreteobjects-list>
+                    <id-agregat-concreteobject>K186</id-agregat-concreteobject>
+                </id-agregat-concreteobjects-list>
+            </agregat>
+            <group-name>FestivalsAffiches</group-name>
+            <group-description>Festivals ayant des Pass disponibles affichés après une recherche</group-description>
+        </group>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K150" idkmad="K151">
+            <abstractattribut-name>nom</abstractattribut-name>
+            <abstractattribut-typestructure>StrValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K150" idkmad="K152">
+            <abstractattribut-name>passDisponibles</abstractattribut-name>
+            <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <concreteobject classkmad="metaobjet.ObjetConcret" id-concreteobject-abstractobject="K150" id-concreteobject-group="K171" idkmad="K186">
+            <concreteobject-name>Musilac</concreteobject-name>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K151" id-concreteattribut-concreteobject="K186" id-concreteattribut-value="K188" idkmad="K187">
+                <typevalue classkmad="metaobjet.StrValue" idkmad="K188">
+                    <typevalue-value>Musilac</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K152" id-concreteattribut-concreteobject="K186" id-concreteattribut-value="K190" idkmad="K189">
+                <typevalue classkmad="metaobjet.NumberValue" idkmad="K190">
+                    <typevalue-value>40</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+        </concreteobject>
+    </abstractobject>
+    <abstractobject classkmad="metaobjet.ObjetAbstrait" idkmad="K153">
+        <abstractobject-name>Hebergement</abstractobject-name>
+        <abstractobject-description>Offre réservable d'un établissement, disponible sur des nuits du festival</abstractobject-description>
+        <group classkmad="metaobjet.Groupe" id-group-abstractobject="K153" id-group-agregat="K176" idkmad="K174">
+            <agregat classkmad="metaobjet.EnsembleAg" idkmad="K176">
+                <id-agregat-concreteobjects-list>
+                    <id-agregat-concreteobject>K191</id-agregat-concreteobject>
+                </id-agregat-concreteobjects-list>
+            </agregat>
+            <group-name>HebergementsAffiches</group-name>
+            <group-description>Hébergements disponibles affichés pour le festival choisi</group-description>
+        </group>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K153" idkmad="K156">
+            <abstractattribut-name>capacite</abstractattribut-name>
+            <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K153" idkmad="K154">
+            <abstractattribut-name>nom</abstractattribut-name>
+            <abstractattribut-typestructure>StrValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K153" idkmad="K155">
+            <abstractattribut-name>type</abstractattribut-name>
+            <abstractattribut-typestructure>StrValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K153" idkmad="K157">
+            <abstractattribut-name>disponible</abstractattribut-name>
+            <abstractattribut-typestructure>BoolValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <concreteobject classkmad="metaobjet.ObjetConcret" id-concreteobject-abstractobject="K153" id-concreteobject-group="K174" idkmad="K191">
+            <concreteobject-name>Emplacement 2 pers - Camping du Sierroz</concreteobject-name>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K154" id-concreteattribut-concreteobject="K191" id-concreteattribut-value="K193" idkmad="K192">
+                <typevalue classkmad="metaobjet.StrValue" idkmad="K193">
+                    <typevalue-value>Camping du Sierroz</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K156" id-concreteattribut-concreteobject="K191" id-concreteattribut-value="K197" idkmad="K196">
+                <typevalue classkmad="metaobjet.NumberValue" idkmad="K197">
+                    <typevalue-value>2</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K155" id-concreteattribut-concreteobject="K191" id-concreteattribut-value="K195" idkmad="K194">
+                <typevalue classkmad="metaobjet.StrValue" idkmad="K195">
+                    <typevalue-value>camping</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K157" id-concreteattribut-concreteobject="K191" id-concreteattribut-value="K199" idkmad="K198">
+                <typevalue classkmad="metaobjet.BoolValue" idkmad="K199">
+                    <typevalue-value>true</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+        </concreteobject>
+    </abstractobject>
+    <abstractobject classkmad="metaobjet.ObjetAbstrait" idkmad="K158">
+        <abstractobject-name>Selection</abstractobject-name>
+        <abstractobject-description>Sélection en cours de constitution : un festival, ses Pass et ses hébergements</abstractobject-description>
+        <group classkmad="metaobjet.Groupe" id-group-abstractobject="K158" id-group-agregat="K179" idkmad="K177">
+            <agregat classkmad="metaobjet.UniqAg" id-agregat-concreteobjects-list="K200 " idkmad="K179"/>
+            <group-name>SelectionEnCours</group-name>
+            <group-description>Sélection que le festivalier est en train de constituer</group-description>
+        </group>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K158" idkmad="K160">
+            <abstractattribut-name>nbPass</abstractattribut-name>
+            <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K158" idkmad="K159">
+            <abstractattribut-name>festival</abstractattribut-name>
+            <abstractattribut-typestructure>StrValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K158" idkmad="K161">
+            <abstractattribut-name>passDisponibles</abstractattribut-name>
+            <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K158" idkmad="K162">
+            <abstractattribut-name>capaciteTotale</abstractattribut-name>
+            <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <concreteobject classkmad="metaobjet.ObjetConcret" id-concreteobject-abstractobject="K158" id-concreteobject-group="K177" idkmad="K200">
+            <concreteobject-name>Selection Musilac</concreteobject-name>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K162" id-concreteattribut-concreteobject="K200" id-concreteattribut-value="K208" idkmad="K207">
+                <typevalue classkmad="metaobjet.NumberValue" idkmad="K208">
+                    <typevalue-value>2</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K161" id-concreteattribut-concreteobject="K200" id-concreteattribut-value="K206" idkmad="K205">
+                <typevalue classkmad="metaobjet.NumberValue" idkmad="K206">
+                    <typevalue-value>40</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K160" id-concreteattribut-concreteobject="K200" id-concreteattribut-value="K204" idkmad="K203">
+                <typevalue classkmad="metaobjet.NumberValue" idkmad="K204">
+                    <typevalue-value>2</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K159" id-concreteattribut-concreteobject="K200" id-concreteattribut-value="K202" idkmad="K201">
+                <typevalue classkmad="metaobjet.StrValue" idkmad="K202">
+                    <typevalue-value>Musilac</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+        </concreteobject>
+    </abstractobject>
+    <abstractobject classkmad="metaobjet.ObjetAbstrait" idkmad="K163">
+        <abstractobject-name>ElementPanier</abstractobject-name>
+        <abstractobject-description>Sélection ajoutée au panier (retirée automatiquement au bout de 15 minutes)</abstractobject-description>
+        <group classkmad="metaobjet.Groupe" id-group-abstractobject="K163" id-group-agregat="K182" idkmad="K180">
+            <agregat classkmad="metaobjet.ListeAg" id-agregat-concreteobjects-list="K209 " idkmad="K182"/>
+            <group-name>Panier</group-name>
+            <group-description>Contenu du panier du festivalier</group-description>
+        </group>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K163" idkmad="K166">
+            <abstractattribut-name>capaciteTotale</abstractattribut-name>
+            <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K163" idkmad="K167">
+            <abstractattribut-name>minutesDepuisAjout</abstractattribut-name>
+            <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K163" idkmad="K165">
+            <abstractattribut-name>nbPass</abstractattribut-name>
+            <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K163" idkmad="K164">
+            <abstractattribut-name>festival</abstractattribut-name>
+            <abstractattribut-typestructure>StrValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <concreteobject classkmad="metaobjet.ObjetConcret" id-concreteobject-abstractobject="K163" id-concreteobject-group="K180" idkmad="K209">
+            <concreteobject-name>Musilac - 2 Pass + camping</concreteobject-name>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K166" id-concreteattribut-concreteobject="K209" id-concreteattribut-value="K215" idkmad="K214">
+                <typevalue classkmad="metaobjet.NumberValue" idkmad="K215">
+                    <typevalue-value>2</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K165" id-concreteattribut-concreteobject="K209" id-concreteattribut-value="K213" idkmad="K212">
+                <typevalue classkmad="metaobjet.NumberValue" idkmad="K213">
+                    <typevalue-value>2</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K164" id-concreteattribut-concreteobject="K209" id-concreteattribut-value="K211" idkmad="K210">
+                <typevalue classkmad="metaobjet.StrValue" idkmad="K211">
+                    <typevalue-value>Musilac</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K167" id-concreteattribut-concreteobject="K209" id-concreteattribut-value="K217" idkmad="K216">
+                <typevalue classkmad="metaobjet.NumberValue" idkmad="K217">
+                    <typevalue-value>3</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+        </concreteobject>
+    </abstractobject>
+    <abstractobject classkmad="metaobjet.ObjetAbstrait" idkmad="K168">
+        <abstractobject-name>Reservation</abstractobject-name>
+        <abstractobject-description>Résultat de la validation transactionnelle du panier</abstractobject-description>
+        <group classkmad="metaobjet.Groupe" id-group-abstractobject="K168" id-group-agregat="K185" idkmad="K183">
+            <agregat classkmad="metaobjet.UniqAg" id-agregat-concreteobjects-list="K218 " idkmad="K185"/>
+            <group-name>ResultatValidation</group-name>
+            <group-description>Résultat de la vérification des disponibilités au moment de la validation</group-description>
+        </group>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K168" idkmad="K169">
+            <abstractattribut-name>numero</abstractattribut-name>
+            <abstractattribut-typestructure>StrValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K168" idkmad="K170">
+            <abstractattribut-name>ressourcesDisponibles</abstractattribut-name>
+            <abstractattribut-typestructure>BoolValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <concreteobject classkmad="metaobjet.ObjetConcret" id-concreteobject-abstractobject="K168" id-concreteobject-group="K183" idkmad="K218">
+            <concreteobject-name>Reservation Jeff</concreteobject-name>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K170" id-concreteattribut-concreteobject="K218" id-concreteattribut-value="K222" idkmad="K221">
+                <typevalue classkmad="metaobjet.BoolValue" idkmad="K222">
+                    <typevalue-value>true</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K169" id-concreteattribut-concreteobject="K218" id-concreteattribut-value="K220" idkmad="K219">
+                <typevalue classkmad="metaobjet.StrValue" idkmad="K220">
+                    <typevalue-value>FB-0001</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+        </concreteobject>
+    </abstractobject>
+</kmad-model>

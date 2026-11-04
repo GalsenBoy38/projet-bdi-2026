@@ -38,7 +38,7 @@
                 <point-x>2860</point-x>
                 <point-y>230</point-y>
             </point>
-            <task classkmad="tache.Task" id-task-point="K5" id-task-subtasks-list="K17 K19 K21 K23 " idkmad="K24">
+            <task classkmad="tache.Task" id-task-point="K5" id-task-subtasks-list="K17 K21 K23 " idkmad="K24">
                 <task-name>Rechercher un festival</task-name>
                 <task-numero>1.1</task-numero>
                 <task-observation/>
@@ -50,7 +50,6 @@
                 <task-precondition>true</task-precondition>
                 <task-effetsdebord>void</task-effetsdebord>
                 <task-iteration>[1]</task-iteration>
-                <task-descriptioniteration>tant que veut faire une nouvelle recherche</task-descriptioniteration>
                 <point classkmad="tache.Point" idkmad="K5">
                     <point-x>1170</point-x>
                     <point-y>460</point-y>
@@ -78,7 +77,7 @@
                         <task-observation/>
                         <task-executant>INT</task-executant>
                         <task-modality>COGN</task-modality>
-                        <task-optional>true</task-optional>
+                        <task-optional>false</task-optional>
                         <task-interruptible>false</task-interruptible>
                         <task-decomposition>LEAF</task-decomposition>
                         <task-precondition>true</task-precondition>
@@ -95,7 +94,7 @@
                         <task-observation/>
                         <task-executant>INT</task-executant>
                         <task-modality>COGN</task-modality>
-                        <task-optional>true</task-optional>
+                        <task-optional>false</task-optional>
                         <task-interruptible>false</task-interruptible>
                         <task-decomposition>LEAF</task-decomposition>
                         <task-precondition>true</task-precondition>
@@ -112,7 +111,7 @@
                         <task-observation/>
                         <task-executant>INT</task-executant>
                         <task-modality>COGN</task-modality>
-                        <task-optional>true</task-optional>
+                        <task-optional>false</task-optional>
                         <task-interruptible>false</task-interruptible>
                         <task-decomposition>LEAF</task-decomposition>
                         <task-precondition>true</task-precondition>
@@ -129,7 +128,7 @@
                         <task-observation/>
                         <task-executant>INT</task-executant>
                         <task-modality>COGN</task-modality>
-                        <task-optional>true</task-optional>
+                        <task-optional>false</task-optional>
                         <task-interruptible>false</task-interruptible>
                         <task-decomposition>LEAF</task-decomposition>
                         <task-precondition>true</task-precondition>
@@ -146,7 +145,7 @@
                         <task-observation/>
                         <task-executant>INT</task-executant>
                         <task-modality>COGN</task-modality>
-                        <task-optional>true</task-optional>
+                        <task-optional>false</task-optional>
                         <task-interruptible>false</task-interruptible>
                         <task-decomposition>LEAF</task-decomposition>
                         <task-precondition>true</task-precondition>
@@ -158,26 +157,9 @@
                         </point>
                     </task>
                 </task>
-                <task classkmad="tache.Task" id-task-point="K18" idkmad="K19">
-                    <task-name>Lancer la recherche</task-name>
-                    <task-numero>1.1.2</task-numero>
-                    <task-observation/>
-                    <task-executant>INT</task-executant>
-                    <task-modality>COGN</task-modality>
-                    <task-optional>false</task-optional>
-                    <task-interruptible>false</task-interruptible>
-                    <task-decomposition>LEAF</task-decomposition>
-                    <task-precondition>true</task-precondition>
-                    <task-effetsdebord>void</task-effetsdebord>
-                    <task-iteration>[1]</task-iteration>
-                    <point classkmad="tache.Point" idkmad="K18">
-                        <point-x>1116</point-x>
-                        <point-y>690</point-y>
-                    </point>
-                </task>
                 <task classkmad="tache.Task" id-task-point="K20" idkmad="K21">
                     <task-name>Afficher les festivals ayant des Pass disponibles</task-name>
-                    <task-numero>1.1.3</task-numero>
+                    <task-numero>1.1.2</task-numero>
                     <task-observation/>
                     <task-executant>SYS</task-executant>
                     <task-modality>COGN</task-modality>
@@ -194,7 +176,7 @@
                 </task>
                 <task classkmad="tache.Task" id-task-point="K22" idkmad="K23">
                     <task-name>Choisir un festival</task-name>
-                    <task-numero>1.1.4</task-numero>
+                    <task-numero>1.1.3</task-numero>
                     <task-observation/>
                     <task-executant>INT</task-executant>
                     <task-modality>COGN</task-modality>
@@ -221,8 +203,10 @@
                 <task-interruptible>false</task-interruptible>
                 <task-decomposition>LEAF</task-decomposition>
                 <task-precondition>true</task-precondition>
+                <task-descriptionprecondition>Le nombre de pass saisi doit être inférieur ou égal au quota de pass restant pour le festival</task-descriptionprecondition>
                 <task-effetsdebord>void</task-effetsdebord>
                 <task-iteration>[1]</task-iteration>
+                <task-descriptioniteration>tant que le nombre de pass saisit est inférieur au nombre de pass restant pour le festival</task-descriptioniteration>
                 <point classkmad="tache.Point" idkmad="K25">
                     <point-x>2080</point-x>
                     <point-y>460</point-y>
@@ -240,7 +224,6 @@
                 <task-precondition>true</task-precondition>
                 <task-effetsdebord>void</task-effetsdebord>
                 <task-iteration>[1]</task-iteration>
-                <task-descriptioniteration>tant que il veut rechercher a nouveau</task-descriptioniteration>
                 <point classkmad="tache.Point" idkmad="K27">
                     <point-x>3510</point-x>
                     <point-y>460</point-y>
@@ -268,7 +251,7 @@
                         <task-observation/>
                         <task-executant>INT</task-executant>
                         <task-modality>COGN</task-modality>
-                        <task-optional>true</task-optional>
+                        <task-optional>false</task-optional>
                         <task-interruptible>false</task-interruptible>
                         <task-decomposition>LEAF</task-decomposition>
                         <task-precondition>true</task-precondition>
@@ -285,7 +268,7 @@
                         <task-observation/>
                         <task-executant>INT</task-executant>
                         <task-modality>COGN</task-modality>
-                        <task-optional>true</task-optional>
+                        <task-optional>false</task-optional>
                         <task-interruptible>false</task-interruptible>
                         <task-decomposition>LEAF</task-decomposition>
                         <task-precondition>true</task-precondition>
@@ -302,7 +285,7 @@
                         <task-observation/>
                         <task-executant>INT</task-executant>
                         <task-modality>COGN</task-modality>
-                        <task-optional>true</task-optional>
+                        <task-optional>false</task-optional>
                         <task-interruptible>false</task-interruptible>
                         <task-decomposition>LEAF</task-decomposition>
                         <task-precondition>true</task-precondition>
@@ -319,7 +302,7 @@
                         <task-observation/>
                         <task-executant>INT</task-executant>
                         <task-modality>COGN</task-modality>
-                        <task-optional>true</task-optional>
+                        <task-optional>false</task-optional>
                         <task-interruptible>false</task-interruptible>
                         <task-decomposition>LEAF</task-decomposition>
                         <task-precondition>true</task-precondition>
@@ -336,7 +319,7 @@
                         <task-observation/>
                         <task-executant>INT</task-executant>
                         <task-modality>COGN</task-modality>
-                        <task-optional>true</task-optional>
+                        <task-optional>false</task-optional>
                         <task-interruptible>false</task-interruptible>
                         <task-decomposition>LEAF</task-decomposition>
                         <task-precondition>true</task-precondition>
@@ -374,7 +357,7 @@
                     <task-optional>false</task-optional>
                     <task-interruptible>false</task-interruptible>
                     <task-decomposition>SEQ</task-decomposition>
-                    <task-precondition>isExist($HebergementsAffiches, $disponible == true)</task-precondition>
+                    <task-precondition>true</task-precondition>
                     <task-descriptionprecondition>Au moins un hébergement disponible est affiché</task-descriptionprecondition>
                     <task-effetsdebord>void</task-effetsdebord>
                     <task-iteration>[1]</task-iteration>
@@ -414,75 +397,42 @@
                         <task-iteration>[1]</task-iteration>
                         <task-descriptioniteration>tant que veut date</task-descriptioniteration>
                         <point classkmad="tache.Point" idkmad="K275">
-                            <point-x>4198</point-x>
+                            <point-x>4265</point-x>
                             <point-y>883</point-y>
                         </point>
                     </task>
                 </task>
             </task>
-            <task classkmad="tache.Task" id-task-point="K47" id-task-subtasks-list="K49 K51 " idkmad="K52">
+            <task classkmad="tache.Task" id-task-point="K47" idkmad="K52">
                 <task-name>Ajouter la sélection au panier</task-name>
                 <task-numero>1.4</task-numero>
                 <task-observation/>
-                <task-executant>ABS</task-executant>
+                <task-executant>INT</task-executant>
                 <task-modality>COGN</task-modality>
                 <task-optional>false</task-optional>
                 <task-interruptible>false</task-interruptible>
-                <task-decomposition>SEQ</task-decomposition>
+                <task-decomposition>LEAF</task-decomposition>
                 <task-precondition>true</task-precondition>
+                <task-descriptionprecondition>au moins 1 Pass, et une capacité des hébergements ≥ au nombre de Pass</task-descriptionprecondition>
                 <task-effetsdebord>void</task-effetsdebord>
                 <task-iteration>[1]</task-iteration>
                 <point classkmad="tache.Point" idkmad="K47">
                     <point-x>4550</point-x>
                     <point-y>460</point-y>
                 </point>
-                <task classkmad="tache.Task" id-task-point="K48" idkmad="K49">
-                    <task-name>Demander l'ajout au panier</task-name>
-                    <task-numero>1.4.1</task-numero>
-                    <task-observation/>
-                    <task-executant>INT</task-executant>
-                    <task-modality>COGN</task-modality>
-                    <task-optional>false</task-optional>
-                    <task-interruptible>false</task-interruptible>
-                    <task-decomposition>LEAF</task-decomposition>
-                    <task-precondition>true</task-precondition>
-                    <task-effetsdebord>void</task-effetsdebord>
-                    <task-iteration>[1]</task-iteration>
-                    <point classkmad="tache.Point" idkmad="K48">
-                        <point-x>4420</point-x>
-                        <point-y>690</point-y>
-                    </point>
-                </task>
-                <task classkmad="tache.Task" id-task-point="K50" idkmad="K51">
-                    <task-name>Vérifier la cohérence Pass / capacité et ajouter au panier</task-name>
-                    <task-numero>1.4.2</task-numero>
-                    <task-observation>Démarre le délai de validité de 15 minutes de la sélection dans le panier</task-observation>
-                    <task-executant>SYS</task-executant>
-                    <task-modality>COGN</task-modality>
-                    <task-optional>false</task-optional>
-                    <task-interruptible>false</task-interruptible>
-                    <task-decomposition>LEAF</task-decomposition>
-                    <task-precondition>(getValue($SelectionEnCours, $nbPass) &gt; 0) AND (getValue($SelectionEnCours, $nbPass) &lt;= getValue($SelectionEnCours, $passDisponibles)) AND (getValue($SelectionEnCours, $capaciteTotale) &gt;= getValue($SelectionEnCours, $nbPass))</task-precondition>
-                    <task-descriptionprecondition>Nombre de Pass compris entre 1 et le nombre de Pass disponibles, et capacité totale des hébergements suffisante (réservation groupée obligatoire)</task-descriptionprecondition>
-                    <task-effetsdebord>void</task-effetsdebord>
-                    <task-iteration>[1]</task-iteration>
-                    <point classkmad="tache.Point" idkmad="K50">
-                        <point-x>4680</point-x>
-                        <point-y>690</point-y>
-                    </point>
-                </task>
             </task>
         </task>
-        <task classkmad="tache.Task" id-task-point="K54" id-task-subtasks-list="K56 K58 K60 " idkmad="K61">
-            <task-name>Gérer le panier (a voir)</task-name>
+        <task classkmad="tache.Task" id-task-point="K54" id-task-subtasks-list="K56 K58 " idkmad="K61">
+            <task-name>Ajuster le panier</task-name>
             <task-numero>2</task-numero>
             <task-observation/>
             <task-executant>INT</task-executant>
             <task-modality>COGN</task-modality>
             <task-optional>true</task-optional>
             <task-interruptible>false</task-interruptible>
-            <task-decomposition>ALT</task-decomposition>
+            <task-decomposition>SEQ</task-decomposition>
             <task-precondition>true</task-precondition>
+            <task-descriptionprecondition>le panier contient au moins une sélection</task-descriptionprecondition>
             <task-effetsdebord>void</task-effetsdebord>
             <task-iteration>[1]</task-iteration>
             <point classkmad="tache.Point" idkmad="K54">
@@ -502,12 +452,12 @@
                 <task-effetsdebord>void</task-effetsdebord>
                 <task-iteration>[1]</task-iteration>
                 <point classkmad="tache.Point" idkmad="K55">
-                    <point-x>4884</point-x>
+                    <point-x>4956</point-x>
                     <point-y>460</point-y>
                 </point>
             </task>
             <task classkmad="tache.Task" id-task-point="K57" idkmad="K58">
-                <task-name>Modifier le nombre de Pass ou les hébergements d'un festival</task-name>
+                <task-name>Modifier la sélection</task-name>
                 <task-numero>2.2</task-numero>
                 <task-observation>Fonctionnalité bonus du cahier des charges</task-observation>
                 <task-executant>INT</task-executant>
@@ -515,35 +465,16 @@
                 <task-optional>false</task-optional>
                 <task-interruptible>false</task-interruptible>
                 <task-decomposition>LEAF</task-decomposition>
-                <task-precondition>card($Panier) &gt; 0</task-precondition>
-                <task-descriptionprecondition>Le panier contient au moins une sélection ; la modification doit conserver la cohérence Pass / capacité</task-descriptionprecondition>
+                <task-precondition>true</task-precondition>
                 <task-effetsdebord>void</task-effetsdebord>
                 <task-iteration>[1]</task-iteration>
                 <point classkmad="tache.Point" idkmad="K57">
-                    <point-x>5089</point-x>
-                    <point-y>460</point-y>
-                </point>
-            </task>
-            <task classkmad="tache.Task" id-task-point="K59" idkmad="K60">
-                <task-name>Retirer la sélection d'un festival</task-name>
-                <task-numero>2.3</task-numero>
-                <task-observation/>
-                <task-executant>INT</task-executant>
-                <task-modality>COGN</task-modality>
-                <task-optional>false</task-optional>
-                <task-interruptible>false</task-interruptible>
-                <task-decomposition>LEAF</task-decomposition>
-                <task-precondition>card($Panier) &gt; 0</task-precondition>
-                <task-descriptionprecondition>Le panier contient au moins une sélection</task-descriptionprecondition>
-                <task-effetsdebord>void</task-effetsdebord>
-                <task-iteration>[1]</task-iteration>
-                <point classkmad="tache.Point" idkmad="K59">
-                    <point-x>5469</point-x>
+                    <point-x>5397</point-x>
                     <point-y>460</point-y>
                 </point>
             </task>
         </task>
-        <task classkmad="tache.Task" id-task-point="K62" id-task-subtasks-list="K70 K76 K98 " idkmad="K99">
+        <task classkmad="tache.Task" id-task-point="K62" id-task-subtasks-list="K70 K76 K97 " idkmad="K99">
             <task-name>Valider le panier</task-name>
             <task-numero>3</task-numero>
             <task-observation/>
@@ -552,8 +483,7 @@
             <task-optional>false</task-optional>
             <task-interruptible>false</task-interruptible>
             <task-decomposition>SEQ</task-decomposition>
-            <task-precondition>card($Panier) &gt; 0</task-precondition>
-            <task-descriptionprecondition>Le panier contient au moins une sélection (un panier vide ne peut pas être validé)</task-descriptionprecondition>
+            <task-precondition>true</task-precondition>
             <task-effetsdebord>void</task-effetsdebord>
             <task-iteration>[1]</task-iteration>
             <point classkmad="tache.Point" idkmad="K62">
@@ -611,9 +541,26 @@
                     </point>
                 </task>
             </task>
-            <task classkmad="tache.Task" id-task-point="K71" id-task-subtasks-list="K73 K75 " idkmad="K76">
+            <task classkmad="tache.Task" id-task-point="K71" idkmad="K76">
                 <task-name>Consulter le récapitulatif</task-name>
                 <task-numero>3.2</task-numero>
+                <task-observation/>
+                <task-executant>INT</task-executant>
+                <task-modality>COGN</task-modality>
+                <task-optional>false</task-optional>
+                <task-interruptible>false</task-interruptible>
+                <task-decomposition>LEAF</task-decomposition>
+                <task-precondition>true</task-precondition>
+                <task-effetsdebord>void</task-effetsdebord>
+                <task-iteration>[1]</task-iteration>
+                <point classkmad="tache.Point" idkmad="K71">
+                    <point-x>6589</point-x>
+                    <point-y>460</point-y>
+                </point>
+            </task>
+            <task classkmad="tache.Task" id-task-point="K80" id-task-subtasks-list="K82 K84 K93 " idkmad="K97">
+                <task-name>Confirmer la réservation</task-name>
+                <task-numero>3.3</task-numero>
                 <task-observation/>
                 <task-executant>ABS</task-executant>
                 <task-modality>COGN</task-modality>
@@ -623,63 +570,12 @@
                 <task-precondition>true</task-precondition>
                 <task-effetsdebord>void</task-effetsdebord>
                 <task-iteration>[1]</task-iteration>
-                <point classkmad="tache.Point" idkmad="K71">
-                    <point-x>6630</point-x>
+                <point classkmad="tache.Point" idkmad="K80">
+                    <point-x>7439</point-x>
                     <point-y>460</point-y>
                 </point>
-                <task classkmad="tache.Task" id-task-point="K72" idkmad="K73">
-                    <task-name>Afficher le récapitulatif et signaler les festivals qui se chevauchent</task-name>
-                    <task-numero>3.2.1</task-numero>
-                    <task-observation/>
-                    <task-executant>SYS</task-executant>
-                    <task-modality>COGN</task-modality>
-                    <task-optional>false</task-optional>
-                    <task-interruptible>false</task-interruptible>
-                    <task-decomposition>LEAF</task-decomposition>
-                    <task-precondition>true</task-precondition>
-                    <task-effetsdebord>void</task-effetsdebord>
-                    <task-iteration>[1]</task-iteration>
-                    <point classkmad="tache.Point" idkmad="K72">
-                        <point-x>6495</point-x>
-                        <point-y>690</point-y>
-                    </point>
-                </task>
-                <task classkmad="tache.Task" id-task-point="K74" idkmad="K75">
-                    <task-name>Vérifier le récapitulatif</task-name>
-                    <task-numero>3.2.2</task-numero>
-                    <task-observation/>
-                    <task-executant>USER</task-executant>
-                    <task-modality>COGN</task-modality>
-                    <task-optional>false</task-optional>
-                    <task-interruptible>false</task-interruptible>
-                    <task-decomposition>LEAF</task-decomposition>
-                    <task-precondition>true</task-precondition>
-                    <task-effetsdebord>void</task-effetsdebord>
-                    <task-iteration>[1]</task-iteration>
-                    <point classkmad="tache.Point" idkmad="K74">
-                        <point-x>6902</point-x>
-                        <point-y>690</point-y>
-                    </point>
-                </task>
-            </task>
-            <task classkmad="tache.Task" id-task-point="K77" id-task-subtasks-list="K79 K97 " idkmad="K98">
-                <task-name>Décider la validation</task-name>
-                <task-numero>3.3</task-numero>
-                <task-observation/>
-                <task-executant>ABS</task-executant>
-                <task-modality>COGN</task-modality>
-                <task-optional>false</task-optional>
-                <task-interruptible>false</task-interruptible>
-                <task-decomposition>ALT</task-decomposition>
-                <task-precondition>true</task-precondition>
-                <task-effetsdebord>void</task-effetsdebord>
-                <task-iteration>[1]</task-iteration>
-                <point classkmad="tache.Point" idkmad="K77">
-                    <point-x>7426</point-x>
-                    <point-y>460</point-y>
-                </point>
-                <task classkmad="tache.Task" id-task-point="K78" idkmad="K79">
-                    <task-name>Annuler la validation</task-name>
+                <task classkmad="tache.Task" id-task-point="K81" idkmad="K82">
+                    <task-name>Confirmer la validation</task-name>
                     <task-numero>3.3.1</task-numero>
                     <task-observation/>
                     <task-executant>INT</task-executant>
@@ -688,16 +584,35 @@
                     <task-interruptible>false</task-interruptible>
                     <task-decomposition>LEAF</task-decomposition>
                     <task-precondition>true</task-precondition>
+                    <task-descriptionprecondition>Le panier contient au moins une sélection (un panier vide ne peut pas être validé)</task-descriptionprecondition>
                     <task-effetsdebord>void</task-effetsdebord>
                     <task-iteration>[1]</task-iteration>
-                    <point classkmad="tache.Point" idkmad="K78">
-                        <point-x>7172</point-x>
-                        <point-y>690</point-y>
+                    <point classkmad="tache.Point" idkmad="K81">
+                        <point-x>7050</point-x>
+                        <point-y>883</point-y>
                     </point>
                 </task>
-                <task classkmad="tache.Task" id-task-point="K80" id-task-subtasks-list="K82 K86 K285 K84 K96 " idkmad="K97">
-                    <task-name>Confirmer la réservation</task-name>
+                <task classkmad="tache.Task" id-task-point="K83" idkmad="K84">
+                    <task-name>Payer</task-name>
                     <task-numero>3.3.2</task-numero>
+                    <task-observation>Paiement prévu dans le modèle mais non développé dans le prototype</task-observation>
+                    <task-executant>INT</task-executant>
+                    <task-modality>COGN</task-modality>
+                    <task-optional>false</task-optional>
+                    <task-interruptible>false</task-interruptible>
+                    <task-decomposition>LEAF</task-decomposition>
+                    <task-precondition>true</task-precondition>
+                    <task-descriptionprecondition>tant que sélection disponible</task-descriptionprecondition>
+                    <task-effetsdebord>void</task-effetsdebord>
+                    <task-iteration>[1]</task-iteration>
+                    <point classkmad="tache.Point" idkmad="K83">
+                        <point-x>7654</point-x>
+                        <point-y>883</point-y>
+                    </point>
+                </task>
+                <task classkmad="tache.Task" id-task-point="K88" id-task-subtasks-list="K342 K90 K345 K92 " idkmad="K93">
+                    <task-name>Recevoir la réservation</task-name>
+                    <task-numero>3.3.3</task-numero>
                     <task-observation/>
                     <task-executant>ABS</task-executant>
                     <task-modality>COGN</task-modality>
@@ -705,15 +620,68 @@
                     <task-interruptible>false</task-interruptible>
                     <task-decomposition>SEQ</task-decomposition>
                     <task-precondition>true</task-precondition>
+                    <task-descriptionprecondition>Tous les Pass et hébergements étaient encore disponibles (transaction validée)</task-descriptionprecondition>
                     <task-effetsdebord>void</task-effetsdebord>
                     <task-iteration>[1]</task-iteration>
-                    <point classkmad="tache.Point" idkmad="K80">
-                        <point-x>7832</point-x>
-                        <point-y>690</point-y>
+                    <point classkmad="tache.Point" idkmad="K88">
+                        <point-x>8103</point-x>
+                        <point-y>883</point-y>
                     </point>
-                    <task classkmad="tache.Task" id-task-point="K81" idkmad="K82">
-                        <task-name>Confirmer la validation</task-name>
-                        <task-numero>3.3.2.1</task-numero>
+                    <task classkmad="tache.Task" id-task-point="K341" idkmad="K342">
+                        <task-name>Générer les pass et les bons hébergements en pdf</task-name>
+                        <task-numero>3.3.3.1</task-numero>
+                        <task-observation/>
+                        <task-executant>SYS</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K341">
+                            <point-x>7689</point-x>
+                            <point-y>1353</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K89" idkmad="K90">
+                        <task-name>Afficher reservation confirmer</task-name>
+                        <task-numero>3.3.3.2</task-numero>
+                        <task-observation/>
+                        <task-executant>SYS</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-descriptionprecondition>paiement accépté</task-descriptionprecondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K89">
+                            <point-x>8172</point-x>
+                            <point-y>1353</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K344" idkmad="K345">
+                        <task-name>Envoyer reservation par mail</task-name>
+                        <task-numero>3.3.3.3</task-numero>
+                        <task-observation/>
+                        <task-executant>SYS</task-executant>
+                        <task-modality>COGN</task-modality>
+                        <task-optional>false</task-optional>
+                        <task-interruptible>false</task-interruptible>
+                        <task-decomposition>LEAF</task-decomposition>
+                        <task-precondition>true</task-precondition>
+                        <task-effetsdebord>void</task-effetsdebord>
+                        <task-iteration>[1]</task-iteration>
+                        <point classkmad="tache.Point" idkmad="K344">
+                            <point-x>8605</point-x>
+                            <point-y>1353</point-y>
+                        </point>
+                    </task>
+                    <task classkmad="tache.Task" id-task-point="K91" idkmad="K92">
+                        <task-name>Télécharger les Pass et les bons d'hébergement</task-name>
+                        <task-numero>3.3.3.4</task-numero>
                         <task-observation/>
                         <task-executant>INT</task-executant>
                         <task-modality>COGN</task-modality>
@@ -723,219 +691,10 @@
                         <task-precondition>true</task-precondition>
                         <task-effetsdebord>void</task-effetsdebord>
                         <task-iteration>[1]</task-iteration>
-                        <point classkmad="tache.Point" idkmad="K81">
-                            <point-x>7280</point-x>
-                            <point-y>920</point-y>
+                        <point classkmad="tache.Point" idkmad="K91">
+                            <point-x>8929</point-x>
+                            <point-y>1353</point-y>
                         </point>
-                    </task>
-                    <task classkmad="tache.Task" id-task-point="K85" id-task-subtasks-list="K279 K282 " idkmad="K86">
-                        <task-name>Traiter les pass indisponible</task-name>
-                        <task-numero>3.3.2.2</task-numero>
-                        <task-observation>Transaction ACID : les Pass et les hébergements sont réservés ensemble ou rien n'est réservé</task-observation>
-                        <task-executant>ABS</task-executant>
-                        <task-modality>COGN</task-modality>
-                        <task-optional>true</task-optional>
-                        <task-interruptible>false</task-interruptible>
-                        <task-decomposition>ALT</task-decomposition>
-                        <task-precondition>true</task-precondition>
-                        <task-descriptionprecondition>une partie des pass est indisponible</task-descriptionprecondition>
-                        <task-effetsdebord>void</task-effetsdebord>
-                        <task-iteration>[1]</task-iteration>
-                        <point classkmad="tache.Point" idkmad="K85">
-                            <point-x>7590</point-x>
-                            <point-y>952</point-y>
-                        </point>
-                        <task classkmad="tache.Task" id-task-point="K278" idkmad="K279">
-                            <task-name>Annuler la validation</task-name>
-                            <task-numero>3.3.2.2.1</task-numero>
-                            <task-observation/>
-                            <task-executant>INT</task-executant>
-                            <task-modality>COGN</task-modality>
-                            <task-optional>false</task-optional>
-                            <task-interruptible>false</task-interruptible>
-                            <task-decomposition>LEAF</task-decomposition>
-                            <task-precondition>true</task-precondition>
-                            <task-effetsdebord>void</task-effetsdebord>
-                            <task-iteration>[1]</task-iteration>
-                            <point classkmad="tache.Point" idkmad="K278">
-                                <point-x>7464</point-x>
-                                <point-y>1107</point-y>
-                            </point>
-                        </task>
-                        <task classkmad="tache.Task" id-task-point="K281" idkmad="K282">
-                            <task-name>Continuer sans les pass indisponible</task-name>
-                            <task-numero>3.3.2.2.2</task-numero>
-                            <task-observation/>
-                            <task-executant>INT</task-executant>
-                            <task-modality>COGN</task-modality>
-                            <task-optional>false</task-optional>
-                            <task-interruptible>false</task-interruptible>
-                            <task-decomposition>LEAF</task-decomposition>
-                            <task-precondition>true</task-precondition>
-                            <task-effetsdebord>void</task-effetsdebord>
-                            <task-iteration>[1]</task-iteration>
-                            <point classkmad="tache.Point" idkmad="K281">
-                                <point-x>7729</point-x>
-                                <point-y>1107</point-y>
-                            </point>
-                        </task>
-                    </task>
-                    <task classkmad="tache.Task" id-task-point="K284" id-task-subtasks-list="K288 K291 " idkmad="K285">
-                        <task-name>Traiter les héberement indisponible</task-name>
-                        <task-numero>3.3.2.3</task-numero>
-                        <task-observation/>
-                        <task-executant>ABS</task-executant>
-                        <task-modality>COGN</task-modality>
-                        <task-optional>false</task-optional>
-                        <task-interruptible>false</task-interruptible>
-                        <task-decomposition>ALT</task-decomposition>
-                        <task-precondition>true</task-precondition>
-                        <task-descriptionprecondition>tant que il y a des hebergement indisponible</task-descriptionprecondition>
-                        <task-effetsdebord>void</task-effetsdebord>
-                        <task-iteration>[1]</task-iteration>
-                        <point classkmad="tache.Point" idkmad="K284">
-                            <point-x>8168</point-x>
-                            <point-y>920</point-y>
-                        </point>
-                        <task classkmad="tache.Task" id-task-point="K287" idkmad="K288">
-                            <task-name>Annuler la validation</task-name>
-                            <task-numero>3.3.2.3.1</task-numero>
-                            <task-observation/>
-                            <task-executant>INT</task-executant>
-                            <task-modality>COGN</task-modality>
-                            <task-optional>false</task-optional>
-                            <task-interruptible>false</task-interruptible>
-                            <task-decomposition>LEAF</task-decomposition>
-                            <task-precondition>true</task-precondition>
-                            <task-effetsdebord>void</task-effetsdebord>
-                            <task-iteration>[1]</task-iteration>
-                            <point classkmad="tache.Point" idkmad="K287">
-                                <point-x>8098</point-x>
-                                <point-y>1082</point-y>
-                            </point>
-                        </task>
-                        <task classkmad="tache.Task" id-task-point="K290" idkmad="K291">
-                            <task-name>Continuer sans les hébergments indisponible</task-name>
-                            <task-numero>3.3.2.3.2</task-numero>
-                            <task-observation/>
-                            <task-executant>INT</task-executant>
-                            <task-modality>COGN</task-modality>
-                            <task-optional>false</task-optional>
-                            <task-interruptible>false</task-interruptible>
-                            <task-decomposition>LEAF</task-decomposition>
-                            <task-precondition>true</task-precondition>
-                            <task-effetsdebord>void</task-effetsdebord>
-                            <task-iteration>[1]</task-iteration>
-                            <point classkmad="tache.Point" idkmad="K290">
-                                <point-x>8383</point-x>
-                                <point-y>1082</point-y>
-                            </point>
-                        </task>
-                    </task>
-                    <task classkmad="tache.Task" id-task-point="K83" idkmad="K84">
-                        <task-name>Payer</task-name>
-                        <task-numero>3.3.2.4</task-numero>
-                        <task-observation>Paiement prévu dans le modèle mais non développé dans le prototype</task-observation>
-                        <task-executant>INT</task-executant>
-                        <task-modality>COGN</task-modality>
-                        <task-optional>false</task-optional>
-                        <task-interruptible>false</task-interruptible>
-                        <task-decomposition>LEAF</task-decomposition>
-                        <task-precondition>true</task-precondition>
-                        <task-effetsdebord>void</task-effetsdebord>
-                        <task-iteration>[1]</task-iteration>
-                        <point classkmad="tache.Point" idkmad="K83">
-                            <point-x>8669</point-x>
-                            <point-y>952</point-y>
-                        </point>
-                    </task>
-                    <task classkmad="tache.Task" id-task-point="K87" id-task-subtasks-list="K93 K95 " idkmad="K96">
-                        <task-name>Obtenir le résultat de la réservation</task-name>
-                        <task-numero>3.3.2.5</task-numero>
-                        <task-observation/>
-                        <task-executant>ABS</task-executant>
-                        <task-modality>COGN</task-modality>
-                        <task-optional>false</task-optional>
-                        <task-interruptible>false</task-interruptible>
-                        <task-decomposition>ALT</task-decomposition>
-                        <task-precondition>true</task-precondition>
-                        <task-effetsdebord>void</task-effetsdebord>
-                        <task-iteration>[1]</task-iteration>
-                        <point classkmad="tache.Point" idkmad="K87">
-                            <point-x>8949</point-x>
-                            <point-y>920</point-y>
-                        </point>
-                        <task classkmad="tache.Task" id-task-point="K88" id-task-subtasks-list="K90 K92 " idkmad="K93">
-                            <task-name>Recevoir la réservation</task-name>
-                            <task-numero>3.3.2.5.1</task-numero>
-                            <task-observation/>
-                            <task-executant>ABS</task-executant>
-                            <task-modality>COGN</task-modality>
-                            <task-optional>false</task-optional>
-                            <task-interruptible>false</task-interruptible>
-                            <task-decomposition>SEQ</task-decomposition>
-                            <task-precondition>getValue($ResultatValidation, $ressourcesDisponibles) == true</task-precondition>
-                            <task-descriptionprecondition>Tous les Pass et hébergements étaient encore disponibles (transaction validée)</task-descriptionprecondition>
-                            <task-effetsdebord>void</task-effetsdebord>
-                            <task-iteration>[1]</task-iteration>
-                            <point classkmad="tache.Point" idkmad="K88">
-                                <point-x>8814</point-x>
-                                <point-y>1150</point-y>
-                            </point>
-                            <task classkmad="tache.Task" id-task-point="K89" idkmad="K90">
-                                <task-name>Générer les Pass et les bons d'hébergement en PDF</task-name>
-                                <task-numero>3.3.2.5.1.1</task-numero>
-                                <task-observation/>
-                                <task-executant>SYS</task-executant>
-                                <task-modality>COGN</task-modality>
-                                <task-optional>false</task-optional>
-                                <task-interruptible>false</task-interruptible>
-                                <task-decomposition>LEAF</task-decomposition>
-                                <task-precondition>true</task-precondition>
-                                <task-descriptionprecondition>paiement accépté</task-descriptionprecondition>
-                                <task-effetsdebord>void</task-effetsdebord>
-                                <task-iteration>[1]</task-iteration>
-                                <point classkmad="tache.Point" idkmad="K89">
-                                    <point-x>8491</point-x>
-                                    <point-y>1420</point-y>
-                                </point>
-                            </task>
-                            <task classkmad="tache.Task" id-task-point="K91" idkmad="K92">
-                                <task-name>Télécharger les Pass et les bons d'hébergement</task-name>
-                                <task-numero>3.3.2.5.1.2</task-numero>
-                                <task-observation/>
-                                <task-executant>INT</task-executant>
-                                <task-modality>COGN</task-modality>
-                                <task-optional>false</task-optional>
-                                <task-interruptible>false</task-interruptible>
-                                <task-decomposition>LEAF</task-decomposition>
-                                <task-precondition>true</task-precondition>
-                                <task-effetsdebord>void</task-effetsdebord>
-                                <task-iteration>[1]</task-iteration>
-                                <point classkmad="tache.Point" idkmad="K91">
-                                    <point-x>9000</point-x>
-                                    <point-y>1445</point-y>
-                                </point>
-                            </task>
-                        </task>
-                        <task classkmad="tache.Task" id-task-point="K94" idkmad="K95">
-                            <task-name>Afficher l'échec de la réservation</task-name>
-                            <task-numero>3.3.2.5.2</task-numero>
-                            <task-observation/>
-                            <task-executant>SYS</task-executant>
-                            <task-modality>COGN</task-modality>
-                            <task-optional>false</task-optional>
-                            <task-interruptible>false</task-interruptible>
-                            <task-decomposition>LEAF</task-decomposition>
-                            <task-precondition>getValue($ResultatValidation, $ressourcesDisponibles) == false</task-precondition>
-                            <task-descriptionprecondition>paiement refusé</task-descriptionprecondition>
-                            <task-effetsdebord>void</task-effetsdebord>
-                            <task-iteration>[1]</task-iteration>
-                            <point classkmad="tache.Point" idkmad="K94">
-                                <point-x>9203</point-x>
-                                <point-y>1150</point-y>
-                            </point>
-                        </task>
                     </task>
                 </task>
             </task>
@@ -953,24 +712,24 @@
             <group-name>FestivalsAffiches</group-name>
             <group-description>Festivals ayant des Pass disponibles affichés après une recherche</group-description>
         </group>
-        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K150" idkmad="K152">
-            <abstractattribut-name>passDisponibles</abstractattribut-name>
-            <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
-        </abstractattribut>
         <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K150" idkmad="K151">
             <abstractattribut-name>nom</abstractattribut-name>
             <abstractattribut-typestructure>StrValue</abstractattribut-typestructure>
         </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K150" idkmad="K152">
+            <abstractattribut-name>passDisponibles</abstractattribut-name>
+            <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
+        </abstractattribut>
         <concreteobject classkmad="metaobjet.ObjetConcret" id-concreteobject-abstractobject="K150" id-concreteobject-group="K171" idkmad="K186">
             <concreteobject-name>Musilac</concreteobject-name>
-            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K152" id-concreteattribut-concreteobject="K186" id-concreteattribut-value="K190" idkmad="K189">
-                <typevalue classkmad="metaobjet.NumberValue" idkmad="K190">
-                    <typevalue-value>40</typevalue-value>
-                </typevalue>
-            </concreteattribut>
             <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K151" id-concreteattribut-concreteobject="K186" id-concreteattribut-value="K188" idkmad="K187">
                 <typevalue classkmad="metaobjet.StrValue" idkmad="K188">
                     <typevalue-value>Musilac</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K152" id-concreteattribut-concreteobject="K186" id-concreteattribut-value="K190" idkmad="K189">
+                <typevalue classkmad="metaobjet.NumberValue" idkmad="K190">
+                    <typevalue-value>40</typevalue-value>
                 </typevalue>
             </concreteattribut>
         </concreteobject>
@@ -987,13 +746,13 @@
             <group-name>HebergementsAffiches</group-name>
             <group-description>Hébergements disponibles affichés pour le festival choisi</group-description>
         </group>
-        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K153" idkmad="K154">
-            <abstractattribut-name>nom</abstractattribut-name>
-            <abstractattribut-typestructure>StrValue</abstractattribut-typestructure>
-        </abstractattribut>
         <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K153" idkmad="K156">
             <abstractattribut-name>capacite</abstractattribut-name>
             <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K153" idkmad="K154">
+            <abstractattribut-name>nom</abstractattribut-name>
+            <abstractattribut-typestructure>StrValue</abstractattribut-typestructure>
         </abstractattribut>
         <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K153" idkmad="K155">
             <abstractattribut-name>type</abstractattribut-name>
@@ -1005,9 +764,9 @@
         </abstractattribut>
         <concreteobject classkmad="metaobjet.ObjetConcret" id-concreteobject-abstractobject="K153" id-concreteobject-group="K174" idkmad="K191">
             <concreteobject-name>Emplacement 2 pers - Camping du Sierroz</concreteobject-name>
-            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K157" id-concreteattribut-concreteobject="K191" id-concreteattribut-value="K199" idkmad="K198">
-                <typevalue classkmad="metaobjet.BoolValue" idkmad="K199">
-                    <typevalue-value>true</typevalue-value>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K154" id-concreteattribut-concreteobject="K191" id-concreteattribut-value="K193" idkmad="K192">
+                <typevalue classkmad="metaobjet.StrValue" idkmad="K193">
+                    <typevalue-value>Camping du Sierroz</typevalue-value>
                 </typevalue>
             </concreteattribut>
             <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K156" id-concreteattribut-concreteobject="K191" id-concreteattribut-value="K197" idkmad="K196">
@@ -1020,9 +779,9 @@
                     <typevalue-value>camping</typevalue-value>
                 </typevalue>
             </concreteattribut>
-            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K154" id-concreteattribut-concreteobject="K191" id-concreteattribut-value="K193" idkmad="K192">
-                <typevalue classkmad="metaobjet.StrValue" idkmad="K193">
-                    <typevalue-value>Camping du Sierroz</typevalue-value>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K157" id-concreteattribut-concreteobject="K191" id-concreteattribut-value="K199" idkmad="K198">
+                <typevalue classkmad="metaobjet.BoolValue" idkmad="K199">
+                    <typevalue-value>true</typevalue-value>
                 </typevalue>
             </concreteattribut>
         </concreteobject>
@@ -1039,13 +798,13 @@
             <abstractattribut-name>nbPass</abstractattribut-name>
             <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
         </abstractattribut>
-        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K158" idkmad="K161">
-            <abstractattribut-name>passDisponibles</abstractattribut-name>
-            <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
-        </abstractattribut>
         <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K158" idkmad="K159">
             <abstractattribut-name>festival</abstractattribut-name>
             <abstractattribut-typestructure>StrValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K158" idkmad="K161">
+            <abstractattribut-name>passDisponibles</abstractattribut-name>
+            <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
         </abstractattribut>
         <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K158" idkmad="K162">
             <abstractattribut-name>capaciteTotale</abstractattribut-name>
@@ -1053,9 +812,9 @@
         </abstractattribut>
         <concreteobject classkmad="metaobjet.ObjetConcret" id-concreteobject-abstractobject="K158" id-concreteobject-group="K177" idkmad="K200">
             <concreteobject-name>Selection Musilac</concreteobject-name>
-            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K159" id-concreteattribut-concreteobject="K200" id-concreteattribut-value="K202" idkmad="K201">
-                <typevalue classkmad="metaobjet.StrValue" idkmad="K202">
-                    <typevalue-value>Musilac</typevalue-value>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K162" id-concreteattribut-concreteobject="K200" id-concreteattribut-value="K208" idkmad="K207">
+                <typevalue classkmad="metaobjet.NumberValue" idkmad="K208">
+                    <typevalue-value>2</typevalue-value>
                 </typevalue>
             </concreteattribut>
             <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K161" id-concreteattribut-concreteobject="K200" id-concreteattribut-value="K206" idkmad="K205">
@@ -1068,9 +827,9 @@
                     <typevalue-value>2</typevalue-value>
                 </typevalue>
             </concreteattribut>
-            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K162" id-concreteattribut-concreteobject="K200" id-concreteattribut-value="K208" idkmad="K207">
-                <typevalue classkmad="metaobjet.NumberValue" idkmad="K208">
-                    <typevalue-value>2</typevalue-value>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K159" id-concreteattribut-concreteobject="K200" id-concreteattribut-value="K202" idkmad="K201">
+                <typevalue classkmad="metaobjet.StrValue" idkmad="K202">
+                    <typevalue-value>Musilac</typevalue-value>
                 </typevalue>
             </concreteattribut>
         </concreteobject>
@@ -1087,12 +846,12 @@
             <abstractattribut-name>capaciteTotale</abstractattribut-name>
             <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
         </abstractattribut>
-        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K163" idkmad="K165">
-            <abstractattribut-name>nbPass</abstractattribut-name>
-            <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
-        </abstractattribut>
         <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K163" idkmad="K167">
             <abstractattribut-name>minutesDepuisAjout</abstractattribut-name>
+            <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
+        </abstractattribut>
+        <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K163" idkmad="K165">
+            <abstractattribut-name>nbPass</abstractattribut-name>
             <abstractattribut-typestructure>NumberValue</abstractattribut-typestructure>
         </abstractattribut>
         <abstractattribut classkmad="metaobjet.AttributAbstrait" id-abstractattribut-abstractobject="K163" idkmad="K164">
@@ -1101,16 +860,6 @@
         </abstractattribut>
         <concreteobject classkmad="metaobjet.ObjetConcret" id-concreteobject-abstractobject="K163" id-concreteobject-group="K180" idkmad="K209">
             <concreteobject-name>Musilac - 2 Pass + camping</concreteobject-name>
-            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K164" id-concreteattribut-concreteobject="K209" id-concreteattribut-value="K211" idkmad="K210">
-                <typevalue classkmad="metaobjet.StrValue" idkmad="K211">
-                    <typevalue-value>Musilac</typevalue-value>
-                </typevalue>
-            </concreteattribut>
-            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K167" id-concreteattribut-concreteobject="K209" id-concreteattribut-value="K217" idkmad="K216">
-                <typevalue classkmad="metaobjet.NumberValue" idkmad="K217">
-                    <typevalue-value>3</typevalue-value>
-                </typevalue>
-            </concreteattribut>
             <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K166" id-concreteattribut-concreteobject="K209" id-concreteattribut-value="K215" idkmad="K214">
                 <typevalue classkmad="metaobjet.NumberValue" idkmad="K215">
                     <typevalue-value>2</typevalue-value>
@@ -1119,6 +868,16 @@
             <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K165" id-concreteattribut-concreteobject="K209" id-concreteattribut-value="K213" idkmad="K212">
                 <typevalue classkmad="metaobjet.NumberValue" idkmad="K213">
                     <typevalue-value>2</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K164" id-concreteattribut-concreteobject="K209" id-concreteattribut-value="K211" idkmad="K210">
+                <typevalue classkmad="metaobjet.StrValue" idkmad="K211">
+                    <typevalue-value>Musilac</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K167" id-concreteattribut-concreteobject="K209" id-concreteattribut-value="K217" idkmad="K216">
+                <typevalue classkmad="metaobjet.NumberValue" idkmad="K217">
+                    <typevalue-value>3</typevalue-value>
                 </typevalue>
             </concreteattribut>
         </concreteobject>
@@ -1141,14 +900,14 @@
         </abstractattribut>
         <concreteobject classkmad="metaobjet.ObjetConcret" id-concreteobject-abstractobject="K168" id-concreteobject-group="K183" idkmad="K218">
             <concreteobject-name>Reservation Jeff</concreteobject-name>
-            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K169" id-concreteattribut-concreteobject="K218" id-concreteattribut-value="K220" idkmad="K219">
-                <typevalue classkmad="metaobjet.StrValue" idkmad="K220">
-                    <typevalue-value>FB-0001</typevalue-value>
-                </typevalue>
-            </concreteattribut>
             <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K170" id-concreteattribut-concreteobject="K218" id-concreteattribut-value="K222" idkmad="K221">
                 <typevalue classkmad="metaobjet.BoolValue" idkmad="K222">
                     <typevalue-value>true</typevalue-value>
+                </typevalue>
+            </concreteattribut>
+            <concreteattribut classkmad="metaobjet.AttributConcret" id-concreteattribut-abstractattribut="K169" id-concreteattribut-concreteobject="K218" id-concreteattribut-value="K220" idkmad="K219">
+                <typevalue classkmad="metaobjet.StrValue" idkmad="K220">
+                    <typevalue-value>FB-0001</typevalue-value>
                 </typevalue>
             </concreteattribut>
         </concreteobject>

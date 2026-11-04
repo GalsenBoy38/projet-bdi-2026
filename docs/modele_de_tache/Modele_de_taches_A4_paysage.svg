@@ -1,0 +1,277 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="297.0mm" height="210.0mm" viewBox="0 0 297.0 210.0" font-family="Arial, Helvetica, sans-serif">
+<rect x="0" y="0" width="297" height="210" fill="#ffffff"/>
+<path d="M148.50,21.25 V27.61" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M88.93,27.61 H241.50" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M88.93,27.61 V30.34" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M181.93,27.61 V30.34" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M241.50,27.61 V30.34" stroke="#444" stroke-width="0.22" fill="none"/>
+<rect x="145.09" y="22.42" width="6.83" height="3.41" rx="0.6" fill="#ffffff" stroke="#c62828" stroke-width="0.18"/>
+<text x="148.50" y="25.21" font-size="2.76" font-weight="bold" fill="#c62828" text-anchor="middle">SEQ</text>
+<path d="M88.93,37.09 V47.28" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M31.51,47.28 H162.44" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M31.51,47.28 V50.01" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M64.55,47.28 V50.01" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M113.04,47.28 V50.01" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M162.44,47.28 V50.01" stroke="#444" stroke-width="0.22" fill="none"/>
+<rect x="85.52" y="40.17" width="6.83" height="3.41" rx="0.6" fill="#ffffff" stroke="#c62828" stroke-width="0.18"/>
+<text x="88.93" y="42.97" font-size="2.76" font-weight="bold" fill="#c62828" text-anchor="middle">SEQ</text>
+<path d="M31.51,56.76 V74.61" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M19.77,74.61 H34.64" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M19.77,74.61 V77.34" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M34.64,74.61 V77.34" stroke="#444" stroke-width="0.22" fill="none"/>
+<rect x="28.10" y="63.67" width="6.83" height="3.41" rx="0.6" fill="#ffffff" stroke="#c62828" stroke-width="0.18"/>
+<text x="31.51" y="66.46" font-size="2.76" font-weight="bold" fill="#c62828" text-anchor="middle">SEQ</text>
+<path d="M8.10,91.75 V166.08" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M8.10,105.12 H9.20" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M8.10,121.32 H9.20" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M8.10,135.60 H9.20" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M8.10,149.88 H9.20" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M8.10,166.08 H9.20" stroke="#444" stroke-width="0.22" fill="none"/>
+<rect x="9.20" y="92.82" width="6.36" height="3.41" rx="0.6" fill="#ffffff" stroke="#c62828" stroke-width="0.18"/>
+<text x="12.38" y="95.61" font-size="2.76" font-weight="bold" fill="#c62828" text-anchor="middle">ALT</text>
+<path d="M34.64,77.34 V112.23" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M34.64,90.29 H35.74" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M34.64,112.23 H35.74" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M113.04,56.76 V74.61" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M86.97,74.61 H140.33" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M86.97,74.61 V77.34" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M114.26,74.61 V77.34" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M140.33,74.61 V77.34" stroke="#444" stroke-width="0.22" fill="none"/>
+<rect x="109.63" y="63.67" width="6.83" height="3.41" rx="0.6" fill="#ffffff" stroke="#c62828" stroke-width="0.18"/>
+<text x="113.04" y="66.46" font-size="2.76" font-weight="bold" fill="#c62828" text-anchor="middle">SEQ</text>
+<path d="M74.17,91.75 V160.33" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M74.17,105.12 H75.27" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M74.17,119.40 H75.27" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M74.17,131.77 H75.27" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M74.17,146.05 H75.27" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M74.17,160.33 H75.27" stroke="#444" stroke-width="0.22" fill="none"/>
+<rect x="75.27" y="92.82" width="6.36" height="3.41" rx="0.6" fill="#ffffff" stroke="#c62828" stroke-width="0.18"/>
+<text x="78.45" y="95.61" font-size="2.76" font-weight="bold" fill="#c62828" text-anchor="middle">ALT</text>
+<path d="M128.75,91.75 V125.15" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M128.75,107.04 H129.85" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M128.75,125.15 H129.85" stroke="#444" stroke-width="0.22" fill="none"/>
+<rect x="129.85" y="92.82" width="6.83" height="3.41" rx="0.6" fill="#ffffff" stroke="#c62828" stroke-width="0.18"/>
+<text x="133.26" y="95.61" font-size="2.76" font-weight="bold" fill="#c62828" text-anchor="middle">SEQ</text>
+<path d="M172.97,40.92 V70.49" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M172.97,54.29 H174.07" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M172.97,70.49 H174.07" stroke="#444" stroke-width="0.22" fill="none"/>
+<rect x="174.07" y="41.99" width="6.83" height="3.41" rx="0.6" fill="#ffffff" stroke="#c62828" stroke-width="0.18"/>
+<text x="177.48" y="44.78" font-size="2.76" font-weight="bold" fill="#c62828" text-anchor="middle">SEQ</text>
+<path d="M241.50,37.09 V47.28" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M205.54,47.28 H265.36" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M205.54,47.28 V50.01" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M229.40,47.28 V50.01" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M265.36,47.28 V50.01" stroke="#444" stroke-width="0.22" fill="none"/>
+<rect x="238.09" y="40.17" width="6.83" height="3.41" rx="0.6" fill="#ffffff" stroke="#c62828" stroke-width="0.18"/>
+<text x="241.50" y="42.97" font-size="2.76" font-weight="bold" fill="#c62828" text-anchor="middle">SEQ</text>
+<path d="M194.10,56.76 V97.82" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M194.10,73.96 H195.20" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M194.10,97.82 H195.20" stroke="#444" stroke-width="0.22" fill="none"/>
+<rect x="195.20" y="57.83" width="6.36" height="3.41" rx="0.6" fill="#ffffff" stroke="#c62828" stroke-width="0.18"/>
+<text x="198.38" y="60.62" font-size="2.76" font-weight="bold" fill="#c62828" text-anchor="middle">ALT</text>
+<path d="M265.36,56.76 V74.61" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M241.82,74.61 H276.10" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M241.82,74.61 V77.34" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M276.10,74.61 V77.34" stroke="#444" stroke-width="0.22" fill="none"/>
+<rect x="261.95" y="63.67" width="6.83" height="3.41" rx="0.6" fill="#ffffff" stroke="#c62828" stroke-width="0.18"/>
+<text x="265.36" y="66.46" font-size="2.76" font-weight="bold" fill="#c62828" text-anchor="middle">SEQ</text>
+<path d="M241.82,77.34 V102.65" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M241.82,86.46 H242.92" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M241.82,102.65 H242.92" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M263.31,87.92 V169.03" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M263.31,107.04 H264.41" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M263.31,128.98 H264.41" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M263.31,147.09 H264.41" stroke="#444" stroke-width="0.22" fill="none"/>
+<path d="M263.31,169.03 H264.41" stroke="#444" stroke-width="0.22" fill="none"/>
+<rect x="264.41" y="88.99" width="6.83" height="3.41" rx="0.6" fill="#ffffff" stroke="#c62828" stroke-width="0.18"/>
+<text x="267.82" y="91.78" font-size="2.76" font-weight="bold" fill="#c62828" text-anchor="middle">SEQ</text>
+<rect x="63.60" y="14.50" width="169.80" height="6.75" rx="1" fill="#eceff1" stroke="#607d8b" stroke-width="0.45"/>
+<text x="123.60" y="18.75" font-size="3.25" fill="#111" xml:space="preserve">Passer une réservation à FestiBed</text>
+<rect x="39.77" y="30.34" width="98.32" height="6.75" rx="1" fill="#eceff1" stroke="#607d8b" stroke-width="0.28"/>
+<text x="73.51" y="34.59" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1</tspan> Constituer le panier</text>
+<rect x="8.51" y="50.01" width="46.00" height="6.75" rx="1" fill="#eceff1" stroke="#607d8b" stroke-width="0.28"/>
+<text x="12.66" y="54.26" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.1</tspan> Rechercher un festival</text>
+<rect x="7.00" y="77.34" width="25.54" height="14.41" rx="1" fill="#eceff1" stroke="#607d8b" stroke-width="0.28"/>
+<text x="9.13" y="81.59" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.1.1</tspan> Saisir les</text>
+<text x="12.20" y="85.42" font-size="3.25" fill="#111" xml:space="preserve">critères de</text>
+<text x="12.56" y="89.25" font-size="3.25" fill="#111" xml:space="preserve">recherche</text>
+<rect x="9.20" y="97.92" width="23.34" height="14.41" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="11.40" y="102.17" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.1.1.1</tspan> Saisir</text>
+<text x="13.20" y="106.00" font-size="3.25" fill="#111" xml:space="preserve">un nom de</text>
+<text x="15.82" y="109.83" font-size="3.25" fill="#111" xml:space="preserve">festival</text>
+<rect x="9.20" y="114.11" width="23.34" height="14.41" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="11.40" y="118.36" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.1.1.2</tspan> Saisir</text>
+<text x="18.16" y="122.19" font-size="3.25" fill="#111" xml:space="preserve">une</text>
+<text x="12.84" y="126.02" font-size="3.25" fill="#111" xml:space="preserve">localisation</text>
+<rect x="9.20" y="130.31" width="23.34" height="10.58" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="11.40" y="134.56" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.1.1.3</tspan> Saisir</text>
+<text x="12.30" y="138.39" font-size="3.25" fill="#111" xml:space="preserve">une période</text>
+<rect x="9.20" y="142.68" width="23.34" height="14.41" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="11.40" y="146.93" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.1.1.4</tspan> Saisir</text>
+<text x="13.29" y="150.76" font-size="3.25" fill="#111" xml:space="preserve">un type de</text>
+<text x="11.22" y="154.59" font-size="3.25" fill="#111" xml:space="preserve">manifestation</text>
+<rect x="9.20" y="158.87" width="23.34" height="14.41" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="11.40" y="163.12" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.1.1.5</tspan> Saisir</text>
+<text x="16.00" y="166.95" font-size="3.25" fill="#111" xml:space="preserve">un prix</text>
+<text x="13.84" y="170.78" font-size="3.25" fill="#111" xml:space="preserve">maximum</text>
+<rect x="35.74" y="77.34" width="20.28" height="25.90" rx="1" fill="#dcfce7" stroke="#15803d" stroke-width="0.28"/>
+<text x="42.28" y="81.59" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.1.2</tspan></text>
+<text x="37.86" y="85.42" font-size="3.25" fill="#111" xml:space="preserve">Afficher les</text>
+<text x="40.02" y="89.25" font-size="3.25" fill="#111" xml:space="preserve">festivals</text>
+<text x="38.85" y="93.08" font-size="3.25" fill="#111" xml:space="preserve">ayant des</text>
+<text x="42.28" y="96.91" font-size="3.25" fill="#111" xml:space="preserve">Pass</text>
+<text x="37.76" y="100.74" font-size="3.25" fill="#111" xml:space="preserve">disponibles</text>
+<rect x="35.74" y="105.02" width="20.28" height="14.41" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="42.28" y="109.28" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.1.3</tspan></text>
+<text x="38.58" y="113.11" font-size="3.25" fill="#111" xml:space="preserve">Choisir un</text>
+<text x="40.83" y="116.94" font-size="3.25" fill="#111" xml:space="preserve">festival</text>
+<rect x="51.97" y="103.24" width="3.76" height="3.08" rx="0.5" fill="#c62828"/>
+<text x="53.85" y="105.67" font-size="2.34" font-weight="bold" fill="#fff" text-anchor="middle">P1</text>
+<rect x="57.02" y="50.01" width="15.04" height="18.24" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="62.29" y="54.26" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.2</tspan></text>
+<text x="58.77" y="58.09" font-size="3.25" fill="#111" xml:space="preserve">Saisir le</text>
+<text x="59.04" y="61.92" font-size="3.25" fill="#111" xml:space="preserve">nombre</text>
+<text x="58.68" y="65.75" font-size="3.25" fill="#111" xml:space="preserve">de Pass</text>
+<rect x="89.06" y="50.01" width="47.97" height="6.75" rx="1" fill="#eceff1" stroke="#607d8b" stroke-width="0.28"/>
+<text x="91.94" y="54.26" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.3</tspan> Choisir les hébergements</text>
+<rect x="73.07" y="77.34" width="27.79" height="14.41" rx="1" fill="#eceff1" stroke="#607d8b" stroke-width="0.28"/>
+<text x="75.33" y="81.59" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.3.1</tspan> Choisir les</text>
+<text x="81.64" y="85.42" font-size="3.25" fill="#111" xml:space="preserve">critères</text>
+<text x="76.19" y="89.25" font-size="3.25" fill="#111" xml:space="preserve">d&#x27;hébergement</text>
+<rect x="75.27" y="97.92" width="25.59" height="14.41" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="77.60" y="102.17" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.3.1.1</tspan> Choisir</text>
+<text x="82.20" y="106.00" font-size="3.25" fill="#111" xml:space="preserve">par type</text>
+<text x="77.29" y="109.83" font-size="3.25" fill="#111" xml:space="preserve">d&#x27;hébergement</text>
+<rect x="75.27" y="114.11" width="25.59" height="10.58" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="77.60" y="118.36" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.3.1.2</tspan> Choisir</text>
+<text x="77.24" y="122.19" font-size="3.25" fill="#111" xml:space="preserve">par localisation</text>
+<rect x="75.27" y="126.48" width="25.59" height="10.58" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="77.60" y="130.73" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.3.1.3</tspan> Choisir</text>
+<text x="82.65" y="134.56" font-size="3.25" fill="#111" xml:space="preserve">par prix</text>
+<rect x="75.27" y="138.85" width="25.59" height="14.41" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="77.60" y="143.10" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.3.1.4</tspan> Choisir</text>
+<text x="79.85" y="146.93" font-size="3.25" fill="#111" xml:space="preserve">par note de</text>
+<text x="77.38" y="150.76" font-size="3.25" fill="#111" xml:space="preserve">l&#x27;établissement</text>
+<rect x="75.27" y="155.04" width="25.59" height="10.58" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="77.60" y="159.29" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.3.1.5</tspan> Choisir</text>
+<text x="79.22" y="163.12" font-size="3.25" fill="#111" xml:space="preserve">par capacité</text>
+<rect x="101.86" y="77.34" width="24.79" height="18.24" rx="1" fill="#dcfce7" stroke="#15803d" stroke-width="0.28"/>
+<text x="104.69" y="81.59" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.3.2</tspan> Afficher</text>
+<text x="112.18" y="85.42" font-size="3.25" fill="#111" xml:space="preserve">les</text>
+<text x="103.88" y="89.25" font-size="3.25" fill="#111" xml:space="preserve">hébergements</text>
+<text x="106.14" y="93.08" font-size="3.25" fill="#111" xml:space="preserve">disponibles</text>
+<rect x="127.65" y="77.34" width="25.37" height="14.41" rx="1" fill="#eceff1" stroke="#607d8b" stroke-width="0.28"/>
+<text x="131.22" y="81.59" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.3.3</tspan> Choisir</text>
+<text x="138.53" y="85.42" font-size="3.25" fill="#111" xml:space="preserve">un</text>
+<text x="130.77" y="89.25" font-size="3.25" fill="#111" xml:space="preserve">hébergement</text>
+<rect x="129.85" y="97.92" width="23.17" height="18.24" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="136.47" y="102.17" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.3.3.1</tspan></text>
+<text x="132.41" y="106.00" font-size="3.25" fill="#111" xml:space="preserve">Sélectionner</text>
+<text x="139.63" y="109.83" font-size="3.25" fill="#111" xml:space="preserve">un</text>
+<text x="131.87" y="113.66" font-size="3.25" fill="#111" xml:space="preserve">hébergement</text>
+<rect x="129.85" y="117.94" width="23.17" height="14.41" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="136.47" y="122.19" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.3.3.2</tspan></text>
+<text x="133.86" y="126.02" font-size="3.25" fill="#111" xml:space="preserve">Choisir les</text>
+<text x="136.20" y="129.85" font-size="3.25" fill="#111" xml:space="preserve">nuitées</text>
+<rect x="154.02" y="50.01" width="16.85" height="18.24" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="160.19" y="54.26" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">1.4</tspan></text>
+<text x="155.59" y="58.09" font-size="3.25" fill="#111" xml:space="preserve">Ajouter la</text>
+<text x="156.04" y="61.92" font-size="3.25" fill="#111" xml:space="preserve">sélection</text>
+<text x="155.68" y="65.75" font-size="3.25" fill="#111" xml:space="preserve">au panier</text>
+<rect x="171.87" y="30.34" width="20.13" height="10.58" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28" stroke-dasharray="1.1,0.6"/>
+<text x="173.82" y="34.59" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">2</tspan> Ajuster le</text>
+<text x="177.42" y="38.42" font-size="3.25" fill="#111" xml:space="preserve">panier</text>
+<rect x="174.07" y="47.09" width="17.93" height="14.41" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="180.78" y="51.34" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">2.1</tspan></text>
+<text x="176.09" y="55.17" font-size="3.25" fill="#111" xml:space="preserve">Consulter</text>
+<text x="176.81" y="59.00" font-size="3.25" fill="#111" xml:space="preserve">le panier</text>
+<rect x="174.07" y="63.28" width="17.93" height="14.41" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="180.78" y="67.54" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">2.2</tspan></text>
+<text x="175.55" y="71.37" font-size="3.25" fill="#111" xml:space="preserve">Modifier la</text>
+<text x="176.63" y="75.20" font-size="3.25" fill="#111" xml:space="preserve">sélection</text>
+<rect x="187.81" y="61.50" width="3.89" height="3.08" rx="0.5" fill="#6a1b9a"/>
+<text x="189.76" y="63.93" font-size="2.34" font-weight="bold" fill="#fff" text-anchor="middle">N1</text>
+<rect x="212.40" y="30.34" width="58.20" height="6.75" rx="1" fill="#eceff1" stroke="#607d8b" stroke-width="0.28"/>
+<text x="228.42" y="34.59" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">3</tspan> Valider le panier</text>
+<rect x="193.00" y="50.01" width="25.08" height="6.75" rx="1" fill="#eceff1" stroke="#607d8b" stroke-width="0.28"/>
+<text x="195.31" y="54.26" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">3.1</tspan> S&#x27;identifier</text>
+<rect x="195.20" y="62.93" width="22.88" height="22.07" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="203.03" y="67.18" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">3.1.1</tspan></text>
+<text x="197.22" y="71.01" font-size="3.25" fill="#111" xml:space="preserve">S&#x27;authentifier</text>
+<text x="200.96" y="74.84" font-size="3.25" fill="#111" xml:space="preserve">avec un</text>
+<text x="199.06" y="78.67" font-size="3.25" fill="#111" xml:space="preserve">compte de</text>
+<text x="197.08" y="82.50" font-size="3.25" fill="#111" xml:space="preserve">réseau social</text>
+<rect x="195.20" y="86.78" width="22.88" height="22.07" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="198.52" y="91.04" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">3.1.2</tspan> Saisir</text>
+<text x="197.71" y="94.87" font-size="3.25" fill="#111" xml:space="preserve">une adresse</text>
+<text x="202.22" y="98.70" font-size="3.25" fill="#111" xml:space="preserve">e-mail</text>
+<text x="199.24" y="102.53" font-size="3.25" fill="#111" xml:space="preserve">(validation</text>
+<text x="199.42" y="106.36" font-size="3.25" fill="#111" xml:space="preserve">anonyme)</text>
+<rect x="219.08" y="50.01" width="20.64" height="14.41" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="227.15" y="54.26" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">3.2</tspan></text>
+<text x="220.74" y="58.09" font-size="3.25" fill="#111" xml:space="preserve">Consulter le</text>
+<text x="221.10" y="61.92" font-size="3.25" fill="#111" xml:space="preserve">récapitulatif</text>
+<rect x="242.36" y="50.01" width="46.00" height="6.75" rx="1" fill="#eceff1" stroke="#607d8b" stroke-width="0.28"/>
+<text x="245.34" y="54.26" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">3.3</tspan> Confirmer la réservation</text>
+<rect x="242.92" y="77.34" width="18.29" height="18.24" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="248.45" y="81.59" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">3.3.1</tspan></text>
+<text x="244.94" y="85.42" font-size="3.25" fill="#111" xml:space="preserve">Confirmer</text>
+<text x="250.80" y="89.25" font-size="3.25" fill="#111" xml:space="preserve">la</text>
+<text x="245.21" y="93.08" font-size="3.25" fill="#111" xml:space="preserve">validation</text>
+<rect x="242.92" y="97.36" width="18.29" height="10.58" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="248.45" y="101.62" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">3.3.2</tspan></text>
+<text x="247.82" y="105.45" font-size="3.25" fill="#111" xml:space="preserve">Payer</text>
+<rect x="257.02" y="95.58" width="3.89" height="3.08" rx="0.5" fill="#6a1b9a"/>
+<text x="258.96" y="98.01" font-size="2.34" font-weight="bold" fill="#fff" text-anchor="middle">N2</text>
+<rect x="262.21" y="77.34" width="27.79" height="10.58" rx="1" fill="#eceff1" stroke="#607d8b" stroke-width="0.28"/>
+<text x="263.93" y="81.59" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">3.3.3</tspan> Recevoir la</text>
+<text x="268.08" y="85.42" font-size="3.25" fill="#111" xml:space="preserve">réservation</text>
+<rect x="264.41" y="94.09" width="25.59" height="25.90" rx="1" fill="#dcfce7" stroke="#15803d" stroke-width="0.28"/>
+<text x="272.24" y="98.34" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">3.3.3.1</tspan></text>
+<text x="268.73" y="102.17" font-size="3.25" fill="#111" xml:space="preserve">Générer les</text>
+<text x="269.45" y="106.00" font-size="3.25" fill="#111" xml:space="preserve">pass et les</text>
+<text x="273.68" y="109.83" font-size="3.25" fill="#111" xml:space="preserve">bons</text>
+<text x="266.83" y="113.66" font-size="3.25" fill="#111" xml:space="preserve">hébergements</text>
+<text x="272.69" y="117.49" font-size="3.25" fill="#111" xml:space="preserve">en pdf</text>
+<rect x="264.41" y="121.77" width="25.59" height="14.41" rx="1" fill="#dcfce7" stroke="#15803d" stroke-width="0.28"/>
+<text x="266.29" y="126.02" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">3.3.3.2</tspan> Afficher</text>
+<text x="267.46" y="129.85" font-size="3.25" fill="#111" xml:space="preserve">la réservation</text>
+<text x="270.08" y="133.68" font-size="3.25" fill="#111" xml:space="preserve">confirmée</text>
+<rect x="264.41" y="137.97" width="25.59" height="18.24" rx="1" fill="#dcfce7" stroke="#15803d" stroke-width="0.28"/>
+<text x="272.24" y="142.22" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">3.3.3.3</tspan></text>
+<text x="269.54" y="146.05" font-size="3.25" fill="#111" xml:space="preserve">Envoyer la</text>
+<text x="266.38" y="149.88" font-size="3.25" fill="#111" xml:space="preserve">réservation par</text>
+<text x="272.79" y="153.71" font-size="3.25" fill="#111" xml:space="preserve">e-mail</text>
+<rect x="264.41" y="158.00" width="25.59" height="22.07" rx="1" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="272.24" y="162.25" font-size="3.25" fill="#111" xml:space="preserve"><tspan font-weight="bold" fill="#333">3.3.3.4</tspan></text>
+<text x="266.02" y="166.08" font-size="3.25" fill="#111" xml:space="preserve">Télécharger les</text>
+<text x="269.27" y="169.91" font-size="3.25" fill="#111" xml:space="preserve">Pass et les</text>
+<text x="273.68" y="173.74" font-size="3.25" fill="#111" xml:space="preserve">bons</text>
+<text x="266.43" y="177.57" font-size="3.25" fill="#111" xml:space="preserve">d&#x27;hébergement</text>
+<text x="7.0" y="10.2" font-size="4.2" font-weight="bold" fill="#111">Modèle de tâches K-MADe – Passer une réservation à FestiBed</text>
+<text x="290.0" y="10.2" font-size="2.6" fill="#555" text-anchor="end">FestiBed – Groupe 3 – source : Modéles_de_taches.kxml</text>
+<line x1="7.0" y1="183.07" x2="290.0" y2="183.07" stroke="#bbb" stroke-width="0.2"/>
+<text x="7.0" y="186.50" font-size="2.99" font-weight="bold" fill="#333">Préconditions (P) et observations (N)</text>
+<text x="7.00" y="190.26" font-size="2.99" fill="#222" xml:space="preserve"><tspan font-weight="bold" fill="#c62828">P1</tspan> (1.1.3) card($FestivalsAffiches) &gt; 0</text>
+<text x="102.67" y="190.26" font-size="2.99" fill="#222" xml:space="preserve"><tspan font-weight="bold" fill="#6a1b9a">N1</tspan> (2.2) Fonctionnalité bonus du cahier des charges</text>
+<text x="198.33" y="190.26" font-size="2.99" fill="#222" xml:space="preserve"><tspan font-weight="bold" fill="#6a1b9a">N2</tspan> (3.3.2) Paiement prévu dans le modèle mais non développé dans</text>
+<text x="200.53" y="193.85" font-size="2.99" fill="#222" xml:space="preserve">le prototype</text>
+<text x="7.00" y="202.40" font-size="2.3" font-weight="bold" fill="#333">Exécutant :</text>
+<rect x="20.00" y="200.30" width="5" height="2.6" rx="0.5" fill="#eceff1" stroke="#607d8b" stroke-width="0.28"/>
+<text x="26.00" y="202.40" font-size="2.3" fill="#333">Abstraite</text>
+<rect x="39.08" y="200.30" width="5" height="2.6" rx="0.5" fill="#fff3cd" stroke="#b8860b" stroke-width="0.28"/>
+<text x="45.08" y="202.40" font-size="2.3" fill="#333">Utilisateur</text>
+<rect x="59.30" y="200.30" width="5" height="2.6" rx="0.5" fill="#dbeafe" stroke="#1d4ed8" stroke-width="0.28"/>
+<text x="65.30" y="202.40" font-size="2.3" fill="#333">Interactive</text>
+<rect x="79.91" y="200.30" width="5" height="2.6" rx="0.5" fill="#dcfce7" stroke="#15803d" stroke-width="0.28"/>
+<text x="85.91" y="202.40" font-size="2.3" fill="#333">Système</text>
+<rect x="98.86" y="200.30" width="5" height="2.6" rx="0.5" fill="#fff" stroke="#607d8b" stroke-width="0.28" stroke-dasharray="1.1,0.6"/>
+<text x="104.86" y="202.40" font-size="2.3" fill="#333">Tâche optionnelle</text>
+<rect x="128.10" y="199.59" width="6.83" height="3.41" rx="0.6" fill="#ffffff" stroke="#c62828" stroke-width="0.18"/>
+<text x="131.52" y="202.38" font-size="2.76" font-weight="bold" fill="#c62828" text-anchor="middle">SEQ</text>
+<text x="135.52" y="202.40" font-size="2.3" fill="#333">séquentiel  </text>
+<rect x="149.32" y="199.59" width="6.36" height="3.41" rx="0.6" fill="#ffffff" stroke="#c62828" stroke-width="0.18"/>
+<text x="152.50" y="202.38" font-size="2.76" font-weight="bold" fill="#c62828" text-anchor="middle">ALT</text>
+<text x="156.50" y="202.40" font-size="2.3" fill="#333">alternatif</text>
+<text x="169.32" y="202.40" font-size="2.3" fill="#555">Sous-tâches empilées : même opérateur que la tâche mère, ordre de haut en bas.</text>
+</svg>

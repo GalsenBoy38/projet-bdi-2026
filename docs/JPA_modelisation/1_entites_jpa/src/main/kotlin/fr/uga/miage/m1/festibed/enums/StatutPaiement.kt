@@ -6,5 +6,4 @@ enum class StatutPaiement {
     EN_ATTENTE,
     ACCEPTE,
     REFUSE,
-    REMBOURSE,
 }
