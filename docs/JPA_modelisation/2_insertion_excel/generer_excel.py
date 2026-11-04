@@ -23,7 +23,7 @@ from openpyxl.utils import get_column_letter
 ICI = Path(__file__).resolve().parent
 PEUPLEMENT = ICI.parent / "3_peuplement_donnees"
 sys.path.insert(0, str(PEUPLEMENT))
-from schema_festibed import TABLES, ENUMS, fichier_csv, numero  # noqa: E402
+from schema_festibed import TABLES, ENUMS, fichier_csv, numero, uuid_de  # noqa: E402
 
 COULEUR = {"PUBLIC": "C6EFCE", "SYNTHÉTIQUE": "FFEB9C", "MIXTE": "BDD7EE"}
 TITRE = Font(bold=True, color="FFFFFF")
@@ -37,7 +37,7 @@ def lire(t):
 def typer(c, v):
     if v == "":
         return None
-    if c.typ in ("id", "int") or c.typ.startswith("num"):
+    if c.typ in ("int",) or c.typ.startswith("num"):
         return int(v)
     if c.typ == "bool":
         return int(v)
@@ -61,6 +61,8 @@ def commentaire(t, c):
         txt += f"\nValeurs : {', '.join(ENUMS[c.enum])}"
     if c.typ == "bool":
         txt += "\n1 = vrai, 0 = faux"
+    if c.typ == "id":
+        txt += "\nUUID au format texte 8-4-4-4-12 (ex. 3f2a9c1e-5b7d-5e21-9c0a-1d2e3f4a5b6c)"
     if c.desc:
         txt += f"\n{c.desc}"
     return Comment(txt, "Groupe 3", width=360, height=150)
@@ -73,11 +75,11 @@ def onglet(wb, t, lignes):
         cell.font = TITRE
         cell.fill = PatternFill("solid", fgColor="44546A")
         cell.comment = commentaire(t, c)
-        ws.column_dimensions[get_column_letter(j)].width = max(14, len(c.nom) + 3)
+        ws.column_dimensions[get_column_letter(j)].width = 38 if c.typ == "id" else max(14, len(c.nom) + 3)
     for i, ligne in enumerate(lignes, 2):
         for j, c in enumerate(t.cols, 1):
             cell = ws.cell(i, j, typer(c, ligne[c.nom]))
-            if c.typ.startswith("str"):
+            if c.typ.startswith("str") or c.typ == "id":
                 cell.number_format = "@"
             elif c.typ == "date":
                 cell.number_format = "yyyy-mm-dd"
@@ -85,7 +87,7 @@ def onglet(wb, t, lignes):
                 cell.number_format = "yyyy-mm-dd hh:mm:ss"
     if not lignes:     # gabarit : colonnes texte au format Texte pour garder les zéros initiaux
         for j, c in enumerate(t.cols, 1):
-            if c.typ.startswith("str"):
+            if c.typ.startswith("str") or c.typ == "id":
                 for i in range(2, 502):
                     ws.cell(i, j).number_format = "@"
     ws.freeze_panes = "A2"
@@ -176,7 +178,7 @@ def jeu_essai():
     for p in passes:
         vendus[sel_fest[p["idSelection"]]] += 1
     festivals = []
-    for i in sorted(F, key=int):
+    for i in (f["idFestival"] for f in T["FESTIVAL"] if f["idFestival"] in F):   # ordre du CSV
         f = dict(fest[i])
         f["nbPassVendus"] = str(vendus[i])
         festivals.append(f)
@@ -197,8 +199,8 @@ def jeu_essai():
             etabs.append(e)
 
     festivaliers_ids = {r["idUtilisateur"] for r in reservations} | {n["idUtilisateur"] for n in notes_f + notes_e}
-    orga_ids = {f["idOrganisateur"] for f in festivals if f["idOrganisateur"]} | {"1"}
-    heb_ids = {e["idUtilisateur"] for e in etabs if e["idUtilisateur"]} | {str(len(T["ORGANISATEUR"]) + 1)}
+    orga_ids = {f["idOrganisateur"] for f in festivals if f["idOrganisateur"]} | {uuid_de("UTILISATEUR", 1)}         # Ronald
+    heb_ids = {e["idUtilisateur"] for e in etabs if e["idUtilisateur"]} | {uuid_de("UTILISATEUR", len(T["ORGANISATEUR"]) + 1)}
     tous_ids = festivaliers_ids | orga_ids | heb_ids
     communes = {f["codeInsee"] for f in festivals} | {e["codeInsee"] for e in etabs if e["codeInsee"]}
     depts = {comm[c]["codeDepartement"] for c in communes}
@@ -234,7 +236,8 @@ def main():
     sommaire(vides, "FestiBed - Groupe 3 - Gabarits d'insertion (modèle JPA)", [
         "Un onglet par table, dans l'ordre d'insertion imposé par les clés étrangères. Survolez un en-tête "
         "pour voir son type, s'il est obligatoire, la clé référencée et les valeurs autorisées. Les colonnes "
-        "texte sont au format Texte (codes INSEE, codes postaux : zéros initiaux conservés). Booléens : 1/0. "
+        "texte et les identifiants (UUID 8-4-4-4-12) sont au format Texte (codes INSEE, codes postaux : zéros "
+        "initiaux conservés). Booléens : 1/0. "
         "Dates : AAAA-MM-JJ. Une fois rempli, le classeur se convertit en INSERT avec excel_vers_sql.py."], {})
     for t in TABLES:
         onglet(vides, t, [])

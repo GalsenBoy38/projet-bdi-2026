@@ -1,18 +1,8 @@
 -- FestiBed - Groupe 3 - Schéma H2 (tests)
 -- Généré par schema_festibed.py : ne pas modifier à la main.
 
-CREATE SEQUENCE SEQ_REGION START WITH 1 INCREMENT BY 50;
-CREATE SEQUENCE SEQ_UTILISATEUR START WITH 1 INCREMENT BY 50;
-CREATE SEQUENCE SEQ_FESTIVAL START WITH 1 INCREMENT BY 50;
-CREATE SEQUENCE SEQ_ETABLISSEMENT START WITH 1 INCREMENT BY 50;
-CREATE SEQUENCE SEQ_OPTION_HEBERGEMENT START WITH 1 INCREMENT BY 50;
-CREATE SEQUENCE SEQ_PHOTO_HEBERGEMENT START WITH 1 INCREMENT BY 50;
-CREATE SEQUENCE SEQ_PAIEMENT START WITH 1 INCREMENT BY 50;
-CREATE SEQUENCE SEQ_SELECTION START WITH 1 INCREMENT BY 50;
-CREATE SEQUENCE SEQ_PASS START WITH 1 INCREMENT BY 50;
-
 CREATE TABLE REGION (
-  idRegion                         BIGINT NOT NULL,
+  idRegion                         UUID NOT NULL,
   nomRegion                        VARCHAR(30) NOT NULL,
   CONSTRAINT PK_REGION PRIMARY KEY (idRegion),
   CONSTRAINT UK_REGION_1 UNIQUE (nomRegion)
@@ -21,7 +11,7 @@ CREATE TABLE REGION (
 CREATE TABLE DEPARTEMENT (
   codeDepartement                  VARCHAR(3) NOT NULL,
   nomDepartement                   VARCHAR(50) NOT NULL,
-  idRegion                         BIGINT NOT NULL,
+  idRegion                         UUID NOT NULL,
   CONSTRAINT PK_DEPARTEMENT PRIMARY KEY (codeDepartement),
   CONSTRAINT FK_DEPARTEMENT_1 FOREIGN KEY (idRegion) REFERENCES REGION (idRegion)
 );
@@ -39,7 +29,7 @@ CREATE TABLE COMMUNE (
 );
 
 CREATE TABLE UTILISATEUR (
-  idUtilisateur                    BIGINT NOT NULL,
+  idUtilisateur                    UUID NOT NULL,
   nom                              VARCHAR(100) NOT NULL,
   email                            VARCHAR(150) NOT NULL,
   CONSTRAINT PK_UTILISATEUR PRIMARY KEY (idUtilisateur),
@@ -47,7 +37,7 @@ CREATE TABLE UTILISATEUR (
 );
 
 CREATE TABLE FESTIVALIER (
-  idUtilisateur                    BIGINT NOT NULL,
+  idUtilisateur                    UUID NOT NULL,
   fournisseurAuth                  VARCHAR(30),
   identifiantExterneFestivalier    VARCHAR(100),
   CONSTRAINT PK_FESTIVALIER PRIMARY KEY (idUtilisateur),
@@ -56,26 +46,26 @@ CREATE TABLE FESTIVALIER (
 );
 
 CREATE TABLE UTILISATEUR_BACKOFFICE (
-  idUtilisateur                    BIGINT NOT NULL,
+  idUtilisateur                    UUID NOT NULL,
   motDePasseHache                  VARCHAR(100) NOT NULL,
   CONSTRAINT PK_UTILISATEUR_BACKOFFICE PRIMARY KEY (idUtilisateur),
   CONSTRAINT FK_UTILISATEUR_BACKOFFICE_1 FOREIGN KEY (idUtilisateur) REFERENCES UTILISATEUR (idUtilisateur)
 );
 
 CREATE TABLE ORGANISATEUR (
-  idUtilisateur                    BIGINT NOT NULL,
+  idUtilisateur                    UUID NOT NULL,
   CONSTRAINT PK_ORGANISATEUR PRIMARY KEY (idUtilisateur),
   CONSTRAINT FK_ORGANISATEUR_1 FOREIGN KEY (idUtilisateur) REFERENCES UTILISATEUR_BACKOFFICE (idUtilisateur)
 );
 
 CREATE TABLE HEBERGEUR (
-  idUtilisateur                    BIGINT NOT NULL,
+  idUtilisateur                    UUID NOT NULL,
   CONSTRAINT PK_HEBERGEUR PRIMARY KEY (idUtilisateur),
   CONSTRAINT FK_HEBERGEUR_1 FOREIGN KEY (idUtilisateur) REFERENCES UTILISATEUR_BACKOFFICE (idUtilisateur)
 );
 
 CREATE TABLE FESTIVAL (
-  idFestival                       BIGINT NOT NULL,
+  idFestival                       UUID NOT NULL,
   nomFestival                      VARCHAR(100) NOT NULL,
   domaine                          VARCHAR(40) NOT NULL,
   sousDomaine                      VARCHAR(70),
@@ -94,7 +84,7 @@ CREATE TABLE FESTIVAL (
   prixPass                         NUMERIC(8,2) NOT NULL,
   actifFestival                    BOOLEAN DEFAULT TRUE NOT NULL,
   codeInsee                        VARCHAR(5) NOT NULL,
-  idOrganisateur                   BIGINT,
+  idOrganisateur                   UUID,
   CONSTRAINT PK_FESTIVAL PRIMARY KEY (idFestival),
   CONSTRAINT FK_FESTIVAL_1 FOREIGN KEY (codeInsee) REFERENCES COMMUNE (codeInsee),
   CONSTRAINT FK_FESTIVAL_2 FOREIGN KEY (idOrganisateur) REFERENCES ORGANISATEUR (idUtilisateur),
@@ -109,7 +99,7 @@ CREATE TABLE FESTIVAL (
 );
 
 CREATE TABLE ETABLISSEMENT (
-  idEtablissement                  BIGINT NOT NULL,
+  idEtablissement                  UUID NOT NULL,
   nomCommercial                    VARCHAR(100) NOT NULL,
   adresse                          VARCHAR(80),
   codePostalEtablissement          VARCHAR(5) NOT NULL,
@@ -127,7 +117,7 @@ CREATE TABLE ETABLISSEMENT (
   osmRef                           VARCHAR(25),
   noteMoyenne                      NUMERIC(3,2),
   nbNotes                          INTEGER DEFAULT 0 NOT NULL,
-  idUtilisateur                    BIGINT,
+  idUtilisateur                    UUID,
   CONSTRAINT PK_ETABLISSEMENT PRIMARY KEY (idEtablissement),
   CONSTRAINT UK_ETABLISSEMENT_1 UNIQUE (osmRef),
   CONSTRAINT FK_ETABLISSEMENT_1 FOREIGN KEY (codeInsee) REFERENCES COMMUNE (codeInsee),
@@ -140,21 +130,21 @@ CREATE TABLE ETABLISSEMENT (
 );
 
 CREATE TABLE HOTEL_DE_TOURISME (
-  idEtablissement                  BIGINT NOT NULL,
+  idEtablissement                  UUID NOT NULL,
   nbChambresHotel                  INTEGER NOT NULL,
   CONSTRAINT PK_HOTEL_DE_TOURISME PRIMARY KEY (idEtablissement),
   CONSTRAINT FK_HOTEL_DE_TOURISME_1 FOREIGN KEY (idEtablissement) REFERENCES ETABLISSEMENT (idEtablissement)
 );
 
 CREATE TABLE AUBERGE_COLLECTIVE (
-  idEtablissement                  BIGINT NOT NULL,
+  idEtablissement                  UUID NOT NULL,
   nbChambresAuberge                INTEGER NOT NULL,
   CONSTRAINT PK_AUBERGE_COLLECTIVE PRIMARY KEY (idEtablissement),
   CONSTRAINT FK_AUBERGE_COLLECTIVE_1 FOREIGN KEY (idEtablissement) REFERENCES ETABLISSEMENT (idEtablissement)
 );
 
 CREATE TABLE CAMPING (
-  idEtablissement                  BIGINT NOT NULL,
+  idEtablissement                  UUID NOT NULL,
   categorie                        VARCHAR(10),
   nbEmplacementsCamping            INTEGER NOT NULL,
   CONSTRAINT PK_CAMPING PRIMARY KEY (idEtablissement),
@@ -163,14 +153,14 @@ CREATE TABLE CAMPING (
 );
 
 CREATE TABLE PARC_RESIDENTIEL_DE_LOISIRS (
-  idEtablissement                  BIGINT NOT NULL,
+  idEtablissement                  UUID NOT NULL,
   nbEmplacementsParc               INTEGER NOT NULL,
   CONSTRAINT PK_PARC_RESIDENTIEL_DE_LOISIRS PRIMARY KEY (idEtablissement),
   CONSTRAINT FK_PARC_RESIDENTIEL_DE_LOISI_1 FOREIGN KEY (idEtablissement) REFERENCES ETABLISSEMENT (idEtablissement)
 );
 
 CREATE TABLE VILLAGE_DE_VACANCES (
-  idEtablissement                  BIGINT NOT NULL,
+  idEtablissement                  UUID NOT NULL,
   mention                          VARCHAR(30),
   typeSejour                       VARCHAR(30),
   nbLogements                      INTEGER NOT NULL,
@@ -181,14 +171,14 @@ CREATE TABLE VILLAGE_DE_VACANCES (
 );
 
 CREATE TABLE RESIDENCE_DE_TOURISME (
-  idEtablissement                  BIGINT NOT NULL,
+  idEtablissement                  UUID NOT NULL,
   nbUnitesHabitation               INTEGER NOT NULL,
   CONSTRAINT PK_RESIDENCE_DE_TOURISME PRIMARY KEY (idEtablissement),
   CONSTRAINT FK_RESIDENCE_DE_TOURISME_1 FOREIGN KEY (idEtablissement) REFERENCES ETABLISSEMENT (idEtablissement)
 );
 
 CREATE TABLE ETABLISSEMENT_NON_CLASSE (
-  idEtablissement                  BIGINT NOT NULL,
+  idEtablissement                  UUID NOT NULL,
   typeNonClasse                    VARCHAR(30) NOT NULL,
   nbEtoilesDeclarees               INTEGER,
   nbChambres                       INTEGER,
@@ -202,14 +192,14 @@ CREATE TABLE ETABLISSEMENT_NON_CLASSE (
 );
 
 CREATE TABLE OPTION_HEBERGEMENT (
-  idOptionHebergement              BIGINT NOT NULL,
+  idOptionHebergement              UUID NOT NULL,
   libelleOptionHebergement         VARCHAR(50) NOT NULL,
   CONSTRAINT PK_OPTION_HEBERGEMENT PRIMARY KEY (idOptionHebergement),
   CONSTRAINT UK_OPTION_HEBERGEMENT_1 UNIQUE (libelleOptionHebergement)
 );
 
 CREATE TABLE HEBERGEMENT (
-  idEtablissement                  BIGINT NOT NULL,
+  idEtablissement                  UUID NOT NULL,
   numeroHebergement                VARCHAR(10) NOT NULL,
   typeHebergement                  VARCHAR(30) NOT NULL,
   capaciteHebergement              INTEGER NOT NULL,
@@ -224,18 +214,18 @@ CREATE TABLE HEBERGEMENT (
 );
 
 CREATE TABLE PHOTO_HEBERGEMENT (
-  idPhotoHebergement               BIGINT NOT NULL,
+  idPhotoHebergement               UUID NOT NULL,
   urlPhotoHebergement              VARCHAR(300) NOT NULL,
-  idEtablissement                  BIGINT NOT NULL,
+  idEtablissement                  UUID NOT NULL,
   numeroHebergement                VARCHAR(10) NOT NULL,
   CONSTRAINT PK_PHOTO_HEBERGEMENT PRIMARY KEY (idPhotoHebergement),
   CONSTRAINT FK_PHOTO_HEBERGEMENT_1 FOREIGN KEY (idEtablissement, numeroHebergement) REFERENCES HEBERGEMENT (idEtablissement, numeroHebergement)
 );
 
 CREATE TABLE EQUIPEMENT (
-  idEtablissement                  BIGINT NOT NULL,
+  idEtablissement                  UUID NOT NULL,
   numeroHebergement                VARCHAR(10) NOT NULL,
-  idOptionHebergement              BIGINT NOT NULL,
+  idOptionHebergement              UUID NOT NULL,
   CONSTRAINT PK_EQUIPEMENT PRIMARY KEY (idEtablissement, numeroHebergement, idOptionHebergement),
   CONSTRAINT FK_EQUIPEMENT_1 FOREIGN KEY (idEtablissement, numeroHebergement) REFERENCES HEBERGEMENT (idEtablissement, numeroHebergement),
   CONSTRAINT FK_EQUIPEMENT_2 FOREIGN KEY (idOptionHebergement) REFERENCES OPTION_HEBERGEMENT (idOptionHebergement)
@@ -244,13 +234,13 @@ CREATE TABLE EQUIPEMENT (
 CREATE TABLE RESERVATION (
   numeroReservation                VARCHAR(20) NOT NULL,
   dateReservation                  TIMESTAMP NOT NULL,
-  idUtilisateur                    BIGINT NOT NULL,
+  idUtilisateur                    UUID NOT NULL,
   CONSTRAINT PK_RESERVATION PRIMARY KEY (numeroReservation),
   CONSTRAINT FK_RESERVATION_1 FOREIGN KEY (idUtilisateur) REFERENCES FESTIVALIER (idUtilisateur)
 );
 
 CREATE TABLE PAIEMENT (
-  idPaiement                       BIGINT NOT NULL,
+  idPaiement                       UUID NOT NULL,
   numTransaction                   VARCHAR(30),
   montantPaiement                  NUMERIC(10,2) NOT NULL,
   datePaiement                     TIMESTAMP,
@@ -265,11 +255,11 @@ CREATE TABLE PAIEMENT (
 );
 
 CREATE TABLE SELECTION (
-  idSelection                      BIGINT NOT NULL,
+  idSelection                      UUID NOT NULL,
   prixPassSelection                NUMERIC(8,2) NOT NULL,
   statutSelection                  VARCHAR(20) NOT NULL,
   numeroReservation                VARCHAR(20) NOT NULL,
-  idFestival                       BIGINT NOT NULL,
+  idFestival                       UUID NOT NULL,
   CONSTRAINT PK_SELECTION PRIMARY KEY (idSelection),
   CONSTRAINT UK_SELECTION_1 UNIQUE (numeroReservation, idFestival),
   CONSTRAINT FK_SELECTION_1 FOREIGN KEY (numeroReservation) REFERENCES RESERVATION (numeroReservation),
@@ -279,20 +269,20 @@ CREATE TABLE SELECTION (
 );
 
 CREATE TABLE PASS (
-  idPass                           BIGINT NOT NULL,
+  idPass                           UUID NOT NULL,
   codePass                         VARCHAR(40) NOT NULL,
-  idSelection                      BIGINT NOT NULL,
+  idSelection                      UUID NOT NULL,
   CONSTRAINT PK_PASS PRIMARY KEY (idPass),
   CONSTRAINT UK_PASS_1 UNIQUE (codePass),
   CONSTRAINT FK_PASS_1 FOREIGN KEY (idSelection) REFERENCES SELECTION (idSelection)
 );
 
 CREATE TABLE NUITEE (
-  idEtablissement                  BIGINT NOT NULL,
+  idEtablissement                  UUID NOT NULL,
   numeroHebergement                VARCHAR(10) NOT NULL,
   dateNuitee                       DATE NOT NULL,
   prixNuitee                       NUMERIC(8,2) NOT NULL,
-  idSelection                      BIGINT,
+  idSelection                      UUID,
   CONSTRAINT PK_NUITEE PRIMARY KEY (idEtablissement, numeroHebergement, dateNuitee),
   CONSTRAINT FK_NUITEE_1 FOREIGN KEY (idEtablissement, numeroHebergement) REFERENCES HEBERGEMENT (idEtablissement, numeroHebergement),
   CONSTRAINT FK_NUITEE_2 FOREIGN KEY (idSelection) REFERENCES SELECTION (idSelection),
@@ -300,8 +290,8 @@ CREATE TABLE NUITEE (
 );
 
 CREATE TABLE NOTATION_FESTIVAL (
-  idFestival                       BIGINT NOT NULL,
-  idUtilisateur                    BIGINT NOT NULL,
+  idFestival                       UUID NOT NULL,
+  idUtilisateur                    UUID NOT NULL,
   noteFestival                     INTEGER NOT NULL,
   dateNoteFestival                 DATE NOT NULL,
   CONSTRAINT PK_NOTATION_FESTIVAL PRIMARY KEY (idFestival, idUtilisateur),
@@ -311,8 +301,8 @@ CREATE TABLE NOTATION_FESTIVAL (
 );
 
 CREATE TABLE NOTATION_ETABLISSEMENT (
-  idEtablissement                  BIGINT NOT NULL,
-  idUtilisateur                    BIGINT NOT NULL,
+  idEtablissement                  UUID NOT NULL,
+  idUtilisateur                    UUID NOT NULL,
   noteEtablissement                INTEGER NOT NULL,
   dateNoteEtablissement            DATE NOT NULL,
   CONSTRAINT PK_NOTATION_ETABLISSEMENT PRIMARY KEY (idEtablissement, idUtilisateur),

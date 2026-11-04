@@ -5,9 +5,9 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
+import java.util.UUID
 
 @Entity
 @Table(
@@ -16,10 +16,9 @@ import jakarta.persistence.UniqueConstraint
 )
 data class RegionEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqRegion")
-    @SequenceGenerator(name = "seqRegion", sequenceName = "SEQ_REGION", allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "idRegion", nullable = false)
-    val id: Long? = null,
+    val id: UUID? = null,
 
     @Column(name = "nomRegion", nullable = false, length = 30)
     var nomRegion: String,

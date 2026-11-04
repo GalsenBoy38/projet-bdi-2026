@@ -1,9 +1,9 @@
 {
  "scenarios": {
-  "sierroz": 2913,
-  "arcades": 10188,
-  "musilac": 1179,
-  "couches": 2629,
-  "saintrock": 1804
+  "sierroz": "991f6cc0-ac55-5194-aeb0-59988ad6fb60",
+  "arcades": "bc6f864f-e894-5be9-8295-90bd84127ccc",
+  "musilac": "6c4121da-27e8-5735-a08d-af217c787b70",
+  "couches": "1ffc2ce1-26de-5f34-aa95-397ea842e2f1",
+  "saintrock": "d6e1773a-d375-52e4-be2b-12a07f516fef"
  }
 }

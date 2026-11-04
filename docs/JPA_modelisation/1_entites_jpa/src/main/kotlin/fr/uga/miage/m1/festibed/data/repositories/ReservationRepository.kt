@@ -4,9 +4,10 @@ import fr.uga.miage.m1.festibed.data.entities.ReservationEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import java.util.UUID
 
 interface ReservationRepository : JpaRepository<ReservationEntity, String> {
-    fun findAllByFestivalierId(festivalierId: Long): Collection<ReservationEntity>
+    fun findAllByFestivalierId(festivalierId: UUID): Collection<ReservationEntity>
 
     /** Validation anonyme : accès par email + numéro de réservation. */
     @Query(

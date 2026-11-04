@@ -7,9 +7,9 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Inheritance
 import jakarta.persistence.InheritanceType
-import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
+import java.util.UUID
 
 /**
  * Héritage JOINED : UTILISATEUR (commun) + une table par sous-type, même clé idUtilisateur.
@@ -28,10 +28,9 @@ import jakarta.persistence.UniqueConstraint
 @Inheritance(strategy = InheritanceType.JOINED)
 abstract class UtilisateurEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqUtilisateur")
-    @SequenceGenerator(name = "seqUtilisateur", sequenceName = "SEQ_UTILISATEUR", allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "idUtilisateur", nullable = false)
-    val id: Long? = null,
+    val id: UUID? = null,
 
     @Column(name = "nom", nullable = false, length = 100)
     var nom: String,

@@ -6,8 +6,8 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Index
-import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
+import java.util.UUID
 
 /** Photo d'un hébergement. La clé étrangère est gérée par HebergementEntity.photos (relation unidirectionnelle). */
 @Entity
@@ -17,10 +17,9 @@ import jakarta.persistence.Table
 )
 data class PhotoHebergementEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqPhotoHebergement")
-    @SequenceGenerator(name = "seqPhotoHebergement", sequenceName = "SEQ_PHOTO_HEBERGEMENT", allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "idPhotoHebergement", nullable = false)
-    val id: Long? = null,
+    val id: UUID? = null,
 
     @Column(name = "urlPhotoHebergement", nullable = false, length = 300)
     var urlPhotoHebergement: String,

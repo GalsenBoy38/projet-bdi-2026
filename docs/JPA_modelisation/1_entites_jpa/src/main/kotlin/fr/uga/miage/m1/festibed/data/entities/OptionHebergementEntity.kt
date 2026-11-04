@@ -5,9 +5,9 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
+import java.util.UUID
 
 /** Équipement proposé (wifi, parking...). Associé aux hébergements par la table EQUIPEMENT. */
 @Entity
@@ -17,10 +17,9 @@ import jakarta.persistence.UniqueConstraint
 )
 data class OptionHebergementEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqOptionHebergement")
-    @SequenceGenerator(name = "seqOptionHebergement", sequenceName = "SEQ_OPTION_HEBERGEMENT", allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "idOptionHebergement", nullable = false)
-    val id: Long? = null,
+    val id: UUID? = null,
 
     @Column(name = "libelleOptionHebergement", nullable = false, length = 50)
     var libelleOptionHebergement: String,

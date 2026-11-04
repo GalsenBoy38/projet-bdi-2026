@@ -5,7 +5,7 @@ INFILE 'csv/25_PASS.csv'
 APPEND INTO TABLE PASS
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idPass,
+  idPass CHAR(36) "HEXTORAW(REPLACE(:idPass, '-', ''))",
   codePass CHAR(160),
-  idSelection
+  idSelection CHAR(36) "HEXTORAW(REPLACE(:idSelection, '-', ''))"
 )

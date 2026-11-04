@@ -7,12 +7,13 @@ import jakarta.persistence.PrimaryKeyJoinColumn
 import jakarta.persistence.Table
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.UUID
 
 @Entity
 @Table(name = "RESIDENCE_DE_TOURISME")
 @PrimaryKeyJoinColumn(name = "idEtablissement")
 class ResidenceDeTourismeEntity(
-    id: Long? = null,
+    id: UUID? = null,
     nomCommercial: String,
     adresse: String,
     codePostalEtablissement: String,

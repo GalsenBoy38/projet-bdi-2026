@@ -32,7 +32,7 @@ sqlldr userid=%1 control=sqlldr\25_PASS.ctl log=logs\PASS.log bad=logs\PASS.bad 
 sqlldr userid=%1 control=sqlldr\26_NUITEE.ctl log=logs\NUITEE.log bad=logs\NUITEE.bad || goto erreur
 sqlldr userid=%1 control=sqlldr\27_NOTATION_FESTIVAL.ctl log=logs\NOTATION_FESTIVAL.log bad=logs\NOTATION_FESTIVAL.bad || goto erreur
 sqlldr userid=%1 control=sqlldr\28_NOTATION_ETABLISSEMENT.ctl log=logs\NOTATION_ETABLISSEMENT.log bad=logs\NOTATION_ETABLISSEMENT.bad || goto erreur
-echo Chargement termine. Executer ensuite 03_sequences_oracle.sql puis 04_controles.sql.
+echo Chargement termine. Executer ensuite 04_controles.sql.
 exit /b 0
 :erreur
 echo ECHEC : voir le dossier logs

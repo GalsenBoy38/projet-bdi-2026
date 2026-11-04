@@ -8,9 +8,10 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.UUID
 
 interface HebergementRepository : JpaRepository<HebergementEntity, HebergementId> {
-    fun findAllByEtablissementId(etablissementId: Long): Collection<HebergementEntity>
+    fun findAllByEtablissementId(etablissementId: UUID): Collection<HebergementEntity>
 
     /**
      * Hébergements actifs ayant au moins une nuit libre pendant le festival, dans un rectangle

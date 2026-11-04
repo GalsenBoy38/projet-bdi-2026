@@ -14,13 +14,13 @@ import jakarta.persistence.Inheritance
 import jakarta.persistence.InheritanceType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
-import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.UUID
 
 /**
  * Établissement d'hébergement. Héritage JOINED : une table par typologie officielle (établissements
@@ -47,10 +47,9 @@ import java.time.LocalDate
 @Inheritance(strategy = InheritanceType.JOINED)
 abstract class EtablissementEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqEtablissement")
-    @SequenceGenerator(name = "seqEtablissement", sequenceName = "SEQ_ETABLISSEMENT", allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "idEtablissement", nullable = false)
-    val id: Long? = null,
+    val id: UUID? = null,
 
     @Column(name = "nomCommercial", nullable = false, length = 100)
     var nomCommercial: String,

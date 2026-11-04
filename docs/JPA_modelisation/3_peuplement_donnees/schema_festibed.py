@@ -9,7 +9,7 @@ ce qui évite les incohérences :
   - le MLD PlantUML (docs/Output_Diagramme/MLD_GLOBAL_FINAL.puml, voir generer_mld.py).
 
 Types abstraits :
-  id        identifiant technique   Long        Oracle NUMBER(19)       H2 BIGINT
+  id        identifiant technique   UUID        Oracle RAW(16)          H2 UUID
   int       entier                  Int         Oracle NUMBER(10)       H2 INTEGER
   num(n)    petit entier            Int         Oracle NUMBER(n)        H2 INTEGER
   bool      booléen                 Boolean     Oracle NUMBER(1) 0/1    H2 BOOLEAN
@@ -17,8 +17,14 @@ Types abstraits :
   str(n)    texte                   String      Oracle VARCHAR2(n CHAR) H2 VARCHAR(n)
   date      date                    LocalDate   DATE
   ts        horodatage              LocalDateTime TIMESTAMP
+
+Identifiants : genere=True marque une table dont la clé primaire est un UUID généré par Hibernate
+(@GeneratedValue(strategy = GenerationType.UUID)). Les autres colonnes « id » (sous-classes JOINED,
+clés étrangères) reprennent l'UUID de la table racine. Le peuplement numérote les lignes en interne
+puis écrit des UUID déterministes (uuid5) : même graine, mêmes identifiants. Aucune séquence.
 """
 import re
+import uuid
 
 # ---------------------------------------------------------------- énumérations
 # (doivent rester identiques aux enums Kotlin de 1_entites_jpa)
@@ -53,9 +59,9 @@ class Col:
 
 
 class Table:
-    def __init__(self, nom, origine, cols, pk, uk=(), fk=(), checks=(), index=(), seq=None, desc=""):
+    def __init__(self, nom, origine, cols, pk, uk=(), fk=(), checks=(), index=(), genere=False, desc=""):
         self.nom, self.origine, self.cols, self.pk = nom, origine, cols, pk
-        self.uk, self.fk, self.checks, self.index, self.seq, self.desc = uk, fk, checks, index, seq, desc
+        self.uk, self.fk, self.checks, self.index, self.genere, self.desc = uk, fk, checks, index, genere, desc
 
     @property
     def noms(self):
@@ -68,7 +74,7 @@ PUB, SYN, MIX = "PUBLIC", "SYNTHÉTIQUE", "MIXTE"
 # Ordre = ordre de création et de chargement (clés étrangères)
 TABLES = [
     Table("REGION", PUB, [C("idRegion", "id"), C("nomRegion", "str(30)", desc="CSV festivals « Région »")],
-          pk=["idRegion"], uk=[["nomRegion"]], seq="SEQ_REGION"),
+          pk=["idRegion"], uk=[["nomRegion"]], genere=True),
     Table("DEPARTEMENT", PUB, [C("codeDepartement", "str(3)", desc="2 premiers caractères du code INSEE (3 en outre-mer)"),
                                C("nomDepartement", "str(50)"), C("idRegion", "id")],
           pk=["codeDepartement"], fk=[(["idRegion"], "REGION", ["idRegion"])],
@@ -80,7 +86,7 @@ TABLES = [
           checks=["latitude BETWEEN -90 AND 90", "longitude BETWEEN -180 AND 180"],
           index=[["codeDepartement"]]),
     Table("UTILISATEUR", SYN, [C("idUtilisateur", "id"), C("nom", "str(100)"), C("email", "str(150)")],
-          pk=["idUtilisateur"], uk=[["email"]], seq="SEQ_UTILISATEUR"),
+          pk=["idUtilisateur"], uk=[["email"]], genere=True),
     Table("FESTIVALIER", SYN, [C("idUtilisateur", "id"), C("fournisseurAuth", "str(30)", True),
                                C("identifiantExterneFestivalier", "str(100)", True)],
           pk=["idUtilisateur"], uk=[["fournisseurAuth", "identifiantExterneFestivalier"]],
@@ -109,7 +115,7 @@ TABLES = [
         checks=["moisDebut BETWEEN 1 AND 12", "dateFinFestival >= dateDebutFestival",
                 "quotaPass >= 0", "nbPassVendus BETWEEN 0 AND quotaPass", "prixPass >= 0"],
         index=[["dateDebutFestival", "dateFinFestival"], ["codeInsee"], ["domaine"], ["idOrganisateur"]],
-        seq="SEQ_FESTIVAL"),
+        genere=True),
     Table("ETABLISSEMENT", MIX, [
         C("idEtablissement", "id"), C("nomCommercial", "str(100)"),
         C("adresse", "str(80)", True, desc="Classés : CSV ; OSM : géocodage inverse BAN (NULL si aucune adresse proche)"),
@@ -133,7 +139,7 @@ TABLES = [
                 "(classement IS NOT NULL AND dateClassement IS NOT NULL AND classementProroge IS NOT NULL)"],
         index=[["latitudeEtablissement", "longitudeEtablissement"], ["codePostalEtablissement"], ["idUtilisateur"],
                ["codeInsee"]],
-        seq="SEQ_ETABLISSEMENT"),
+        genere=True),
     Table("HOTEL_DE_TOURISME", PUB, [C("idEtablissement", "id"), C("nbChambresHotel", "int")],
           pk=["idEtablissement"], fk=[(["idEtablissement"], "ETABLISSEMENT", ["idEtablissement"])]),
     Table("AUBERGE_COLLECTIVE", PUB, [C("idEtablissement", "id"), C("nbChambresAuberge", "int")],
@@ -157,7 +163,7 @@ TABLES = [
         index=[["typeNonClasse"]],
         desc="Hébergement touristique recensé par OpenStreetMap mais absent de la liste des établissements classés"),
     Table("OPTION_HEBERGEMENT", SYN, [C("idOptionHebergement", "id"), C("libelleOptionHebergement", "str(50)")],
-          pk=["idOptionHebergement"], uk=[["libelleOptionHebergement"]], seq="SEQ_OPTION_HEBERGEMENT"),
+          pk=["idOptionHebergement"], uk=[["libelleOptionHebergement"]], genere=True),
     Table("HEBERGEMENT", SYN, [
         C("idEtablissement", "id"), C("numeroHebergement", "str(10)"),
         C("typeHebergement", "str(30)", enum="TypeHebergement"), C("capaciteHebergement", "int"),
@@ -170,7 +176,7 @@ TABLES = [
                                      C("idEtablissement", "id"), C("numeroHebergement", "str(10)")],
           pk=["idPhotoHebergement"],
           fk=[(["idEtablissement", "numeroHebergement"], "HEBERGEMENT", ["idEtablissement", "numeroHebergement"])],
-          index=[["idEtablissement", "numeroHebergement"]], seq="SEQ_PHOTO_HEBERGEMENT"),
+          index=[["idEtablissement", "numeroHebergement"]], genere=True),
     Table("EQUIPEMENT", SYN, [C("idEtablissement", "id"), C("numeroHebergement", "str(10)"),
                               C("idOptionHebergement", "id")],
           pk=["idEtablissement", "numeroHebergement", "idOptionHebergement"],
@@ -187,17 +193,17 @@ TABLES = [
                             C("numeroReservation", "str(20)")],
           pk=["idPaiement"], uk=[["numTransaction"], ["numeroReservation"]],
           fk=[(["numeroReservation"], "RESERVATION", ["numeroReservation"])],
-          checks=["montantPaiement >= 0"], seq="SEQ_PAIEMENT"),
+          checks=["montantPaiement >= 0"], genere=True),
     Table("SELECTION", SYN, [C("idSelection", "id"), C("prixPassSelection", "dec(8,2)"),
                              C("statutSelection", "str(20)", enum="StatutSelection"),
                              C("numeroReservation", "str(20)"), C("idFestival", "id")],
           pk=["idSelection"], uk=[["numeroReservation", "idFestival"]],
           fk=[(["numeroReservation"], "RESERVATION", ["numeroReservation"]),
               (["idFestival"], "FESTIVAL", ["idFestival"])],
-          checks=["prixPassSelection >= 0"], index=[["idFestival"]], seq="SEQ_SELECTION"),
+          checks=["prixPassSelection >= 0"], index=[["idFestival"]], genere=True),
     Table("PASS", SYN, [C("idPass", "id"), C("codePass", "str(40)"), C("idSelection", "id")],
           pk=["idPass"], uk=[["codePass"]], fk=[(["idSelection"], "SELECTION", ["idSelection"])],
-          index=[["idSelection"]], seq="SEQ_PASS"),
+          index=[["idSelection"]], genere=True),
     Table("NUITEE", SYN, [C("idEtablissement", "id"), C("numeroHebergement", "str(10)"), C("dateNuitee", "date"),
                           C("prixNuitee", "dec(8,2)"), C("idSelection", "id", True, desc="NULL = nuit libre")],
           pk=["idEtablissement", "numeroHebergement", "dateNuitee"],
@@ -217,7 +223,22 @@ TABLES = [
           checks=["noteEtablissement BETWEEN 1 AND 5"], index=[["idUtilisateur"]]),
 ]
 PAR_NOM = {t.nom: t for t in TABLES}
-ALLOCATION = 50  # = allocationSize des @SequenceGenerator
+ESPACE_UUID = uuid.uuid5(uuid.NAMESPACE_URL, "https://festibed.fr/groupe3")
+
+
+def racine(t, col):
+    """Table dont la clé UUID générée alimente la colonne col de t (en suivant les clés étrangères)."""
+    if t.genere and col in t.pk:
+        return t.nom
+    for cols, ref, rcols in t.fk:
+        if col in cols:
+            return racine(PAR_NOM[ref], rcols[cols.index(col)])
+    raise ValueError(f"{t.nom}.{col} : identifiant sans table racine")
+
+
+def uuid_de(table_racine, n):
+    """UUID déterministe de la n-ième ligne d'une table racine (peuplement reproductible)."""
+    return str(uuid.uuid5(ESPACE_UUID, f"{table_racine}:{n}"))
 
 
 def type_sql(typ, dialecte):
@@ -225,7 +246,7 @@ def type_sql(typ, dialecte):
     base, a, b = m.groups()
     ora = dialecte == "oracle"
     if base == "id":
-        return "NUMBER(19)" if ora else "BIGINT"
+        return "RAW(16)" if ora else "UUID"
     if base == "int":
         return "NUMBER(10)" if ora else "INTEGER"
     if base == "num":
@@ -257,10 +278,6 @@ def ddl(dialecte):
     ora = dialecte == "oracle"
     out = [f"-- FestiBed - Groupe 3 - Schéma {'Oracle' if ora else 'H2 (tests)'}",
            "-- Généré par schema_festibed.py : ne pas modifier à la main.", ""]
-    for t in TABLES:
-        if t.seq:
-            out.append(f"CREATE SEQUENCE {t.seq} START WITH 1 INCREMENT BY {ALLOCATION};")
-    out.append("")
     for t in TABLES:
         lignes = []
         for c in t.cols:

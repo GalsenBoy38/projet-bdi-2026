@@ -13,12 +13,13 @@ import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.UUID
 
 @Entity
 @Table(name = "VILLAGE_DE_VACANCES")
 @PrimaryKeyJoinColumn(name = "idEtablissement")
 class VillageDeVacancesEntity(
-    id: Long? = null,
+    id: UUID? = null,
     nomCommercial: String,
     adresse: String,
     codePostalEtablissement: String,

@@ -5,6 +5,6 @@ INFILE 'csv/12_AUBERGE_COLLECTIVE.csv'
 APPEND INTO TABLE AUBERGE_COLLECTIVE
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idEtablissement,
+  idEtablissement CHAR(36) "HEXTORAW(REPLACE(:idEtablissement, '-', ''))",
   nbChambresAuberge
 )

@@ -14,12 +14,12 @@ import jakarta.persistence.Id
 import jakarta.persistence.Index
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
-import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.UUID
 
 @Entity
 @Table(
@@ -33,10 +33,9 @@ import java.time.LocalDate
 )
 data class FestivalEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqFestival")
-    @SequenceGenerator(name = "seqFestival", sequenceName = "SEQ_FESTIVAL", allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "idFestival", nullable = false)
-    val id: Long? = null,
+    val id: UUID? = null,
 
     @Column(name = "nomFestival", nullable = false, length = 100)
     var nomFestival: String,

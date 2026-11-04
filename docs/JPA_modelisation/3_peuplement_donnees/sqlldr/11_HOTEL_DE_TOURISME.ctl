@@ -5,6 +5,6 @@ INFILE 'csv/11_HOTEL_DE_TOURISME.csv'
 APPEND INTO TABLE HOTEL_DE_TOURISME
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idEtablissement,
+  idEtablissement CHAR(36) "HEXTORAW(REPLACE(:idEtablissement, '-', ''))",
   nbChambresHotel
 )

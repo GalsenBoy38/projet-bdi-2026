@@ -27,14 +27,14 @@ skinparam class {
 
 ' ===== Utilisateurs =====
 entity "UTILISATEUR" as Utilisateur #FFEB9C {
-  <u>idUtilisateur</u> : BIGINT
+  <u>idUtilisateur</u> : UUID
   --
   nom : VARCHAR(100)
   <<UK>> email : VARCHAR(150)
 }
 
 entity "FESTIVALIER" as Festivalier #FFEB9C {
-  <u>#idUtilisateur</u> : BIGINT
+  <u>#idUtilisateur</u> : UUID
   --
   fournisseurAuth : VARCHAR(30) [0..1]
   identifiantExterneFestivalier : VARCHAR(100) [0..1]
@@ -42,24 +42,24 @@ entity "FESTIVALIER" as Festivalier #FFEB9C {
 }
 
 entity "UTILISATEUR_BACKOFFICE" as UtilisateurBackoffice #FFEB9C {
-  <u>#idUtilisateur</u> : BIGINT
+  <u>#idUtilisateur</u> : UUID
   --
   motDePasseHache : VARCHAR(100)
 }
 
 entity "ORGANISATEUR" as Organisateur #FFEB9C {
-  <u>#idUtilisateur</u> : BIGINT
+  <u>#idUtilisateur</u> : UUID
   --
 }
 
 entity "HEBERGEUR" as Hebergeur #FFEB9C {
-  <u>#idUtilisateur</u> : BIGINT
+  <u>#idUtilisateur</u> : UUID
   --
 }
 
 ' ===== Géographie =====
 entity "REGION" as Region #C6EFCE {
-  <u>idRegion</u> : BIGINT
+  <u>idRegion</u> : UUID
   --
   <<UK>> nomRegion : VARCHAR(30)
 }
@@ -68,7 +68,7 @@ entity "DEPARTEMENT" as Departement #C6EFCE {
   <u>codeDepartement</u> : VARCHAR(3)
   --
   nomDepartement : VARCHAR(50)
-  #idRegion : BIGINT
+  #idRegion : UUID
 }
 
 entity "COMMUNE" as Commune #C6EFCE {
@@ -82,7 +82,7 @@ entity "COMMUNE" as Commune #C6EFCE {
 
 ' ===== Festivals =====
 entity "FESTIVAL" as Festival #BDD7EE {
-  <u>idFestival</u> : BIGINT
+  <u>idFestival</u> : UUID
   --
   nomFestival : VARCHAR(100)
   domaine : VARCHAR(40)
@@ -102,12 +102,12 @@ entity "FESTIVAL" as Festival #BDD7EE {
   prixPass : DECIMAL(8,2)
   actifFestival : LOGICAL
   #codeInsee : VARCHAR(5)
-  #idOrganisateur : BIGINT [0..1]
+  #idOrganisateur : UUID [0..1]
 }
 
 entity "NOTATION_FESTIVAL" as NotationFestival #FFEB9C {
-  <u>#idFestival</u> : BIGINT
-  <u>#idUtilisateur</u> : BIGINT
+  <u>#idFestival</u> : UUID
+  <u>#idUtilisateur</u> : UUID
   --
   noteFestival : SMALLINT
   dateNoteFestival : DATE
@@ -115,7 +115,7 @@ entity "NOTATION_FESTIVAL" as NotationFestival #FFEB9C {
 
 ' ===== Établissements =====
 entity "ETABLISSEMENT" as Etablissement #BDD7EE {
-  <u>idEtablissement</u> : BIGINT
+  <u>idEtablissement</u> : UUID
   --
   nomCommercial : VARCHAR(100)
   adresse : VARCHAR(80) [0..1]
@@ -134,36 +134,36 @@ entity "ETABLISSEMENT" as Etablissement #BDD7EE {
   <<UK>> osmRef : VARCHAR(25) [0..1]
   noteMoyenne : DECIMAL(3,2) [0..1]
   nbNotes : INT
-  #idUtilisateur : BIGINT [0..1]
+  #idUtilisateur : UUID [0..1]
 }
 
 entity "HOTEL_DE_TOURISME" as HotelDeTourisme #C6EFCE {
-  <u>#idEtablissement</u> : BIGINT
+  <u>#idEtablissement</u> : UUID
   --
   nbChambresHotel : INT
 }
 
 entity "AUBERGE_COLLECTIVE" as AubergeCollective #C6EFCE {
-  <u>#idEtablissement</u> : BIGINT
+  <u>#idEtablissement</u> : UUID
   --
   nbChambresAuberge : INT
 }
 
 entity "CAMPING" as Camping #C6EFCE {
-  <u>#idEtablissement</u> : BIGINT
+  <u>#idEtablissement</u> : UUID
   --
   categorie : VARCHAR(10) [0..1]
   nbEmplacementsCamping : INT
 }
 
 entity "PARC_RESIDENTIEL_DE_LOISIRS" as ParcResidentielDeLoisirs #C6EFCE {
-  <u>#idEtablissement</u> : BIGINT
+  <u>#idEtablissement</u> : UUID
   --
   nbEmplacementsParc : INT
 }
 
 entity "VILLAGE_DE_VACANCES" as VillageDeVacances #C6EFCE {
-  <u>#idEtablissement</u> : BIGINT
+  <u>#idEtablissement</u> : UUID
   --
   mention : VARCHAR(30) [0..1]
   typeSejour : VARCHAR(30) [0..1]
@@ -171,13 +171,13 @@ entity "VILLAGE_DE_VACANCES" as VillageDeVacances #C6EFCE {
 }
 
 entity "RESIDENCE_DE_TOURISME" as ResidenceDeTourisme #C6EFCE {
-  <u>#idEtablissement</u> : BIGINT
+  <u>#idEtablissement</u> : UUID
   --
   nbUnitesHabitation : INT
 }
 
 entity "ETABLISSEMENT_NON_CLASSE" as EtablissementNonClasse #C6EFCE {
-  <u>#idEtablissement</u> : BIGINT
+  <u>#idEtablissement</u> : UUID
   --
   typeNonClasse : VARCHAR(30)
   nbEtoilesDeclarees : SMALLINT [0..1]
@@ -186,8 +186,8 @@ entity "ETABLISSEMENT_NON_CLASSE" as EtablissementNonClasse #C6EFCE {
 }
 
 entity "NOTATION_ETABLISSEMENT" as NotationEtablissement #FFEB9C {
-  <u>#idEtablissement</u> : BIGINT
-  <u>#idUtilisateur</u> : BIGINT
+  <u>#idEtablissement</u> : UUID
+  <u>#idUtilisateur</u> : UUID
   --
   noteEtablissement : SMALLINT
   dateNoteEtablissement : DATE
@@ -195,7 +195,7 @@ entity "NOTATION_ETABLISSEMENT" as NotationEtablissement #FFEB9C {
 
 ' ===== Hébergements =====
 entity "HEBERGEMENT" as Hebergement #FFEB9C {
-  <u>#idEtablissement</u> : BIGINT
+  <u>#idEtablissement</u> : UUID
   <u>numeroHebergement</u> : VARCHAR(10)
   --
   typeHebergement : VARCHAR(30)
@@ -206,33 +206,33 @@ entity "HEBERGEMENT" as Hebergement #FFEB9C {
 }
 
 entity "PHOTO_HEBERGEMENT" as PhotoHebergement #FFEB9C {
-  <u>idPhotoHebergement</u> : BIGINT
+  <u>idPhotoHebergement</u> : UUID
   --
   urlPhotoHebergement : VARCHAR(300)
-  #idEtablissement : BIGINT
+  #idEtablissement : UUID
   #numeroHebergement : VARCHAR(10)
 }
 
 entity "OPTION_HEBERGEMENT" as OptionHebergement #FFEB9C {
-  <u>idOptionHebergement</u> : BIGINT
+  <u>idOptionHebergement</u> : UUID
   --
   <<UK>> libelleOptionHebergement : VARCHAR(50)
 }
 
 entity "EQUIPEMENT" as Equipement #FFEB9C {
-  <u>#idEtablissement</u> : BIGINT
+  <u>#idEtablissement</u> : UUID
   <u>#numeroHebergement</u> : VARCHAR(10)
-  <u>#idOptionHebergement</u> : BIGINT
+  <u>#idOptionHebergement</u> : UUID
   --
 }
 
 entity "NUITEE" as Nuitee #FFEB9C {
-  <u>#idEtablissement</u> : BIGINT
+  <u>#idEtablissement</u> : UUID
   <u>#numeroHebergement</u> : VARCHAR(10)
   <u>dateNuitee</u> : DATE
   --
   prixNuitee : DECIMAL(8,2)
-  #idSelection : BIGINT [0..1]
+  #idSelection : UUID [0..1]
 }
 
 ' ===== Réservations =====
@@ -240,28 +240,28 @@ entity "RESERVATION" as Reservation #FFEB9C {
   <u>numeroReservation</u> : VARCHAR(20)
   --
   dateReservation : DATETIME
-  #idUtilisateur : BIGINT
+  #idUtilisateur : UUID
 }
 
 entity "SELECTION" as Selection #FFEB9C {
-  <u>idSelection</u> : BIGINT
+  <u>idSelection</u> : UUID
   --
   prixPassSelection : DECIMAL(8,2)
   statutSelection : VARCHAR(20)
   #numeroReservation : VARCHAR(20)
-  #idFestival : BIGINT
+  #idFestival : UUID
   <<UK>> (numeroReservation, idFestival)
 }
 
 entity "PASS" as Pass #FFEB9C {
-  <u>idPass</u> : BIGINT
+  <u>idPass</u> : UUID
   --
   <<UK>> codePass : VARCHAR(40)
-  #idSelection : BIGINT
+  #idSelection : UUID
 }
 
 entity "PAIEMENT" as Paiement #FFEB9C {
-  <u>idPaiement</u> : BIGINT
+  <u>idPaiement</u> : UUID
   --
   <<UK>> numTransaction : VARCHAR(30) [0..1]
   montantPaiement : DECIMAL(10,2)

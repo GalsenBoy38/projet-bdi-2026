@@ -5,7 +5,7 @@ INFILE 'csv/10_ETABLISSEMENT.csv'
 APPEND INTO TABLE ETABLISSEMENT
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idEtablissement,
+  idEtablissement CHAR(36) "HEXTORAW(REPLACE(:idEtablissement, '-', ''))",
   nomCommercial CHAR(400),
   adresse CHAR(320),
   codePostalEtablissement CHAR(20),
@@ -23,5 +23,5 @@ FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
   osmRef CHAR(100),
   noteMoyenne,
   nbNotes,
-  idUtilisateur
+  idUtilisateur CHAR(36) "HEXTORAW(REPLACE(:idUtilisateur, '-', ''))"
 )

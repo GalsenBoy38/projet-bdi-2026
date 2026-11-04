@@ -29,7 +29,7 @@ COULEUR = {"PUBLIC": "#C6EFCE", "SYNTHÉTIQUE": "#FFEB9C", "MIXTE": "#BDD7EE"}
 
 def type_mld(typ):
     base, a, b = re.fullmatch(r"(\w+)(?:\((\d+)(?:,(\d+))?\))?", typ).groups()
-    return {"id": "BIGINT", "int": "INT", "num": "SMALLINT", "bool": "LOGICAL", "date": "DATE",
+    return {"id": "UUID", "int": "INT", "num": "SMALLINT", "bool": "LOGICAL", "date": "DATE",
             "ts": "DATETIME"}.get(base) or (f"VARCHAR({a})" if base == "str" else f"DECIMAL({a},{b})")
 
 

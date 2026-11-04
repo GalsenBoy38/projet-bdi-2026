@@ -5,7 +5,7 @@ INFILE 'csv/21_EQUIPEMENT.csv'
 APPEND INTO TABLE EQUIPEMENT
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idEtablissement,
+  idEtablissement CHAR(36) "HEXTORAW(REPLACE(:idEtablissement, '-', ''))",
   numeroHebergement CHAR(40),
-  idOptionHebergement
+  idOptionHebergement CHAR(36) "HEXTORAW(REPLACE(:idOptionHebergement, '-', ''))"
 )

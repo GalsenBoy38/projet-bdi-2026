@@ -11,13 +11,13 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.OneToOne
-import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import java.math.BigDecimal
 import java.time.LocalDateTime
+import java.util.UUID
 
 /**
  * Prévu dans le modèle, non développé dans le prototype (statut NON_GERE).
@@ -33,10 +33,9 @@ import java.time.LocalDateTime
 )
 data class PaiementEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqPaiement")
-    @SequenceGenerator(name = "seqPaiement", sequenceName = "SEQ_PAIEMENT", allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "idPaiement", nullable = false)
-    val id: Long? = null,
+    val id: UUID? = null,
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "numeroReservation", nullable = false)

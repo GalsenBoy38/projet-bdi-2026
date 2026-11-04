@@ -4,12 +4,13 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.PrimaryKeyJoinColumn
 import jakarta.persistence.Table
+import java.util.UUID
 
 @Entity
 @Table(name = "UTILISATEUR_BACKOFFICE")
 @PrimaryKeyJoinColumn(name = "idUtilisateur")
 abstract class UtilisateurBackofficeEntity(
-    id: Long? = null,
+    id: UUID? = null,
     nom: String,
     email: String,
 

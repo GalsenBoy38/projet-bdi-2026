@@ -2,13 +2,15 @@
 
 Le classeur doit suivre Gabarits_insertion_vides.xlsx (un onglet NN_TABLE par table, en-têtes en ligne 1).
 Produit deux scripts :
-  <nom>_oracle.sql : INSERT Oracle (SQL*Plus / SQL Developer), booléens 1/0, puis recalage des séquences
-  <nom>_h2.sql     : INSERT H2 (tests), booléens TRUE/FALSE, puis recalage des séquences
+  <nom>_oracle.sql : INSERT Oracle (SQL*Plus / SQL Developer), booléens 1/0, UUID en HEXTORAW('...')
+  <nom>_h2.sql     : INSERT H2 (tests), booléens TRUE/FALSE, UUID en texte
+Les identifiants sont des UUID (texte 8-4-4-4-12) : pas de séquence à recaler.
 
 Usage : python excel_vers_sql.py Jeu_essai_scenarios.xlsx [prefixe_sortie]
 """
 import datetime as dt
 import sys
+import uuid
 from decimal import Decimal
 from pathlib import Path
 
@@ -16,7 +18,7 @@ from openpyxl import load_workbook
 
 ICI = Path(__file__).resolve().parent
 sys.path.insert(0, str(ICI.parent / "3_peuplement_donnees"))
-from schema_festibed import TABLES, ENUMS, ALLOCATION, numero  # noqa: E402
+from schema_festibed import TABLES, ENUMS, numero  # noqa: E402
 
 
 def litteral(c, v, dialecte):
@@ -29,7 +31,13 @@ def litteral(c, v, dialecte):
     if c.typ == "bool":
         vrai = str(v).strip().upper() in ("1", "TRUE", "VRAI", "OUI")
         return ("1" if vrai else "0") if dialecte == "oracle" else ("TRUE" if vrai else "FALSE")
-    if c.typ in ("id", "int") or c.typ.startswith("num"):
+    if c.typ == "id":
+        try:
+            u = uuid.UUID(str(v).strip())
+        except ValueError:
+            raise ValueError(f"{c.nom} : « {v} » n'est pas un UUID") from None
+        return f"HEXTORAW('{u.hex.upper()}')" if dialecte == "oracle" else f"'{u}'"
+    if c.typ == "int" or c.typ.startswith("num"):
         return str(int(v))
     if c.typ.startswith("dec"):
         return str(Decimal(str(v)))
@@ -51,7 +59,6 @@ def litteral(c, v, dialecte):
 def convertir(xlsx, prefixe):
     wb = load_workbook(xlsx, data_only=True)
     sorties = {"oracle": ["SET DEFINE OFF", "SET FEEDBACK OFF"], "h2": []}
-    max_ids = {}
     total = 0
     for t in TABLES:
         nom_onglet = f"{numero(t):02d}_{t.nom}"[:31]
@@ -72,15 +79,7 @@ def convertir(xlsx, prefixe):
                 except ValueError as e:
                     raise ValueError(f"{nom_onglet} ligne {n} : {e}") from None
                 out.append(f"INSERT INTO {t.nom} ({', '.join(t.noms)}) VALUES ({', '.join(vals)});")
-            if t.seq:
-                max_ids[t.seq] = max(max_ids.get(t.seq, 0), int(ligne[0]))
             total += 1
-    for t in TABLES:
-        if t.seq:
-            depart = max_ids.get(t.seq, 0) + ALLOCATION + 1
-            sorties["oracle"] += [f"DROP SEQUENCE {t.seq};",
-                                  f"CREATE SEQUENCE {t.seq} START WITH {depart} INCREMENT BY {ALLOCATION};"]
-            sorties["h2"].append(f"ALTER SEQUENCE {t.seq} RESTART WITH {depart};")
     sorties["oracle"].append("COMMIT;")
     sorties["h2"].append("COMMIT;")
     for dialecte, out in sorties.items():

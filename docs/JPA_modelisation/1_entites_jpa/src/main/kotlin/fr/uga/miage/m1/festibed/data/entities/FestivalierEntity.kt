@@ -5,6 +5,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.PrimaryKeyJoinColumn
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
+import java.util.UUID
 
 @Entity
 @Table(
@@ -15,7 +16,7 @@ import jakarta.persistence.UniqueConstraint
 )
 @PrimaryKeyJoinColumn(name = "idUtilisateur")
 class FestivalierEntity(
-    id: Long? = null,
+    id: UUID? = null,
     nom: String,
     email: String,
 

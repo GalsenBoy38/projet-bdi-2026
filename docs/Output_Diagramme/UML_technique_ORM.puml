@@ -8,7 +8,8 @@
 '     collections inverses ; @OneToMany seulement pour les compositions.
 '   - Compositions (losange plein, cascade ALL + orphanRemoval) :
 '     Reservation ◆ Selection ◆ Pass, Hebergement ◆ PhotoHebergement.
-'   - Clés composées en @EmbeddedId (+ @MapsId).
+'   - Clés techniques en UUID (@GeneratedValue(strategy = GenerationType.UUID),
+'     Oracle RAW(16), H2 UUID) ; clés composées en @EmbeddedId (+ @MapsId).
 '   - Festival.nbPassVendus et Etablissement.noteMoyenne / nbNotes : lecture
 '     seule pour JPA, modifiés par UPDATE atomiques (stratégie de concurrence).
 '   - Nuitee.selection = null -> nuitée libre.
@@ -41,7 +42,7 @@ title Diagramme UML technique - FestiBed (modèle ORM / JPA)
 
 ' ====== UTILISATEURS ======
 abstract class Utilisateur {
-    - id: Long
+    - id: UUID
     - nom: String
     - email: String
 }
@@ -60,7 +61,7 @@ class Hebergeur
 
 ' ====== GEOGRAPHIE ======
 class Region {
-    - id: Long
+    - id: UUID
     - nomRegion: String
 }
 
@@ -78,7 +79,7 @@ class Commune {
 
 ' ====== FESTIVALS ======
 class Festival {
-    - id: Long
+    - id: UUID
     - nomFestival: String
     - domaine: Domaine
     - sousDomaine: SousDomaine [0..1]
@@ -107,13 +108,13 @@ class NotationFestival {
 }
 
 class NotationFestivalId <<Embeddable>> {
-    - idFestival: Long
-    - idUtilisateur: Long
+    - idFestival: UUID
+    - idUtilisateur: UUID
 }
 
 ' ====== ETABLISSEMENTS ======
 abstract class Etablissement {
-    - id: Long
+    - id: UUID
     - nomCommercial: String
     - adresse: String [0..1]
     - codePostalEtablissement: String
@@ -175,8 +176,8 @@ class NotationEtablissement {
 }
 
 class NotationEtablissementId <<Embeddable>> {
-    - idEtablissement: Long
-    - idUtilisateur: Long
+    - idEtablissement: UUID
+    - idUtilisateur: UUID
 }
 
 ' ====== HEBERGEMENTS ======
@@ -190,7 +191,7 @@ class Hebergement {
 }
 
 class HebergementId <<Embeddable>> {
-    - idEtablissement: Long
+    - idEtablissement: UUID
     - numeroHebergement: String
 }
 
@@ -207,12 +208,12 @@ class NuiteeId <<Embeddable>> {
 }
 
 class PhotoHebergement {
-    - id: Long
+    - id: UUID
     - urlPhotoHebergement: String
 }
 
 class OptionHebergement {
-    - id: Long
+    - id: UUID
     - libelleOptionHebergement: String
 }
 
@@ -223,18 +224,18 @@ class Reservation {
 }
 
 class Selection {
-    - id: Long
+    - id: UUID
     - prixPassSelection: BigDecimal
     - statutSelection: StatutSelection
 }
 
 class Pass {
-    - id: Long
+    - id: UUID
     - codePass: String
 }
 
 class Paiement {
-    - id: Long
+    - id: UUID
     - numTransaction: String [0..1]
     - montantPaiement: BigDecimal
     - datePaiement: LocalDateTime [0..1]

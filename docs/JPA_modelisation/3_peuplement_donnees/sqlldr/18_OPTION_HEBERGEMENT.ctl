@@ -5,6 +5,6 @@ INFILE 'csv/18_OPTION_HEBERGEMENT.csv'
 APPEND INTO TABLE OPTION_HEBERGEMENT
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idOptionHebergement,
+  idOptionHebergement CHAR(36) "HEXTORAW(REPLACE(:idOptionHebergement, '-', ''))",
   libelleOptionHebergement CHAR(200)
 )

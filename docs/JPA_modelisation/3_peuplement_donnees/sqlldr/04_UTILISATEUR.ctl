@@ -5,7 +5,7 @@ INFILE 'csv/04_UTILISATEUR.csv'
 APPEND INTO TABLE UTILISATEUR
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idUtilisateur,
+  idUtilisateur CHAR(36) "HEXTORAW(REPLACE(:idUtilisateur, '-', ''))",
   nom CHAR(400),
   email CHAR(600)
 )

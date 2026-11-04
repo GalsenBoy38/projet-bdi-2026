@@ -6,9 +6,10 @@ import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.math.BigDecimal
+import java.util.UUID
 
-interface EtablissementRepository : JpaRepository<EtablissementEntity, Long> {
-    fun findAllByHebergeurId(hebergeurId: Long): Collection<EtablissementEntity>
+interface EtablissementRepository : JpaRepository<EtablissementEntity, UUID> {
+    fun findAllByHebergeurId(hebergeurId: UUID): Collection<EtablissementEntity>
 
     /** Nouvelle note : moyenne et compteur mis à jour en une instruction (pas de perte en concurrence). */
     @Modifying(clearAutomatically = true, flushAutomatically = true)
@@ -18,5 +19,5 @@ interface EtablissementRepository : JpaRepository<EtablissementEntity, Long> {
              e.nbNotes = e.nbNotes + 1
            where e.id = :id""",
     )
-    fun ajouterNote(@Param("id") idEtablissement: Long, @Param("note") note: BigDecimal): Int
+    fun ajouterNote(@Param("id") idEtablissement: UUID, @Param("note") note: BigDecimal): Int
 }

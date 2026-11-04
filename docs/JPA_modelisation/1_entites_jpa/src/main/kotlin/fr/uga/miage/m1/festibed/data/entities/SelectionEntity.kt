@@ -14,12 +14,12 @@ import jakarta.persistence.Index
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
-import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import java.math.BigDecimal
+import java.util.UUID
 
 /**
  * Une sélection = un festival + ses Pass + ses nuitées (indissociables, « réservation groupée »).
@@ -35,10 +35,9 @@ import java.math.BigDecimal
 )
 data class SelectionEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqSelection")
-    @SequenceGenerator(name = "seqSelection", sequenceName = "SEQ_SELECTION", allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "idSelection", nullable = false)
-    val id: Long? = null,
+    val id: UUID? = null,
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idFestival", nullable = false)

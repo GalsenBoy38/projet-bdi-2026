@@ -11,6 +11,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import java.math.BigDecimal
+import java.util.UUID
 
 /**
  * Hébergement touristique recensé par OpenStreetMap mais absent de la liste officielle des établissements
@@ -24,7 +25,7 @@ import java.math.BigDecimal
 )
 @PrimaryKeyJoinColumn(name = "idEtablissement")
 class EtablissementNonClasseEntity(
-    id: Long? = null,
+    id: UUID? = null,
     nomCommercial: String,
     adresse: String? = null,
     codePostalEtablissement: String,

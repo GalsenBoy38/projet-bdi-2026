@@ -9,9 +9,10 @@ import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.time.LocalDate
+import java.util.UUID
 
 interface NuiteeRepository : JpaRepository<NuiteeEntity, NuiteeId> {
-    fun findAllBySelectionId(selectionId: Long): Collection<NuiteeEntity>
+    fun findAllBySelectionId(selectionId: UUID): Collection<NuiteeEntity>
 
     /**
      * Occupe les nuits d'un hébergement pour une sélection, seulement si elles sont encore libres.

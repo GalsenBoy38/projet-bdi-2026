@@ -16,7 +16,7 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
-        jdbc.batch_size: 50                    # INSERT groupés (séquences allocationSize = 50)
+        jdbc.batch_size: 50                    # INSERT groupés (UUID générés en mémoire : aucun aller-retour base)
         order_inserts: true
         order_updates: true
         default_batch_fetch_size: 50           # limite les N+1 sur les relations LAZY

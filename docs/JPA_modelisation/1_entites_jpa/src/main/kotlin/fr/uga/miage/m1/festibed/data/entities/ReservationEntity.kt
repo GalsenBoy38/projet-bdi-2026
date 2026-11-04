@@ -12,12 +12,7 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.LocalDateTime
 
-/**
- * Réservation validée (le panier reste côté client 15 min, cf. stratégie de concurrence).
- * numeroReservation : code opaque "FB" + 10 caractères, généré par l'application (pas de séquence) ;
- * sert aussi à la consultation anonyme (email + numéro).
- * Pas de « paiement » ici : un @OneToOne côté inverse est toujours chargé ; passer par PaiementRepository.
- */
+
 @Entity
 @Table(
     name = "RESERVATION",

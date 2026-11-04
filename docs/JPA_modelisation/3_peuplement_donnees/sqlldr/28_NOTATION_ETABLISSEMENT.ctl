@@ -5,8 +5,8 @@ INFILE 'csv/28_NOTATION_ETABLISSEMENT.csv'
 APPEND INTO TABLE NOTATION_ETABLISSEMENT
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idEtablissement,
-  idUtilisateur,
+  idEtablissement CHAR(36) "HEXTORAW(REPLACE(:idEtablissement, '-', ''))",
+  idUtilisateur CHAR(36) "HEXTORAW(REPLACE(:idUtilisateur, '-', ''))",
   noteEtablissement,
   dateNoteEtablissement DATE "YYYY-MM-DD"
 )

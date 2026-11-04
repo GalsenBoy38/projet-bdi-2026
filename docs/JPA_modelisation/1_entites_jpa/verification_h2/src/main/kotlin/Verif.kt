@@ -3,7 +3,7 @@
  *   mode « essai »   : schéma + jeu d'essai Excel (2_insertion_excel/insert_jeu_essai_scenarios_h2.sql)
  *   mode « complet » : schéma + peuplement complet (3_peuplement_donnees/csv, 1,6 million de lignes)
  * Vérifie : contrôles SQL, hbm2ddl.auto=validate, lectures (héritage, clés composées, projections),
- * écritures (cascade, séquences), UPDATE conditionnels, concurrence, repositories Spring Data.
+ * écritures (cascade, UUID générés), UPDATE conditionnels, concurrence, repositories Spring Data.
  *
  *   cd docs/JPA_modelisation/1_entites_jpa/verification_h2
  *   mvn -q compile dependency:build-classpath -Dmdep.outputFile=cp.txt
@@ -20,6 +20,7 @@ import org.hibernate.cfg.Configuration
 import java.sql.DriverManager
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.UUID
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
@@ -70,8 +71,7 @@ fun main(args: Array<String>) {
         val charger = java.io.File("target/charger_h2.sql")
         charger.writeText(java.io.File("$P/3_peuplement_donnees/02_charger_h2.sql").readText()
             .replace("CSVREAD('csv/", "CSVREAD('$P/3_peuplement_donnees/csv/"))
-        sql(url, "$P/3_peuplement_donnees/01_schema_h2.sql", charger.absolutePath.replace('\\', '/'),
-            "$P/3_peuplement_donnees/03_sequences_h2.sql")
+        sql(url, "$P/3_peuplement_donnees/01_schema_h2.sql", charger.absolutePath.replace('\\', '/'))
     }
     println("== Chargement $mode : ${(System.currentTimeMillis() - t0) / 1000} s")
 
@@ -93,7 +93,7 @@ fun main(args: Array<String>) {
     println("== Hibernate validate + requêtes JPA")
     val sf = sessionFactory(url)
     check(true, "schéma validé par Hibernate (hbm2ddl.auto=validate)")
-    val idMusilac: Long
+    val idMusilac: UUID
     sf.openSession().use { s ->
         val f = s.createQuery("from FestivalEntity f join fetch f.commune c join fetch c.departement d join fetch d.region where f.nomFestival = 'Musilac'", FestivalEntity::class.java).singleResult
         idMusilac = f.id!!
@@ -152,11 +152,11 @@ fun main(args: Array<String>) {
         s.persist(PaiementEntity(reservation = resa, montantPaiement = festival.prixPass.multiply(2.toBigDecimal())))
         tx.commit()
         check(nuits == 1 && pass == 1, "UPDATE conditionnels : $nuits nuitée occupée, $pass festival mis à jour")
-        check(sel.id != null && sel.passes.all { it.id != null }, "cascade + séquences : idSelection=${sel.id}, idPass=${sel.passes.map { it.id }}")
+        check(sel.id != null && sel.passes.all { it.id != null }, "cascade + UUID générés : idSelection=${sel.id}, idPass=${sel.passes.map { it.id }}")
     }
     sf.openSession().use { s ->
         val f = s.find(FestivalEntity::class.java, idMusilac)
-        val vendusSql = s.createNativeQuery("select count(*) from PASS p join SELECTION s on s.idSelection = p.idSelection where s.idFestival = $idMusilac", java.lang.Long::class.java).singleResult
+        val vendusSql = s.createNativeQuery("select count(*) from PASS p join SELECTION s on s.idSelection = p.idSelection where s.idFestival = '$idMusilac'", java.lang.Long::class.java).singleResult
         check(f.nbPassVendus.toLong() == vendusSql.toLong(), "nbPassVendus (${f.nbPassVendus}) = Pass en base ($vendusSql)")
         val tx = s.beginTransaction()
         f.nomFestival = "Musilac"            // l'organisateur modifie son festival : nbPassVendus ne doit pas être écrasé
@@ -171,8 +171,8 @@ fun main(args: Array<String>) {
     }
     println("== Concurrence : 8 validations simultanées sur la même nuitée")
     val selIds = sf.openSession().use { s ->
-        s.createQuery("select s.id from SelectionEntity s where s.festival.id = :f", java.lang.Long::class.java)
-            .setParameter("f", idMusilac).setMaxResults(8).resultList.map { it.toLong() }
+        s.createQuery("select s.id from SelectionEntity s where s.festival.id = :f", UUID::class.java)
+            .setParameter("f", idMusilac).setMaxResults(8).resultList
     }
     val cible = sf.openSession().use { s ->
         s.createQuery("from NuiteeEntity n where n.selection is null", NuiteeEntity::class.java).setMaxResults(1).singleResult.id

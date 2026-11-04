@@ -6,7 +6,8 @@
   2. Géocodage des établissements classés par la Base Adresse Nationale, rapprochement avec OpenStreetMap
      (téléphone, e-mail, position), géocodage inverse des lieux OSM non classés (résultats mis en cache dans cache/)
   3. Génération des données synthétiques (graine fixe : le jeu est reproductible)
-  4. Écriture d'un CSV par table (csv/NN_TABLE.csv), des scripts SQL et SQL*Loader
+  4. Écriture d'un CSV par table (csv/NN_TABLE.csv), des scripts SQL et SQL*Loader ; les identifiants,
+     numérotés en interne, sont écrits en UUID déterministes (schema_festibed.uuid_de)
   5. Contrôles des règles du cahier des charges
 
 Usage :
@@ -32,7 +33,7 @@ from pathlib import Path
 
 ICI = Path(__file__).resolve().parent
 sys.path.insert(0, str(ICI))
-from schema_festibed import TABLES, PAR_NOM, ENUMS, ALLOCATION, ddl, fichier_csv, numero  # noqa: E402
+from schema_festibed import TABLES, PAR_NOM, ENUMS, ddl, fichier_csv, numero, racine, uuid_de  # noqa: E402
 
 RACINE = ICI.parents[2]
 DATA = RACINE / "data"
@@ -874,14 +875,16 @@ def ecrire_csv(dossier, donnees):
     for ancien in dossier.glob("*.csv"):     # la numérotation suit l'ordre des tables : pas de fichier périmé
         ancien.unlink()
     for t in TABLES:
+        racines = [racine(t, c.nom) if c.typ == "id" else None for c in t.cols]
         with open(dossier / fichier_csv(t), "w", encoding="utf-8", newline="") as f:
             w = csv.writer(f, delimiter=";", quoting=csv.QUOTE_MINIMAL, lineterminator="\n")
             w.writerow(t.noms)
             for ligne in donnees[t.nom]:
-                w.writerow([valeur_csv(ligne.get(c)) for c in t.noms])
+                w.writerow([valeur_csv(v) if r is None or v is None else uuid_de(r, v)
+                            for v, r in zip((ligne.get(c) for c in t.noms), racines)])
 
 
-def ecrire_scripts(donnees):
+def ecrire_scripts():
     (ICI / "01_schema_oracle.sql").write_text(ddl("oracle"), encoding="utf-8")
     (ICI / "01_schema_h2.sql").write_text(ddl("h2"), encoding="utf-8")
     ctl = ICI / "sqlldr"
@@ -896,7 +899,9 @@ def ecrire_scripts(donnees):
     for t in TABLES:
         champs = []
         for c in t.cols:
-            if c.typ == "date":
+            if c.typ == "id":     # UUID texte (8-4-4-4-12) -> RAW(16)
+                champs.append(f'  {c.nom} CHAR(36) "HEXTORAW(REPLACE(:{c.nom}, \'-\', \'\'))"')
+            elif c.typ == "date":
                 champs.append(f'  {c.nom} DATE "YYYY-MM-DD"')
             elif c.typ == "ts":
                 champs.append(f'  {c.nom} TIMESTAMP "YYYY-MM-DD HH24:MI:SS"')
@@ -915,25 +920,10 @@ def ecrire_scripts(donnees):
                    f"bad=logs\\{t.nom}.bad || goto erreur")
         h2.append(f"INSERT INTO {t.nom} ({', '.join(t.noms)}) SELECT {', '.join(t.noms)} FROM "
                   f"CSVREAD('csv/{fichier_csv(t)}', NULL, 'charset=UTF-8 fieldSeparator=;');")
-    bat += ["echo Chargement termine. Executer ensuite 03_sequences_oracle.sql puis 04_controles.sql.", "exit /b 0",
+    bat += ["echo Chargement termine. Executer ensuite 04_controles.sql.", "exit /b 0",
             ":erreur", "echo ECHEC : voir le dossier logs", "exit /b 1"]
     (ICI / "02_charger_oracle.bat").write_text("\r\n".join(bat) + "\r\n", encoding="utf-8")
     (ICI / "02_charger_h2.sql").write_text("\n".join(h2) + "\n", encoding="utf-8")
-    ecrire_sequences(donnees, ICI / "03_sequences_oracle.sql", ICI / "03_sequences_h2.sql")
-
-
-def ecrire_sequences(donnees, fichier_oracle, fichier_h2):
-    ora = ["-- Recale les séquences après chargement (ids existants + marge > allocationSize)"]
-    h2 = list(ora)
-    for t in TABLES:
-        if t.seq:
-            pk = t.pk[0]
-            depart = max((ligne[pk] for ligne in donnees[t.nom]), default=0) + ALLOCATION + 1
-            ora += [f"DROP SEQUENCE {t.seq};",
-                    f"CREATE SEQUENCE {t.seq} START WITH {depart} INCREMENT BY {ALLOCATION};"]
-            h2.append(f"ALTER SEQUENCE {t.seq} RESTART WITH {depart};")
-    fichier_oracle.write_text("\n".join(ora) + "\n", encoding="utf-8")
-    fichier_h2.write_text("\n".join(h2) + "\n", encoding="utf-8")
 
 
 # ================================================================== 5. contrôles
@@ -1028,10 +1018,11 @@ def main():
     assert set(donnees) == set(PAR_NOM)
     ok = controler(donnees, sc)
     ecrire_csv(SORTIE, donnees)
-    ecrire_scripts(donnees)
+    ecrire_scripts()
     note("Volumes : " + ", ".join(f"{t.nom}={len(donnees[t.nom])}" for t in TABLES))
     with open(ICI / "cache" / "jeu_complet.json", "w", encoding="utf-8") as f:   # pour le jeu d'essai Excel
-        json.dump({"scenarios": {k: (v.get("idFestival") or v.get("idEtablissement")) for k, v in sc.items()}},
+        json.dump({"scenarios": {k: uuid_de("FESTIVAL", v["idFestival"]) if "idFestival" in v
+                                 else uuid_de("ETABLISSEMENT", v["idEtablissement"]) for k, v in sc.items()}},
                   f, indent=1)
     note(f"Terminé en {time.time() - t0:.0f} s")
     (ICI / "rapport_peuplement.txt").write_text("\n".join(log) + "\n", encoding="utf-8")

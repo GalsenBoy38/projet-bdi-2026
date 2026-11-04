@@ -26,7 +26,7 @@ Le schéma est décrit **une seule fois**, dans `3_peuplement_donnees/schema_fes
 | `Paiement` : clé technique `idPaiement`, `numTransaction` nullable | Le paiement n'est pas développé, donc il n'y a pas encore de numéro de transaction |
 | `Reservation.numeroReservation` aléatoire (`FB` + 10 caractères base 32) | La validation anonyme donne accès à la réservation avec email + numéro : un numéro séquentiel se devinerait |
 | Pas de collections inverses (`Festivalier.reservations`, `Selection.nuitees`, `Hebergement.nuitees`, `Reservation.paiement`…) : relations unidirectionnelles | Chargements massifs ou `@OneToOne` inverse toujours chargé ; même principe que MarketHub |
-| Séquences `allocationSize = 50` (au lieu de IDENTITY) | Permet les INSERT groupés (création de plusieurs Pass) |
+| Clés techniques en **UUID** (`@GeneratedValue(strategy = GenerationType.UUID)`, Oracle `RAW(16)`, H2 `UUID`) au lieu de séquences | Identifiant créé par l'application sans aller-retour en base (INSERT groupés), non devinable dans les URL de l'API, comme MarketHub ; plus de séquence à recaler après chargement |
 | `Etablissement` : `classement`, `dateClassement`, `classementProroge` facultatifs (CHECK tous NULL ou tous renseignés) + sous-classe `EtablissementNonClasse` (`typeNonClasse`, `nbEtoilesDeclarees`, `nbChambres`, `nbLits`) | 35 294 hébergements non classés recensés par OpenStreetMap (chambres d'hôtes, gîtes, appartements…) |
 | `Etablissement.commune` (FK `codeInsee` vers COMMUNE), `emailEtablissement`, `osmRef` (UNIQUE) ; `adresse` facultative ; `nomCommercial` 100 caractères | Code INSEE fourni par OSM et la BAN ; e-mail et téléphone d'OSM ; lieux OSM sans adresse proche |
 | `TypeHebergement` + `LOGEMENT_ENTIER`, `LIT_EN_DORTOIR` | Offres des gîtes, appartements, auberges de jeunesse et refuges |
@@ -40,7 +40,7 @@ Les entités suivent les conventions du projet MarketHub (`backend/server/.../da
 - un fichier par entité, suffixe `Entity` ;
 - package `data.entities`, enums dans `enums` (un fichier par enum), repositories dans `data.repositories` (un fichier par repository) ;
 - les colonnes sont déclarées dans le constructeur, et chaque `@Table` / `@Column` porte un nom explicite ;
-- l'identifiant technique s'appelle `id` (`val id: Long? = null`) ; les clés naturelles gardent leur nom (`codeInsee`, `codeDepartement`, `numeroReservation`) ;
+- l'identifiant technique s'appelle `id` (`val id: UUID? = null`, généré par Hibernate au `persist`) ; les clés naturelles gardent leur nom (`codeInsee`, `codeDepartement`, `numeroReservation`) ;
 - les relations « un vers plusieurs » sont **unidirectionnelles**, avec `@OneToMany(cascade = ALL, orphanRemoval = true)` + `@JoinColumn(nullable = false)` côté parent, comme `CommandeEntity.lignes`. Il n'y a ni `mappedBy` ni référence retour ;
 - les requêtes simples sont des méthodes dérivées (`findAllByFestivalierId`, `findByEmail`…).
 
@@ -78,7 +78,6 @@ src/main/kotlin/fr/uga/miage/m1/festibed/
 | Toutes les entités en `data class` | `data class` sauf les deux hiérarchies (`UtilisateurEntity`, `EtablissementEntity` et leurs sous-classes) | Kotlin interdit d'hériter d'une `data class` ; les sous-classes passent les champs communs au constructeur parent |
 | `equals`/`hashCode`/`toString` générés | Redéfinis sur l'identifiant dans les entités qui ont des relations | Avec des relations `LAZY`, ceux générés par la `data class` chargeraient les relations (ou lèveraient `LazyInitializationException` hors transaction) et l'`id` change au `persist` |
 | `@ManyToOne` par défaut (EAGER) | `@ManyToOne(fetch = LAZY)` | Volume : 660 000 nuitées → hébergement → établissement (7 tables) → hébergeur |
-| `GenerationType.UUID` | Séquences Oracle `allocationSize = 50` | Clés numériques du MLD, INSERT groupés |
 | Noms de colonnes `snake_case` | Noms du MLD (`nomFestival`) | Le schéma, les CSV, SQL*Loader et les gabarits Excel utilisent les noms du MLD |
 | Plugins `spring` + `jpa` | + `all-open` sur `@Entity`/`@Embeddable` | Sans classe ouverte, Hibernate ne peut pas créer de proxy `LAZY` |
 
@@ -111,7 +110,7 @@ Dépendances : `spring-boot-starter-data-jpa`, `kotlin-reflect` (requis par Spri
 |---|---|
 | `Gabarits_insertion_vides.xlsx` | Un onglet par table (ordre d'insertion), en-têtes seuls. Le commentaire de chaque en-tête donne le type, s'il est obligatoire, la clé référencée et les valeurs d'enum |
 | `Jeu_essai_scenarios.xlsx` | ≈ 5 000 lignes cohérentes (dont 133 établissements non classés OSM) (toutes les clés étrangères sont présentes), autour des scénarios : Musilac + camping du Sierroz (1), Jazz à Couches / Saint Rock + hôtel des Arcades à Autun (2 et 3), compte de Ronald (4) |
-| `excel_vers_sql.py` | Convertit un classeur au format des gabarits en `*_oracle.sql` et `*_h2.sql`. Il contrôle les en-têtes, les colonnes obligatoires, les longueurs et les valeurs d'enum, puis recale les séquences |
+| `excel_vers_sql.py` | Convertit un classeur au format des gabarits en `*_oracle.sql` et `*_h2.sql`. Il contrôle les en-têtes, les colonnes obligatoires, les longueurs, les valeurs d'enum et le format des UUID (Oracle : `HEXTORAW('…')`) |
 | `insert_jeu_essai_scenarios_oracle.sql` / `_h2.sql` | Le jeu d'essai déjà converti |
 | `generer_excel.py` | Régénère les deux classeurs depuis le peuplement complet |
 
@@ -138,6 +137,7 @@ python generer_mld.py                      # régénère docs/Output_Diagramme/M
 | Nettoyage établissements | 5 doublons supprimés, `-` → NULL, classements → enum, sous-type selon la typologie |
 | Géocodage | API Adresse (BAN) : **20 731 établissements classés sur 21 430 (97 %)** ont des coordonnées fiables (score ≥ 0,4). Résultat dans `cache/geocodage_etablissements.csv` |
 | OpenStreetMap | **16 186 classés (76 %) rapprochés** d'un lieu OSM (nom + commune + distance) : téléphone, e-mail, position du bâtiment. **35 294 lieux non classés ajoutés** (sans nom et refuges non gardés écartés, 562 doublons) ; adresse et code postal par géocodage inverse BAN (`cache/geocodage_inverse_osm.csv`) et API Géo (`cache/communes_api_geo.csv`). Détail : `docs/etude_chargement/` §5.4 |
+| Identifiants | Numérotés en interne puis écrits en **UUID déterministes** (`uuid5`, table racine + numéro) : sous-classes JOINED et clés étrangères reprennent l'UUID de la table racine, et deux exécutions donnent les mêmes identifiants |
 | Données synthétiques | Dates 2027 (transposées des éditions passées), quotas 30–300, 111 584 hébergements, nuitées autour des festivals, 113 168 réservations, 220 247 Pass, notations |
 
 **Volumes**
@@ -162,22 +162,21 @@ python generer_mld.py                      # régénère docs/Output_Diagramme/M
 
 **Chargement Oracle**
 1. `01_schema_oracle.sql` (SQL*Plus ou SQL Developer).
-2. `02_charger_oracle.bat utilisateur/motdepasse@//hote:1521/service` (SQL*Loader, tables dans l'ordre des clés étrangères, journaux dans `logs/`).
-3. `03_sequences_oracle.sql` (recale les séquences après les identifiants chargés).
-4. `04_controles.sql` : toutes les lignes « anomalies » doivent valoir 0.
+2. `02_charger_oracle.bat utilisateur/motdepasse@//hote:1521/service` (SQL*Loader, tables dans l'ordre des clés étrangères, journaux dans `logs/` ; les UUID texte du CSV sont convertis en `RAW(16)` par `HEXTORAW(REPLACE(:id, '-', ''))`). Aucune séquence à recaler : les UUID générés par l'application ne peuvent pas entrer en collision avec ceux chargés.
+3. `04_controles.sql` : toutes les lignes « anomalies » doivent valoir 0.
 
 Ensuite : `EXEC DBMS_STATS.GATHER_SCHEMA_STATS(USER)` avant les tests de performance.
 
-**Chargement H2** (tests) : `01_schema_h2.sql`, puis `02_charger_h2.sql` (exécuté depuis ce dossier), puis `03_sequences_h2.sql`.
+**Chargement H2** (tests) : `01_schema_h2.sql`, puis `02_charger_h2.sql` (exécuté depuis ce dossier).
 
 ## Ce qui a été vérifié
 
-Avec `1_entites_jpa/verification_h2` (Kotlin 2.2.21, Hibernate 6.6.29, Spring Data JPA 3.5.5, H2 2.3.232), sur le jeu d'essai **et** sur le peuplement complet (chargé en ≈ 80 s), le 03/11/2026 :
+Avec `1_entites_jpa/verification_h2` (Kotlin 2.2.21, Hibernate 6.6.29, Spring Data JPA 3.5.5, H2 2.3.232), sur le jeu d'essai **et** sur le peuplement complet (chargé en ≈ 4 min : conversion des UUID texte par H2), le 03/11/2026 :
 
 - `hbm2ddl.auto=validate` accepte toutes les entités face au schéma ;
 - les 11 contrôles « anomalies » de `04_controles.sql` renvoient 0 ;
 - les lectures fonctionnent : héritage JOINED (dont un établissement non classé OSM et la commune d'un établissement), clés composées et `@MapsId`, projection de recherche d'hébergements autour de Musilac (le Sierroz est trouvé) ;
-- l'écriture d'une réservation complète fonctionne : cascade Reservation → Selection → Pass, séquences, paiement ;
+- l'écriture d'une réservation complète fonctionne : cascade Reservation → Selection → Pass, UUID générés, paiement ;
 - `reserverPass` vend les derniers Pass puis refuse le suivant, `modifierQuota` refuse un quota inférieur aux ventes, `occuper` refuse une nuit déjà prise, `retirerSiLibre` refuse une nuit réservée ;
 - la sauvegarde d'un festival par l'organisateur n'écrase pas `nbPassVendus` ;
 - **concurrence** : sur 8 transactions simultanées sur la même nuitée, une seule l'obtient.

@@ -69,7 +69,7 @@ L'ordre est imposé par les clés étrangères (fichiers `01` à `28`).
 | 26 | NUITEE (après SELECTION, à cause de `idSelection`) | Synthétique | 682 643 |
 | 27–28 | NOTATION_FESTIVAL, NOTATION_ETABLISSEMENT | Synthétique | 30 000 chacune |
 
-COMMUNE contient désormais toutes les communes **des festivals et des établissements** (clé étrangère `ETABLISSEMENT.codeInsee`). Après le chargement, **recalez les séquences** (`03_sequences_*.sql`), sinon la première insertion de l'application violera une clé primaire.
+COMMUNE contient désormais toutes les communes **des festivals et des établissements** (clé étrangère `ETABLISSEMENT.codeInsee`). Les clés techniques sont des **UUID** (Oracle `RAW(16)`, H2 `UUID`) : le générateur numérote les lignes en interne puis écrit des UUID déterministes (`uuid5`), et l'application génère les siens au `persist`. Il n'y a donc **aucune séquence à recaler** après le chargement.
 
 ## 5. Chargement des données existantes : règles de nettoyage
 
@@ -184,6 +184,7 @@ Les **35 294** lieux OSM restants deviennent des établissements non classés : 
 | L'enum `SousDomaine` compte 6 valeurs pour 139 compléments distincts | Les 6 valeurs sont gardées, NULL pour les autres (1 665 festivals) : choix de modélisation assumé |
 | `numIdentification` n'est pas unique dans la source | Pas de contrainte UNIQUE ; la clé reste `idFestival` |
 | Festivals sur deux mois (« 7.5 ») | Seul `moisDebut` est conservé : perte acceptée |
+| Les sources n'ont pas d'identifiant utilisable, alors que les clés techniques du modèle sont des UUID | Le générateur numérote les lignes, puis écrit `uuid5(espace FestiBed, "TABLE_RACINE:n")`. Les sous-classes et les clés étrangères reprennent l'UUID de la table racine. Les identifiants sont reproductibles et ne gênent pas ceux que l'application génère ensuite |
 
 **À reporter dans le MCD Looping** (`docs/Input_Diagramme/MCD_GLOBAL_FINAL-20-10-2026.loo`, fichier binaire non modifiable par script) : entité ETABLISSEMENT (attributs `codeInsee` via une association « Situer » 0,n – 0,1 vers COMMUNE, `emailEtablissement`, `osmRef` ; classement facultatif) ; nouvelle sous-entité ETABLISSEMENT_NON_CLASSE (`typeNonClasse`, `nbEtoilesDeclarees`, `nbChambres`, `nbLits`) dans l'héritage d'ETABLISSEMENT ; valeurs `LOGEMENT_ENTIER` et `LIT_EN_DORTOIR` pour le type d'hébergement. Le MCD de rétro-conception reçoit l'entité LIEU_OSM (voir `docs/Output_Diagramme/MLD_retro_conception.puml`).
 
@@ -228,6 +229,14 @@ INFILE 'csv/03_COMMUNE.csv'
 APPEND INTO TABLE COMMUNE
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (codeInsee CHAR(20), nomCommune CHAR(160), latitude, longitude, codeDepartement CHAR(12))
+```
+
+Les colonnes UUID (`RAW(16)`) sont lues comme texte, puis converties. Exemple tiré de `26_NUITEE.ctl` :
+
+```
+  idEtablissement CHAR(36) "HEXTORAW(REPLACE(:idEtablissement, '-', ''))",
+  ...
+  idSelection CHAR(36) "HEXTORAW(REPLACE(:idSelection, '-', ''))"
 ```
 
 Commande : `02_charger_oracle.bat festibed/***@//hote:1521/service` (charge les 28 tables dans l'ordre).
