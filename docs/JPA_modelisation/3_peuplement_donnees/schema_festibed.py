@@ -22,6 +22,9 @@ Identifiants : genere=True marque une table dont la clé primaire est un UUID g�
 (@GeneratedValue(strategy = GenerationType.UUID)). Les autres colonnes « id » (sous-classes JOINED,
 clés étrangères) reprennent l'UUID de la table racine. Le peuplement numérote les lignes en interne
 puis écrit des UUID déterministes (uuid5) : même graine, mêmes identifiants. Aucune séquence.
+
+Noms de colonnes : les tables sont décrites avec les noms du MLD ; PHYSIQUE renomme ensuite les clés
+selon la convention des entités JPA (id, <propriété>_id), voir plus bas.
 """
 import re
 import uuid
@@ -56,6 +59,7 @@ ENUMS = {
 class Col:
     def __init__(self, nom, typ, null=False, defaut=None, enum=None, desc=""):
         self.nom, self.typ, self.null, self.defaut, self.enum, self.desc = nom, typ, null, defaut, enum, desc
+        self.cle = nom      # nom du MLD : clé des lignes dans les générateurs (nom devient le nom physique)
 
 
 class Table:
@@ -223,6 +227,49 @@ TABLES = [
           checks=["noteEtablissement BETWEEN 1 AND 5"], index=[["idUtilisateur"]]),
 ]
 PAR_NOM = {t.nom: t for t in TABLES}
+
+# Noms physiques = convention des entités JPA (comme MarketHub) : pas de name = "..." dans les @Column,
+# donc colonne = nom de la propriété ; clé primaire générée et sous-classes JOINED « id » ; clé étrangère
+# « <propriété>_id ». Les tables ci-dessus restent décrites avec les noms du MLD, qui servent de clés
+# internes aux générateurs (Col.cle) ; seules les colonnes ci-dessous changent de nom en base.
+_SOUS_ETAB = ["HOTEL_DE_TOURISME", "AUBERGE_COLLECTIVE", "CAMPING", "PARC_RESIDENTIEL_DE_LOISIRS",
+              "VILLAGE_DE_VACANCES", "RESIDENCE_DE_TOURISME", "ETABLISSEMENT_NON_CLASSE"]
+PHYSIQUE = {
+    "REGION": {"idRegion": "id"},
+    "DEPARTEMENT": {"idRegion": "region_id"},
+    "COMMUNE": {"codeDepartement": "departement_id"},
+    **{t: {"idUtilisateur": "id"} for t in ["UTILISATEUR", "FESTIVALIER", "UTILISATEUR_BACKOFFICE",
+                                             "ORGANISATEUR", "HEBERGEUR"]},
+    "FESTIVAL": {"idFestival": "id", "codeInsee": "commune_id", "idOrganisateur": "organisateur_id"},
+    "ETABLISSEMENT": {"idEtablissement": "id", "codeInsee": "commune_id", "idUtilisateur": "hebergeur_id"},
+    **{t: {"idEtablissement": "id"} for t in _SOUS_ETAB},
+    "OPTION_HEBERGEMENT": {"idOptionHebergement": "id"},
+    "HEBERGEMENT": {"idEtablissement": "etablissement_id"},
+    "PHOTO_HEBERGEMENT": {"idPhotoHebergement": "id", "idEtablissement": "etablissement_id"},
+    "EQUIPEMENT": {"idEtablissement": "etablissement_id", "idOptionHebergement": "option_id"},
+    "RESERVATION": {"idUtilisateur": "festivalier_id"},
+    "PAIEMENT": {"idPaiement": "id", "numeroReservation": "reservation_id"},
+    "SELECTION": {"idSelection": "id", "numeroReservation": "reservation_id", "idFestival": "festival_id"},
+    "PASS": {"idPass": "id", "idSelection": "selection_id"},
+    "NUITEE": {"idEtablissement": "etablissement_id", "idSelection": "selection_id"},
+    "NOTATION_FESTIVAL": {"idFestival": "festival_id", "idUtilisateur": "festivalier_id"},
+    "NOTATION_ETABLISSEMENT": {"idEtablissement": "etablissement_id", "idUtilisateur": "festivalier_id"},
+}
+
+
+def _noms_physiques():
+    for t in TABLES:
+        m = PHYSIQUE.get(t.nom, {})
+        renomme = lambda cols, mm=m: [mm.get(c, c) for c in cols]   # noqa: E731
+        for c in t.cols:
+            c.nom = m.get(c.cle, c.cle)
+        t.pk, t.uk, t.index = renomme(t.pk), [renomme(u) for u in t.uk], [renomme(i) for i in t.index]
+        t.fk = [(renomme(cols), ref, [PHYSIQUE.get(ref, {}).get(r, r) for r in rcols]) for cols, ref, rcols in t.fk]
+        for ancien, nouveau in m.items():
+            t.checks = [re.sub(rf"\b{ancien}\b", nouveau, ck) for ck in t.checks]
+
+
+_noms_physiques()
 ESPACE_UUID = uuid.uuid5(uuid.NAMESPACE_URL, "https://festibed.fr/groupe3")
 
 

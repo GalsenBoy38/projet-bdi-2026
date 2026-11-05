@@ -9,5 +9,5 @@ FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
   nomCommune CHAR(160),
   latitude,
   longitude,
-  codeDepartement CHAR(12)
+  departement_id CHAR(12)
 )

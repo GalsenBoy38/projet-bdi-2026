@@ -7,7 +7,6 @@ import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
 import jakarta.persistence.Index
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.JoinColumns
@@ -32,31 +31,31 @@ data class HebergementEntity(
     val id: HebergementId,
 
     @MapsId("idEtablissement")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idEtablissement", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "etablissement_id", nullable = false)
     var etablissement: EtablissementEntity,
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "typeHebergement", nullable = false, length = 30)
+    @Column(nullable = false, length = 30)
     var typeHebergement: TypeHebergement,
 
     /** Nombre de personnes : la somme des capacités d'une sélection doit couvrir ses Pass. */
-    @Column(name = "capaciteHebergement", nullable = false)
+    @Column(nullable = false)
     var capaciteHebergement: Int,
 
-    @Column(name = "descriptionHebergement", length = 500)
+    @Column(length = 500)
     var descriptionHebergement: String? = null,
 
-    @Column(name = "prixNuitHebergement", nullable = false, precision = 8, scale = 2)
+    @Column(nullable = false, precision = 8, scale = 2)
     var prixNuitHebergement: BigDecimal,
 
-    @Column(name = "actifHebergement", nullable = false)
+    @Column(nullable = false)
     var actifHebergement: Boolean = true,
 
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumns(
-        JoinColumn(name = "idEtablissement", referencedColumnName = "idEtablissement", nullable = false),
+        JoinColumn(name = "etablissement_id", referencedColumnName = "etablissement_id", nullable = false),
         JoinColumn(name = "numeroHebergement", referencedColumnName = "numeroHebergement", nullable = false),
     )
     var photos: MutableCollection<PhotoHebergementEntity> = mutableListOf(),
@@ -66,11 +65,11 @@ data class HebergementEntity(
     @JoinTable(
         name = "EQUIPEMENT",
         joinColumns = [
-            JoinColumn(name = "idEtablissement", referencedColumnName = "idEtablissement"),
+            JoinColumn(name = "etablissement_id", referencedColumnName = "etablissement_id"),
             JoinColumn(name = "numeroHebergement", referencedColumnName = "numeroHebergement"),
         ],
-        inverseJoinColumns = [JoinColumn(name = "idOptionHebergement")],
-        indexes = [Index(name = "IX_EQUIPEMENT_1", columnList = "idOptionHebergement")],
+        inverseJoinColumns = [JoinColumn(name = "option_id")],
+        indexes = [Index(name = "IX_EQUIPEMENT_1", columnList = "option_id")],
     )
     var options: MutableSet<OptionHebergementEntity> = mutableSetOf(),
 ) {

@@ -7,7 +7,6 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -26,69 +25,69 @@ import java.util.UUID
     name = "FESTIVAL",
     indexes = [
         Index(name = "IX_FESTIVAL_1", columnList = "dateDebutFestival, dateFinFestival"),
-        Index(name = "IX_FESTIVAL_2", columnList = "codeInsee"),
+        Index(name = "IX_FESTIVAL_2", columnList = "commune_id"),
         Index(name = "IX_FESTIVAL_3", columnList = "domaine"),
-        Index(name = "IX_FESTIVAL_4", columnList = "idOrganisateur"),
+        Index(name = "IX_FESTIVAL_4", columnList = "organisateur_id"),
     ],
 )
 data class FestivalEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "idFestival", nullable = false)
+    @Column(nullable = false)
     val id: UUID? = null,
 
-    @Column(name = "nomFestival", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     var nomFestival: String,
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "domaine", nullable = false, length = 40)
+    @Column(nullable = false, length = 40)
     var domaine: Domaine,
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "sousDomaine", length = 70)
+    @Column(length = 70)
     var sousDomaine: SousDomaine? = null,
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "periodicite", length = 30)
+    @Column(length = 30)
     var periodicite: Periodicite? = null,
 
-    @Column(name = "moisDebut", nullable = false)
+    @Column(nullable = false)
     var moisDebut: Int,
 
-    @Column(name = "siteWebFestival", length = 150)
+    @Column(length = 150)
     var siteWebFestival: String? = null,
 
     /** Identifiant du jeu public : NON unique (codes génériques XX999 et valeurs vides). */
-    @Column(name = "numIdentification", length = 50)
+    @Column(length = 50)
     var numIdentification: String? = null,
 
-    @Column(name = "dateCreation")
+    @Column
     var dateCreation: LocalDate? = null,
 
-    @Column(name = "codePostalFestival", nullable = false, length = 5)
+    @Column(nullable = false, length = 5)
     var codePostalFestival: String,
 
-    @Column(name = "dateDebutFestival", nullable = false)
+    @Column(nullable = false)
     var dateDebutFestival: LocalDate,
 
-    @Column(name = "dateFinFestival", nullable = false)
+    @Column(nullable = false)
     var dateFinFestival: LocalDate,
 
     /** Dates de la source publique (éditions 2017-2020), conservées pour la traçabilité. */
-    @Column(name = "dateDebutAncien")
+    @Column
     var dateDebutAncien: LocalDate? = null,
 
-    @Column(name = "dateFinAncien")
+    @Column
     var dateFinAncien: LocalDate? = null,
 
     /** Nombre maximal de Pass que l'organisateur confie à FestiBed (>= 30). */
-    @Column(name = "quotaPass", nullable = false)
+    @Column(nullable = false)
     var quotaPass: Int,
 
-    @Column(name = "prixPass", nullable = false, precision = 8, scale = 2)
+    @Column(nullable = false, precision = 8, scale = 2)
     var prixPass: BigDecimal,
 
     /**
@@ -96,18 +95,18 @@ data class FestivalEntity(
      * par l'UPDATE conditionnel FestivalRepository.reserverPass ; sinon la sauvegarde d'un festival
      * modifié par l'organisateur écraserait les ventes faites entre-temps (lost update).
      */
-    @Column(name = "nbPassVendus", nullable = false, insertable = false, updatable = false)
+    @Column(nullable = false, insertable = false, updatable = false)
     val nbPassVendus: Int = 0,
 
-    @Column(name = "actifFestival", nullable = false)
+    @Column(nullable = false)
     var actifFestival: Boolean = true,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "codeInsee", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "commune_id", nullable = false)
     var commune: CommuneEntity,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idOrganisateur")
+    @ManyToOne
+    @JoinColumn(name = "organisateur_id")
     var organisateur: OrganisateurEntity? = null,
 ) {
     val passDisponibles: Int get() = quotaPass - nbPassVendus

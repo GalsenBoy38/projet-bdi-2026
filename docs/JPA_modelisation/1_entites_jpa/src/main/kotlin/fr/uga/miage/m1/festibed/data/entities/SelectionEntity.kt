@@ -6,7 +6,6 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -23,37 +22,37 @@ import java.util.UUID
 
 /**
  * Une sélection = un festival + ses Pass + ses nuitées (indissociables, « réservation groupée »).
- * Un même festival n'apparaît qu'une fois par réservation (UK numeroReservation + idFestival).
- * La colonne numeroReservation est gérée par ReservationEntity.selections ; les nuitées occupées
+ * Un même festival n'apparaît qu'une fois par réservation (UK reservation_id + festival_id).
+ * La colonne reservation_id est gérée par ReservationEntity.selections ; les nuitées occupées
  * se lisent par NuiteeRepository.findAllBySelectionId (pas de collection ici : relations unidirectionnelles).
  */
 @Entity
 @Table(
     name = "SELECTION",
-    uniqueConstraints = [UniqueConstraint(name = "UK_SELECTION_1", columnNames = ["numeroReservation", "idFestival"])],
-    indexes = [Index(name = "IX_SELECTION_1", columnList = "idFestival")],
+    uniqueConstraints = [UniqueConstraint(name = "UK_SELECTION_1", columnNames = ["reservation_id", "festival_id"])],
+    indexes = [Index(name = "IX_SELECTION_1", columnList = "festival_id")],
 )
 data class SelectionEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "idSelection", nullable = false)
+    @Column(nullable = false)
     val id: UUID? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idFestival", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "festival_id", nullable = false)
     var festival: FestivalEntity,
 
     /** Prix du Pass au moment de la réservation (le prix du festival peut changer ensuite). */
-    @Column(name = "prixPassSelection", nullable = false, precision = 8, scale = 2)
+    @Column(nullable = false, precision = 8, scale = 2)
     var prixPassSelection: BigDecimal,
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "statutSelection", nullable = false, length = 20)
+    @Column(nullable = false, length = 20)
     var statutSelection: StatutSelection = StatutSelection.CONFIRMEE,
 
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
-    @JoinColumn(name = "idSelection", nullable = false)
+    @JoinColumn(name = "selection_id", nullable = false)
     var passes: MutableCollection<PassEntity> = mutableListOf(),
 ) {
     override fun equals(other: Any?) = this === other || (other is SelectionEntity && id != null && id == other.id)

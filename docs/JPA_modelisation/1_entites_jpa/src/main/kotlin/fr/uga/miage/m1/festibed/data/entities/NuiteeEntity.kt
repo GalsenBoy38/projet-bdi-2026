@@ -3,7 +3,6 @@ package fr.uga.miage.m1.festibed.data.entities
 import jakarta.persistence.Column
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.Index
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.JoinColumns
@@ -16,14 +15,14 @@ import java.math.BigDecimal
  * Nuit pendant laquelle un hébergement est proposé à FestiBed.
  * selection == null : nuit libre ; sinon nuit réservée par cette sélection.
  * L'occupation se fait UNIQUEMENT par l'UPDATE conditionnel NuiteeRepository.occuper
- * (… WHERE idSelection IS NULL), jamais par un save() après lecture.
+ * (… WHERE selection_id IS NULL), jamais par un save() après lecture.
  */
 @Entity
 @Table(
     name = "NUITEE",
     indexes = [
-        Index(name = "IX_NUITEE_1", columnList = "dateNuitee, idSelection"),
-        Index(name = "IX_NUITEE_2", columnList = "idSelection"),
+        Index(name = "IX_NUITEE_1", columnList = "dateNuitee, selection_id"),
+        Index(name = "IX_NUITEE_2", columnList = "selection_id"),
     ],
 )
 data class NuiteeEntity(
@@ -31,18 +30,18 @@ data class NuiteeEntity(
     val id: NuiteeId,
 
     @MapsId("hebergementId")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumns(
-        JoinColumn(name = "idEtablissement", referencedColumnName = "idEtablissement"),
+        JoinColumn(name = "etablissement_id", referencedColumnName = "etablissement_id"),
         JoinColumn(name = "numeroHebergement", referencedColumnName = "numeroHebergement"),
     )
     var hebergement: HebergementEntity,
 
-    @Column(name = "prixNuitee", nullable = false, precision = 8, scale = 2)
+    @Column(nullable = false, precision = 8, scale = 2)
     var prixNuitee: BigDecimal,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idSelection")
+    @ManyToOne
+    @JoinColumn(name = "selection_id")
     var selection: SelectionEntity? = null,
 ) {
     val libre: Boolean get() = selection == null

@@ -6,7 +6,6 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
-import jakarta.persistence.PrimaryKeyJoinColumn
 import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
@@ -16,7 +15,6 @@ import java.util.UUID
 
 @Entity
 @Table(name = "CAMPING")
-@PrimaryKeyJoinColumn(name = "idEtablissement")
 class CampingEntity(
     id: UUID? = null,
     nomCommercial: String,
@@ -36,13 +34,13 @@ class CampingEntity(
     osmRef: String? = null,
     hebergeur: HebergeurEntity? = null,
 
-    @Column(name = "nbEmplacementsCamping", nullable = false)
+    @Column(nullable = false)
     var nbEmplacementsCamping: Int,
 
     /** NULL pour les 33 « aires naturelles » du jeu public. */
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "categorie", length = 10)
+    @Column(length = 10)
     var categorie: CategorieCamping? = null,
 ) : EtablissementEntity(
     id, nomCommercial, adresse, codePostalEtablissement, nomCommuneEtablissement, commune, telephoneEtablissement,

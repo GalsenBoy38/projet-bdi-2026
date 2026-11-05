@@ -13,14 +13,14 @@ import java.util.UUID
 @Entity
 @Table(
     name = "PHOTO_HEBERGEMENT",
-    indexes = [Index(name = "IX_PHOTO_HEBERGEMENT_1", columnList = "idEtablissement, numeroHebergement")],
+    indexes = [Index(name = "IX_PHOTO_HEBERGEMENT_1", columnList = "etablissement_id, numeroHebergement")],
 )
 data class PhotoHebergementEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "idPhotoHebergement", nullable = false)
+    @Column(nullable = false)
     val id: UUID? = null,
 
-    @Column(name = "urlPhotoHebergement", nullable = false, length = 300)
+    @Column(nullable = false, length = 300)
     var urlPhotoHebergement: String,
 )

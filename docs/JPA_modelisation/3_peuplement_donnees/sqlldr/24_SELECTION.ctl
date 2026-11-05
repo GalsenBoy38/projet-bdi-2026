@@ -5,9 +5,9 @@ INFILE 'csv/24_SELECTION.csv'
 APPEND INTO TABLE SELECTION
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idSelection CHAR(36) "HEXTORAW(REPLACE(:idSelection, '-', ''))",
+  id CHAR(36) "HEXTORAW(REPLACE(:id, '-', ''))",
   prixPassSelection,
   statutSelection CHAR(80),
-  numeroReservation CHAR(80),
-  idFestival CHAR(36) "HEXTORAW(REPLACE(:idFestival, '-', ''))"
+  reservation_id CHAR(80),
+  festival_id CHAR(36) "HEXTORAW(REPLACE(:festival_id, '-', ''))"
 )

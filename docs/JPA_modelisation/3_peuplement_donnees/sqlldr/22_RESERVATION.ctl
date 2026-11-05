@@ -7,5 +7,5 @@ FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
   numeroReservation CHAR(80),
   dateReservation TIMESTAMP "YYYY-MM-DD HH24:MI:SS",
-  idUtilisateur CHAR(36) "HEXTORAW(REPLACE(:idUtilisateur, '-', ''))"
+  festivalier_id CHAR(36) "HEXTORAW(REPLACE(:festivalier_id, '-', ''))"
 )

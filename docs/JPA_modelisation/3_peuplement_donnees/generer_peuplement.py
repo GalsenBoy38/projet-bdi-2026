@@ -881,7 +881,7 @@ def ecrire_csv(dossier, donnees):
             w.writerow(t.noms)
             for ligne in donnees[t.nom]:
                 w.writerow([valeur_csv(v) if r is None or v is None else uuid_de(r, v)
-                            for v, r in zip((ligne.get(c) for c in t.noms), racines)])
+                            for v, r in zip((ligne.get(c.cle) for c in t.cols), racines)])
 
 
 def ecrire_scripts():
@@ -965,7 +965,7 @@ def controler(d, sc):
     geo = sum(1 for e in d["ETABLISSEMENT"] if e["latitudeEtablissement"] is not None)
     verif(geo >= 0.95 * len(d["ETABLISSEMENT"]), f"établissements géocodés ({geo} / {len(d['ETABLISSEMENT'])})")
     sous_types = collections.Counter(x["idEtablissement"] for t in TABLES
-                                     if t.fk and t.fk[0][1] == "ETABLISSEMENT" and t.pk == ["idEtablissement"]
+                                     if t.fk and t.fk[0][1] == "ETABLISSEMENT" and t.pk == ["id"]
                                      for x in d[t.nom])
     verif(all(sous_types[e["idEtablissement"]] == 1 for e in d["ETABLISSEMENT"]),
           "chaque établissement a exactement un sous-type")

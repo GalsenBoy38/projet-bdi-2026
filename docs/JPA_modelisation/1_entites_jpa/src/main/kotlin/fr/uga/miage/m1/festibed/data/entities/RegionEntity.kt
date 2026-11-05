@@ -17,9 +17,9 @@ import java.util.UUID
 data class RegionEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "idRegion", nullable = false)
+    @Column(nullable = false)
     val id: UUID? = null,
 
-    @Column(name = "nomRegion", nullable = false, length = 30)
+    @Column(nullable = false, length = 30)
     var nomRegion: String,
 )

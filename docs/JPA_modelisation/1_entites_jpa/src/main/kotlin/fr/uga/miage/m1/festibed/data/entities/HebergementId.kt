@@ -8,9 +8,9 @@ import java.util.UUID
 /** Clé de HEBERGEMENT : composition avec l'établissement (H001, H002... propres à chaque établissement). */
 @Embeddable
 data class HebergementId(
-    @Column(name = "idEtablissement", nullable = false)
+    @Column(name = "etablissement_id", nullable = false)
     val idEtablissement: UUID? = null,
 
-    @Column(name = "numeroHebergement", nullable = false, length = 10)
+    @Column(nullable = false, length = 10)
     val numeroHebergement: String? = null,
 ) : Serializable

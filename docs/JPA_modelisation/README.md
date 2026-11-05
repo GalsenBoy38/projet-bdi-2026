@@ -18,7 +18,7 @@ Le schéma est décrit **une seule fois**, dans `3_peuplement_donnees/schema_fes
 | Changement | Raison |
 |---|---|
 | `Festival.nbPassVendus` (+ CHECK `nbPassVendus BETWEEN 0 AND quotaPass`) | Utilisé par l'UPDATE conditionnel de la stratégie de concurrence, mais absent du modèle. En **lecture seule** pour JPA, pour que la sauvegarde d'un festival n'écrase pas les ventes |
-| `Selection.festival` (FK `idFestival`, UNIQUE `numeroReservation + idFestival`) | Une sélection correspond à un festival ; avant, on ne le retrouvait qu'à travers les Pass |
+| `Selection.festival` (FK `festival_id`, UNIQUE `reservation_id + festival_id`) | Une sélection correspond à un festival ; avant, on ne le retrouvait qu'à travers les Pass |
 | `Pass.festival` supprimé | Dépendance transitive (le festival se retrouve par la sélection) : respect de la 3e forme normale |
 | `StatutSelection`, `StatutPaiement` en enums | Ce n'étaient que des `String` libres |
 | `Classement` + `AUBERGE_COLLECTIVE`, `AIRE_NATURELLE` | 149 établissements du jeu public ont ces classements |
@@ -28,8 +28,9 @@ Le schéma est décrit **une seule fois**, dans `3_peuplement_donnees/schema_fes
 | Pas de collections inverses (`Festivalier.reservations`, `Selection.nuitees`, `Hebergement.nuitees`, `Reservation.paiement`…) : relations unidirectionnelles | Chargements massifs ou `@OneToOne` inverse toujours chargé ; même principe que MarketHub |
 | Clés techniques en **UUID** (`@GeneratedValue(strategy = GenerationType.UUID)`, Oracle `RAW(16)`, H2 `UUID`) au lieu de séquences | Identifiant créé par l'application sans aller-retour en base (INSERT groupés), non devinable dans les URL de l'API, comme MarketHub ; plus de séquence à recaler après chargement |
 | `Etablissement` : `classement`, `dateClassement`, `classementProroge` facultatifs (CHECK tous NULL ou tous renseignés) + sous-classe `EtablissementNonClasse` (`typeNonClasse`, `nbEtoilesDeclarees`, `nbChambres`, `nbLits`) | 35 294 hébergements non classés recensés par OpenStreetMap (chambres d'hôtes, gîtes, appartements…) |
-| `Etablissement.commune` (FK `codeInsee` vers COMMUNE), `emailEtablissement`, `osmRef` (UNIQUE) ; `adresse` facultative ; `nomCommercial` 100 caractères | Code INSEE fourni par OSM et la BAN ; e-mail et téléphone d'OSM ; lieux OSM sans adresse proche |
+| `Etablissement.commune` (FK `commune_id` vers COMMUNE), `emailEtablissement`, `osmRef` (UNIQUE) ; `adresse` facultative ; `nomCommercial` 100 caractères | Code INSEE fourni par OSM et la BAN ; e-mail et téléphone d'OSM ; lieux OSM sans adresse proche |
 | `TypeHebergement` + `LOGEMENT_ENTIER`, `LIT_EN_DORTOIR` | Offres des gîtes, appartements, auberges de jeunesse et refuges |
+| Noms physiques à la façon de MarketHub : `@Column` sans `name`, clé primaire générée et sous-classes JOINED `id`, clés étrangères `<propriété>_id` (`festival_id`, `commune_id`, `hebergeur_id`…) | Annotations identiques au projet MarketHub. Les colonnes non clés gardent le nom du MLD (`nomFestival`), qui est aussi le nom de la propriété. La correspondance MLD → nom physique est dans `schema_festibed.PHYSIQUE` |
 | `VARCHAR2(n CHAR)` dans Oracle | Un nom accentué de 80 caractères dépasse 80 **octets** en UTF-8 |
 | Index sur toutes les clés étrangères et les critères de recherche | Oracle n'indexe pas automatiquement les clés étrangères |
 
@@ -39,8 +40,9 @@ Les entités suivent les conventions du projet MarketHub (`backend/server/.../da
 
 - un fichier par entité, suffixe `Entity` ;
 - package `data.entities`, enums dans `enums` (un fichier par enum), repositories dans `data.repositories` (un fichier par repository) ;
-- les colonnes sont déclarées dans le constructeur, et chaque `@Table` / `@Column` porte un nom explicite ;
-- l'identifiant technique s'appelle `id` (`val id: UUID? = null`, généré par Hibernate au `persist`) ; les clés naturelles gardent leur nom (`codeInsee`, `codeDepartement`, `numeroReservation`) ;
+- les colonnes sont déclarées dans le constructeur ; `@Table(name = ...)` est explicite, `@Column` n'a pas de `name` : la colonne porte le nom de la propriété (`@Column(nullable = false)`) ;
+- l'identifiant technique s'appelle `id` (`@Id @GeneratedValue(strategy = GenerationType.UUID) @Column(nullable = false) val id: UUID? = null`) ; les sous-classes JOINED héritent de la colonne `id` ; les clés naturelles gardent leur nom (`codeInsee`, `codeDepartement`, `numeroReservation`) ;
+- une relation s'écrit `@ManyToOne(optional = false)` + `@JoinColumn(name = "festival_id", nullable = false)` ; seules les clés composées (HEBERGEMENT, NUITEE, notations) gardent un `name` explicite dans leur `@Embeddable` ;
 - les relations « un vers plusieurs » sont **unidirectionnelles**, avec `@OneToMany(cascade = ALL, orphanRemoval = true)` + `@JoinColumn(nullable = false)` côté parent, comme `CommandeEntity.lignes`. Il n'y a ni `mappedBy` ni référence retour ;
 - les requêtes simples sont des méthodes dérivées (`findAllByFestivalierId`, `findByEmail`…).
 
@@ -76,10 +78,9 @@ src/main/kotlin/fr/uga/miage/m1/festibed/
 | MarketHub | FestiBed | Pourquoi |
 |---|---|---|
 | Toutes les entités en `data class` | `data class` sauf les deux hiérarchies (`UtilisateurEntity`, `EtablissementEntity` et leurs sous-classes) | Kotlin interdit d'hériter d'une `data class` ; les sous-classes passent les champs communs au constructeur parent |
-| `equals`/`hashCode`/`toString` générés | Redéfinis sur l'identifiant dans les entités qui ont des relations | Avec des relations `LAZY`, ceux générés par la `data class` chargeraient les relations (ou lèveraient `LazyInitializationException` hors transaction) et l'`id` change au `persist` |
-| `@ManyToOne` par défaut (EAGER) | `@ManyToOne(fetch = LAZY)` | Volume : 660 000 nuitées → hébergement → établissement (7 tables) → hébergeur |
-| Noms de colonnes `snake_case` | Noms du MLD (`nomFestival`) | Le schéma, les CSV, SQL*Loader et les gabarits Excel utilisent les noms du MLD |
-| Plugins `spring` + `jpa` | + `all-open` sur `@Entity`/`@Embeddable` | Sans classe ouverte, Hibernate ne peut pas créer de proxy `LAZY` |
+| `equals`/`hashCode`/`toString` générés | Redéfinis sur l'identifiant dans les entités qui ont des relations | Ceux générés par la `data class` parcourraient les relations (collections, cycles) et l'`id` change au `persist` |
+| Toutes les colonnes en `snake_case` (stratégie de nommage Spring) | Clés `id` / `xxx_id` comme MarketHub, autres colonnes au nom de la propriété (`nomFestival`) | `PhysicalNamingStrategyStandardImpl` : nom physique = nom de la propriété, sans conversion |
+| Plugins `spring` + `jpa` | + `all-open` sur `@Entity`/`@Embeddable` | Sans classe ouverte, Hibernate ne peut pas créer de proxy (`getReference`, chargement différé) |
 
 Les entités ne sortent pas de la couche `data` : comme dans MarketHub, un mapper les convertit en objets du domaine **dans la transaction** de l'adapter.
 
@@ -90,7 +91,7 @@ Les entités ne sortent pas de la couche `data` : comme dans MarketHub, un mappe
     <compilerPlugins>
         <plugin>spring</plugin>
         <plugin>jpa</plugin>        <!-- constructeur sans argument pour @Entity/@Embeddable -->
-        <plugin>all-open</plugin>   <!-- classes ouvertes => proxys LAZY possibles -->
+        <plugin>all-open</plugin>   <!-- classes ouvertes => proxys Hibernate possibles -->
     </compilerPlugins>
     <pluginOptions>
         <option>all-open:annotation=jakarta.persistence.Entity</option>

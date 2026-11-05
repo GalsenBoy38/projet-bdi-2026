@@ -5,7 +5,7 @@ INFILE 'csv/09_FESTIVAL.csv'
 APPEND INTO TABLE FESTIVAL
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idFestival CHAR(36) "HEXTORAW(REPLACE(:idFestival, '-', ''))",
+  id CHAR(36) "HEXTORAW(REPLACE(:id, '-', ''))",
   nomFestival CHAR(400),
   domaine CHAR(160),
   sousDomaine CHAR(280),
@@ -23,6 +23,6 @@ FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
   nbPassVendus,
   prixPass,
   actifFestival,
-  codeInsee CHAR(20),
-  idOrganisateur CHAR(36) "HEXTORAW(REPLACE(:idOrganisateur, '-', ''))"
+  commune_id CHAR(20),
+  organisateur_id CHAR(36) "HEXTORAW(REPLACE(:organisateur_id, '-', ''))"
 )

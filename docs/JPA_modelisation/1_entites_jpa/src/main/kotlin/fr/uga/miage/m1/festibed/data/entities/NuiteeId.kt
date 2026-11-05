@@ -10,6 +10,6 @@ import java.time.LocalDate
 data class NuiteeId(
     val hebergementId: HebergementId? = null,
 
-    @Column(name = "dateNuitee", nullable = false)
+    @Column(nullable = false)
     val dateNuitee: LocalDate? = null,
 ) : Serializable

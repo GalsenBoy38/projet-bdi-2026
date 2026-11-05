@@ -18,9 +18,9 @@ import java.util.UUID
 data class OptionHebergementEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "idOptionHebergement", nullable = false)
+    @Column(nullable = false)
     val id: UUID? = null,
 
-    @Column(name = "libelleOptionHebergement", nullable = false, length = 50)
+    @Column(nullable = false, length = 50)
     var libelleOptionHebergement: String,
 )

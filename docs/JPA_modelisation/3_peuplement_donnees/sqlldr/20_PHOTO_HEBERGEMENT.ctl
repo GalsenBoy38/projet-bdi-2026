@@ -5,8 +5,8 @@ INFILE 'csv/20_PHOTO_HEBERGEMENT.csv'
 APPEND INTO TABLE PHOTO_HEBERGEMENT
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idPhotoHebergement CHAR(36) "HEXTORAW(REPLACE(:idPhotoHebergement, '-', ''))",
+  id CHAR(36) "HEXTORAW(REPLACE(:id, '-', ''))",
   urlPhotoHebergement CHAR(1200),
-  idEtablissement CHAR(36) "HEXTORAW(REPLACE(:idEtablissement, '-', ''))",
+  etablissement_id CHAR(36) "HEXTORAW(REPLACE(:etablissement_id, '-', ''))",
   numeroHebergement CHAR(40)
 )

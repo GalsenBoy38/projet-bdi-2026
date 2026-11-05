@@ -1,13 +1,11 @@
 package fr.uga.miage.m1.festibed.data.entities
 
 import jakarta.persistence.Entity
-import jakarta.persistence.PrimaryKeyJoinColumn
 import jakarta.persistence.Table
 import java.util.UUID
 
 @Entity
 @Table(name = "ORGANISATEUR")
-@PrimaryKeyJoinColumn(name = "idUtilisateur")
 class OrganisateurEntity(
     id: UUID? = null,
     nom: String,

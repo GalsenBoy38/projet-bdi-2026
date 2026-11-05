@@ -7,7 +7,6 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
-import jakarta.persistence.PrimaryKeyJoinColumn
 import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
@@ -17,7 +16,6 @@ import java.util.UUID
 
 @Entity
 @Table(name = "VILLAGE_DE_VACANCES")
-@PrimaryKeyJoinColumn(name = "idEtablissement")
 class VillageDeVacancesEntity(
     id: UUID? = null,
     nomCommercial: String,
@@ -37,17 +35,17 @@ class VillageDeVacancesEntity(
     osmRef: String? = null,
     hebergeur: HebergeurEntity? = null,
 
-    @Column(name = "nbLogements", nullable = false)
+    @Column(nullable = false)
     var nbLogements: Int,
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "mention", length = 30)
+    @Column(length = 30)
     var mention: MentionVillage? = null,
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "typeSejour", length = 30)
+    @Column(length = 30)
     var typeSejour: TypeSejour? = null,
 ) : EtablissementEntity(
     id, nomCommercial, adresse, codePostalEtablissement, nomCommuneEtablissement, commune, telephoneEtablissement,

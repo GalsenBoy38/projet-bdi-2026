@@ -3,7 +3,6 @@ package fr.uga.miage.m1.festibed.data.entities
 import jakarta.persistence.Column
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.Index
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
@@ -15,27 +14,27 @@ import java.time.LocalDate
 @Entity
 @Table(
     name = "NOTATION_FESTIVAL",
-    indexes = [Index(name = "IX_NOTATION_FESTIVAL_1", columnList = "idUtilisateur")],
+    indexes = [Index(name = "IX_NOTATION_FESTIVAL_1", columnList = "festivalier_id")],
 )
 data class NotationFestivalEntity(
     @EmbeddedId
     val id: NotationFestivalId = NotationFestivalId(),
 
     @MapsId("idFestival")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idFestival", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "festival_id", nullable = false)
     var festival: FestivalEntity,
 
     @MapsId("idUtilisateur")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idUtilisateur", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "festivalier_id", nullable = false)
     var festivalier: FestivalierEntity,
 
     /** 1 à 5. */
-    @Column(name = "noteFestival", nullable = false)
+    @Column(nullable = false)
     var noteFestival: Int,
 
-    @Column(name = "dateNoteFestival", nullable = false)
+    @Column(nullable = false)
     var dateNoteFestival: LocalDate,
 ) {
     override fun equals(other: Any?) = this === other || (other is NotationFestivalEntity && id == other.id)

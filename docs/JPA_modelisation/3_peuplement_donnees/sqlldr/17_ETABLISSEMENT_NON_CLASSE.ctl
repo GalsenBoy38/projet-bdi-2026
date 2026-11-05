@@ -5,7 +5,7 @@ INFILE 'csv/17_ETABLISSEMENT_NON_CLASSE.csv'
 APPEND INTO TABLE ETABLISSEMENT_NON_CLASSE
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idEtablissement CHAR(36) "HEXTORAW(REPLACE(:idEtablissement, '-', ''))",
+  id CHAR(36) "HEXTORAW(REPLACE(:id, '-', ''))",
   typeNonClasse CHAR(120),
   nbEtoilesDeclarees,
   nbChambres,

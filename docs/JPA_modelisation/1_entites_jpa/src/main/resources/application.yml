@@ -19,7 +19,7 @@ spring:
         jdbc.batch_size: 50                    # INSERT groupés (UUID générés en mémoire : aucun aller-retour base)
         order_inserts: true
         order_updates: true
-        default_batch_fetch_size: 50           # limite les N+1 sur les relations LAZY
+        default_batch_fetch_size: 50           # charge par lots les relations (limite les N+1)
 
 ---
 # Profil de test : H2 en mémoire, schéma + jeu d'essai des scénarios

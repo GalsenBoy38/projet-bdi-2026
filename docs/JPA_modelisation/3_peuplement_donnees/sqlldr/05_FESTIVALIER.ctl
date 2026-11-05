@@ -5,7 +5,7 @@ INFILE 'csv/05_FESTIVALIER.csv'
 APPEND INTO TABLE FESTIVALIER
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idUtilisateur CHAR(36) "HEXTORAW(REPLACE(:idUtilisateur, '-', ''))",
+  id CHAR(36) "HEXTORAW(REPLACE(:id, '-', ''))",
   fournisseurAuth CHAR(120),
   identifiantExterneFestivalier CHAR(400)
 )

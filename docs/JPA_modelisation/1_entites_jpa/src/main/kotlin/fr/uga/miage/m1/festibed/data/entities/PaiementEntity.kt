@@ -5,7 +5,6 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -28,31 +27,31 @@ import java.util.UUID
     name = "PAIEMENT",
     uniqueConstraints = [
         UniqueConstraint(name = "UK_PAIEMENT_1", columnNames = ["numTransaction"]),
-        UniqueConstraint(name = "UK_PAIEMENT_2", columnNames = ["numeroReservation"]),
+        UniqueConstraint(name = "UK_PAIEMENT_2", columnNames = ["reservation_id"]),
     ],
 )
 data class PaiementEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "idPaiement", nullable = false)
+    @Column(nullable = false)
     val id: UUID? = null,
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "numeroReservation", nullable = false)
+    @OneToOne(optional = false)
+    @JoinColumn(name = "reservation_id", nullable = false)
     var reservation: ReservationEntity,
 
-    @Column(name = "numTransaction", length = 30)
+    @Column(length = 30)
     var numTransaction: String? = null,
 
-    @Column(name = "montantPaiement", nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false, precision = 10, scale = 2)
     var montantPaiement: BigDecimal,
 
-    @Column(name = "datePaiement")
+    @Column
     var datePaiement: LocalDateTime? = null,
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "statutPaiement", nullable = false, length = 20)
+    @Column(nullable = false, length = 20)
     var statutPaiement: StatutPaiement = StatutPaiement.NON_GERE,
 ) {
     override fun equals(other: Any?) = this === other || (other is PaiementEntity && id != null && id == other.id)

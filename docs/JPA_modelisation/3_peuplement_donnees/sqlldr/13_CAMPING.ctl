@@ -5,7 +5,7 @@ INFILE 'csv/13_CAMPING.csv'
 APPEND INTO TABLE CAMPING
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idEtablissement CHAR(36) "HEXTORAW(REPLACE(:idEtablissement, '-', ''))",
+  id CHAR(36) "HEXTORAW(REPLACE(:id, '-', ''))",
   categorie CHAR(40),
   nbEmplacementsCamping
 )

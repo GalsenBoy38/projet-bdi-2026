@@ -7,5 +7,5 @@ FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
   codeDepartement CHAR(12),
   nomDepartement CHAR(200),
-  idRegion CHAR(36) "HEXTORAW(REPLACE(:idRegion, '-', ''))"
+  region_id CHAR(36) "HEXTORAW(REPLACE(:region_id, '-', ''))"
 )

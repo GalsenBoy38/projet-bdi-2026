@@ -6,7 +6,6 @@ import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Index
-import jakarta.persistence.PrimaryKeyJoinColumn
 import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
@@ -23,7 +22,6 @@ import java.util.UUID
     name = "ETABLISSEMENT_NON_CLASSE",
     indexes = [Index(name = "IX_ETABLISSEMENT_NON_CLASSE_1", columnList = "typeNonClasse")],
 )
-@PrimaryKeyJoinColumn(name = "idEtablissement")
 class EtablissementNonClasseEntity(
     id: UUID? = null,
     nomCommercial: String,
@@ -42,17 +40,17 @@ class EtablissementNonClasseEntity(
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "typeNonClasse", nullable = false, length = 30)
+    @Column(nullable = false, length = 30)
     var typeNonClasse: TypeNonClasse,
 
     /** Étoiles déclarées dans OSM (1 à 5) : information, pas un classement officiel. */
-    @Column(name = "nbEtoilesDeclarees")
+    @Column
     var nbEtoilesDeclarees: Int? = null,
 
-    @Column(name = "nbChambres")
+    @Column
     var nbChambres: Int? = null,
 
-    @Column(name = "nbLits")
+    @Column
     var nbLits: Int? = null,
 ) : EtablissementEntity(
     id, nomCommercial, adresse, codePostalEtablissement, nomCommuneEtablissement, commune, telephoneEtablissement,

@@ -5,7 +5,6 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -40,72 +39,72 @@ import java.util.UUID
     indexes = [
         Index(name = "IX_ETABLISSEMENT_1", columnList = "latitudeEtablissement, longitudeEtablissement"),
         Index(name = "IX_ETABLISSEMENT_2", columnList = "codePostalEtablissement"),
-        Index(name = "IX_ETABLISSEMENT_3", columnList = "idUtilisateur"),
-        Index(name = "IX_ETABLISSEMENT_4", columnList = "codeInsee"),
+        Index(name = "IX_ETABLISSEMENT_3", columnList = "hebergeur_id"),
+        Index(name = "IX_ETABLISSEMENT_4", columnList = "commune_id"),
     ],
 )
 @Inheritance(strategy = InheritanceType.JOINED)
 abstract class EtablissementEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "idEtablissement", nullable = false)
+    @Column(nullable = false)
     val id: UUID? = null,
 
-    @Column(name = "nomCommercial", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     var nomCommercial: String,
 
     /** NULL pour un lieu OSM sans adresse à moins de 200 m (refuge, camping isolé…). */
-    @Column(name = "adresse", length = 80)
+    @Column(length = 80)
     var adresse: String? = null,
 
-    @Column(name = "codePostalEtablissement", nullable = false, length = 5)
+    @Column(nullable = false, length = 5)
     var codePostalEtablissement: String,
 
-    @Column(name = "nomCommuneEtablissement", nullable = false, length = 50)
+    @Column(nullable = false, length = 50)
     var nomCommuneEtablissement: String,
 
     /** Commune INSEE (OSM ou géocodage BAN) ; nomCommuneEtablissement reste le libellé postal. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "codeInsee")
+    @ManyToOne
+    @JoinColumn(name = "commune_id")
     var commune: CommuneEntity? = null,
 
     /** Premier numéro OSM ; NULL si l'établissement n'est pas dans OSM ou n'y a pas de numéro. */
-    @Column(name = "telephoneEtablissement", length = 30)
+    @Column(length = 30)
     var telephoneEtablissement: String? = null,
 
-    @Column(name = "emailEtablissement", length = 150)
+    @Column(length = 150)
     var emailEtablissement: String? = null,
 
-    @Column(name = "siteWebEtablissement", length = 350)
+    @Column(length = 350)
     var siteWebEtablissement: String? = null,
 
-    @Column(name = "capaciteAccueil", nullable = false)
+    @Column(nullable = false)
     var capaciteAccueil: Int,
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "classement", length = 50)
+    @Column(length = 50)
     var classement: Classement? = null,
 
-    @Column(name = "dateClassement")
+    @Column
     var dateClassement: LocalDate? = null,
 
-    @Column(name = "classementProroge")
+    @Column
     var classementProroge: Boolean? = null,
 
     /** Point OSM si l'établissement y est recensé, sinon géocodage BAN de l'adresse. */
-    @Column(name = "latitudeEtablissement", precision = 12, scale = 9)
+    @Column(precision = 12, scale = 9)
     var latitudeEtablissement: BigDecimal? = null,
 
-    @Column(name = "longitudeEtablissement", precision = 12, scale = 9)
+    @Column(precision = 12, scale = 9)
     var longitudeEtablissement: BigDecimal? = null,
 
     /** Objet OpenStreetMap correspondant (« node/123 », « relation/456 »), pour les mises à jour. */
-    @Column(name = "osmRef", length = 25)
+    @Column(length = 25)
     var osmRef: String? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idUtilisateur")
+    @ManyToOne
+    @JoinColumn(name = "hebergeur_id")
     var hebergeur: HebergeurEntity? = null,
 ) {
     val estClasse: Boolean get() = classement != null
@@ -114,10 +113,10 @@ abstract class EtablissementEntity(
      * Moyenne des notations, dénormalisée pour le filtre « note de l'établissement ».
      * LECTURE SEULE pour JPA : mise à jour par EtablissementRepository.ajouterNote (UPDATE atomique).
      */
-    @Column(name = "noteMoyenne", precision = 3, scale = 2, insertable = false, updatable = false)
+    @Column(precision = 3, scale = 2, insertable = false, updatable = false)
     val noteMoyenne: BigDecimal? = null
 
-    @Column(name = "nbNotes", nullable = false, insertable = false, updatable = false)
+    @Column(nullable = false, insertable = false, updatable = false)
     val nbNotes: Int = 0
 
     override fun equals(other: Any?) = this === other || (other is EtablissementEntity && id != null && id == other.id)

@@ -156,7 +156,7 @@ fun main(args: Array<String>) {
     }
     sf.openSession().use { s ->
         val f = s.find(FestivalEntity::class.java, idMusilac)
-        val vendusSql = s.createNativeQuery("select count(*) from PASS p join SELECTION s on s.idSelection = p.idSelection where s.idFestival = '$idMusilac'", java.lang.Long::class.java).singleResult
+        val vendusSql = s.createNativeQuery("select count(*) from PASS p join SELECTION s on s.id = p.selection_id where s.festival_id = '$idMusilac'", java.lang.Long::class.java).singleResult
         check(f.nbPassVendus.toLong() == vendusSql.toLong(), "nbPassVendus (${f.nbPassVendus}) = Pass en base ($vendusSql)")
         val tx = s.beginTransaction()
         f.nomFestival = "Musilac"            // l'organisateur modifie son festival : nbPassVendus ne doit pas être écrasé

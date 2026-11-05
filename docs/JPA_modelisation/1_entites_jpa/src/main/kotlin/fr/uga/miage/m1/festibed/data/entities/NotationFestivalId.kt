@@ -7,9 +7,9 @@ import java.util.UUID
 
 @Embeddable
 data class NotationFestivalId(
-    @Column(name = "idFestival", nullable = false)
+    @Column(name = "festival_id", nullable = false)
     val idFestival: UUID? = null,
 
-    @Column(name = "idUtilisateur", nullable = false)
+    @Column(name = "festivalier_id", nullable = false)
     val idUtilisateur: UUID? = null,
 ) : Serializable

@@ -5,12 +5,12 @@ INFILE 'csv/10_ETABLISSEMENT.csv'
 APPEND INTO TABLE ETABLISSEMENT
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idEtablissement CHAR(36) "HEXTORAW(REPLACE(:idEtablissement, '-', ''))",
+  id CHAR(36) "HEXTORAW(REPLACE(:id, '-', ''))",
   nomCommercial CHAR(400),
   adresse CHAR(320),
   codePostalEtablissement CHAR(20),
   nomCommuneEtablissement CHAR(200),
-  codeInsee CHAR(20),
+  commune_id CHAR(20),
   telephoneEtablissement CHAR(120),
   emailEtablissement CHAR(600),
   siteWebEtablissement CHAR(1400),
@@ -23,5 +23,5 @@ FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
   osmRef CHAR(100),
   noteMoyenne,
   nbNotes,
-  idUtilisateur CHAR(36) "HEXTORAW(REPLACE(:idUtilisateur, '-', ''))"
+  hebergeur_id CHAR(36) "HEXTORAW(REPLACE(:hebergeur_id, '-', ''))"
 )

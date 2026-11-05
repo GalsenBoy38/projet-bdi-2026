@@ -66,10 +66,10 @@ L'ordre est imposé par les clés étrangères (fichiers `01` à `28`).
 | 10–17 | ETABLISSEMENT puis HOTEL_DE_TOURISME, AUBERGE_COLLECTIVE, CAMPING, PARC_RESIDENTIEL_DE_LOISIRS, VILLAGE_DE_VACANCES, RESIDENCE_DE_TOURISME, **ETABLISSEMENT_NON_CLASSE** | Mixte | 56 724 (21 430 classés + 35 294 non classés) |
 | 18–21 | OPTION_HEBERGEMENT → HEBERGEMENT → PHOTO_HEBERGEMENT → EQUIPEMENT | Synthétique | 111 584 hébergements |
 | 22–25 | RESERVATION → PAIEMENT → SELECTION → PASS | Synthétique | 113 168 réservations, 220 247 Pass |
-| 26 | NUITEE (après SELECTION, à cause de `idSelection`) | Synthétique | 682 643 |
+| 26 | NUITEE (après SELECTION, à cause de `selection_id`) | Synthétique | 682 643 |
 | 27–28 | NOTATION_FESTIVAL, NOTATION_ETABLISSEMENT | Synthétique | 30 000 chacune |
 
-COMMUNE contient désormais toutes les communes **des festivals et des établissements** (clé étrangère `ETABLISSEMENT.codeInsee`). Les clés techniques sont des **UUID** (Oracle `RAW(16)`, H2 `UUID`) : le générateur numérote les lignes en interne puis écrit des UUID déterministes (`uuid5`), et l'application génère les siens au `persist`. Il n'y a donc **aucune séquence à recaler** après le chargement.
+COMMUNE contient désormais toutes les communes **des festivals et des établissements** (clé étrangère `ETABLISSEMENT.commune_id`). Les clés étrangères portent le nom `<propriété JPA>_id` (`festival_id`, `selection_id`…) et les clés primaires générées s'appellent `id` (correspondance avec le MLD : `schema_festibed.PHYSIQUE`). Les clés techniques sont des **UUID** (Oracle `RAW(16)`, H2 `UUID`) : le générateur numérote les lignes en interne puis écrit des UUID déterministes (`uuid5`), et l'application génère les siens au `persist`. Il n'y a donc **aucune séquence à recaler** après le chargement.
 
 ## 5. Chargement des données existantes : règles de nettoyage
 
@@ -107,7 +107,7 @@ COMMUNE contient désormais toutes les communes **des festivals et des établiss
 Le cahier des charges impose : « les informations géographiques et géoréférencées doivent être utilisées pour la recherche des établissements et des hébergements par localisation ». Le CSV des établissements classés **ne contient aucune coordonnée**.
 
 - Le script envoie un CSV `cle;adresse;code_postal;commune` à l'endpoint `/search/csv/` de l'API Adresse (paramètres `columns=adresse`, `columns=commune`, `postcode=code_postal`), par lots de 4 000.
-- La réponse fournit `latitude`, `longitude`, `result_score` et `result_citycode` (code INSEE → `ETABLISSEMENT.codeInsee`).
+- La réponse fournit `latitude`, `longitude`, `result_score` et `result_citycode` (code INSEE → `ETABLISSEMENT.commune_id`).
 - Résultat retenu si `result_score ≥ 0,4` : **20 731 sur 21 430** (97 %).
 
 ### 5.4 OpenStreetMap (`osm-france-tourism-accommodation.csv`)
@@ -156,7 +156,7 @@ Les **35 294** lieux OSM restants deviennent des établissements non classés : 
 | Comptes | 47 000 festivaliers de test (`fournisseurAuth` NULL, e-mail `@festibed.test`), 500 organisateurs, 2 500 hébergeurs | Les comptes de peuplement ne s'authentifient pas par un réseau social |
 | `motDePasseHache` | Hash **BCrypt** d'un mot de passe de test, calculé une fois et réutilisé | Ne jamais stocker un mot de passe en clair |
 | HEBERGEMENT | 1 à 4 offres par établissement, selon le type : hôtel → chambre simple/double ; camping/parc/aire → emplacement ; village/résidence → bungalow ; gîte/appartement → **logement entier** ; auberge de jeunesse/refuge → **lit en dortoir**. Capacité ≤ capacité d'accueil. Prix selon les étoiles (classement officiel, sinon étoiles déclarées dans OSM, sinon 2) | Le cahier des charges demande des hébergements créés sans lien avec un festival |
-| NUITEE | Une ligne par nuit disponible, **autour des périodes de festivals** (pas toute l'année). `idSelection` est NULL si la nuit est libre | Volume maîtrisé ; la clé primaire (hébergement, date) empêche toute double réservation |
+| NUITEE | Une ligne par nuit disponible, **autour des périodes de festivals** (pas toute l'année). `selection_id` est NULL si la nuit est libre | Volume maîtrisé ; la clé primaire (hébergement, date) empêche toute double réservation |
 | RESERVATION / SELECTION / PASS | Une réservation = 1 à 3 sélections ; une sélection = 1 festival, 1 à 4 Pass, et des nuitées dont la **capacité totale est ≥ nombre de Pass** | Règle de cohérence Pass / capacité du modèle de tâches et du BPMN |
 | PAIEMENT | Statut `NON_GERE`, montant = Pass + nuitées | Le paiement n'est pas développé, mais la table existe |
 | Données des scénarios | Musilac / camping du Sierroz (scénario 1), festivals autour d'Autun fin juillet, Jazz à Couches, Saint Rock, hôtel des Arcades (scénarios 2 et 3), compte de Ronald (scénario 4) | Ces données doivent **exister** pour la démonstration |
@@ -179,10 +179,10 @@ Les **35 294** lieux OSM restants deviennent des établissements non classés : 
 | OSM recense des hébergements **non classés**, qui n'ont ni classement ni date de classement | `classement`, `dateClassement`, `classementProroge` deviennent facultatifs, avec un CHECK « tous NULL ou tous renseignés » ; nouveau sous-type ETABLISSEMENT_NON_CLASSE (héritage JOINED). Les 6 sous-classes classées exigent toujours le classement dans leur constructeur JPA |
 | Les étoiles OSM sont déclaratives | Rangées dans `nbEtoilesDeclarees` (non classés), jamais confondues avec le classement officiel |
 | Gîtes, appartements, dortoirs n'entraient dans aucun `TypeHebergement` | Ajout de `LOGEMENT_ENTIER` et `LIT_EN_DORTOIR` |
-| ETABLISSEMENT n'avait pas de clé étrangère vers COMMUNE | `codeInsee` (FK vers COMMUNE, facultatif) ajouté : OSM et la BAN fournissent le code INSEE. `nomCommuneEtablissement` reste le libellé postal (« PARIS 9E ARRONDISSEMENT ») |
+| ETABLISSEMENT n'avait pas de clé étrangère vers COMMUNE | `commune_id` (FK vers COMMUNE.codeInsee, facultatif) ajouté : OSM et la BAN fournissent le code INSEE. `nomCommuneEtablissement` reste le libellé postal (« PARIS 9E ARRONDISSEMENT ») |
 | Noms OSM jusqu'à 99 caractères | `nomCommercial` passe de 80 à 100 caractères |
 | L'enum `SousDomaine` compte 6 valeurs pour 139 compléments distincts | Les 6 valeurs sont gardées, NULL pour les autres (1 665 festivals) : choix de modélisation assumé |
-| `numIdentification` n'est pas unique dans la source | Pas de contrainte UNIQUE ; la clé reste `idFestival` |
+| `numIdentification` n'est pas unique dans la source | Pas de contrainte UNIQUE ; la clé reste `id` (UUID) |
 | Festivals sur deux mois (« 7.5 ») | Seul `moisDebut` est conservé : perte acceptée |
 | Les sources n'ont pas d'identifiant utilisable, alors que les clés techniques du modèle sont des UUID | Le générateur numérote les lignes, puis écrit `uuid5(espace FestiBed, "TABLE_RACINE:n")`. Les sous-classes et les clés étrangères reprennent l'UUID de la table racine. Les identifiants sont reproductibles et ne gênent pas ceux que l'application génère ensuite |
 
@@ -204,13 +204,13 @@ SELECT COUNT(*) FROM FESTIVAL WHERE nbPassVendus * 2 < quotaPass OR nbPassVendus
 -- Classement renseigné si et seulement si l'établissement n'est pas dans ETABLISSEMENT_NON_CLASSE
 SELECT COUNT(*) FROM ETABLISSEMENT e
 WHERE (e.classement IS NULL
-       AND NOT EXISTS (SELECT 1 FROM ETABLISSEMENT_NON_CLASSE x WHERE x.idEtablissement = e.idEtablissement))
+       AND NOT EXISTS (SELECT 1 FROM ETABLISSEMENT_NON_CLASSE x WHERE x.id = e.id))
    OR (e.classement IS NOT NULL
-       AND EXISTS (SELECT 1 FROM ETABLISSEMENT_NON_CLASSE x WHERE x.idEtablissement = e.idEtablissement));  -- 0
+       AND EXISTS (SELECT 1 FROM ETABLISSEMENT_NON_CLASSE x WHERE x.id = e.id));  -- 0
 
 -- Festivals qui se chevauchent (doit être > 0)
 SELECT COUNT(*) FROM FESTIVAL a JOIN FESTIVAL b
-  ON a.idFestival < b.idFestival
+  ON a.id < b.id
  AND a.dateDebutFestival <= b.dateFinFestival AND b.dateDebutFestival <= a.dateFinFestival;
 ```
 
@@ -228,15 +228,15 @@ CHARACTERSET AL32UTF8
 INFILE 'csv/03_COMMUNE.csv'
 APPEND INTO TABLE COMMUNE
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
-(codeInsee CHAR(20), nomCommune CHAR(160), latitude, longitude, codeDepartement CHAR(12))
+(codeInsee CHAR(20), nomCommune CHAR(160), latitude, longitude, departement_id CHAR(12))
 ```
 
 Les colonnes UUID (`RAW(16)`) sont lues comme texte, puis converties. Exemple tiré de `26_NUITEE.ctl` :
 
 ```
-  idEtablissement CHAR(36) "HEXTORAW(REPLACE(:idEtablissement, '-', ''))",
+  etablissement_id CHAR(36) "HEXTORAW(REPLACE(:etablissement_id, '-', ''))",
   ...
-  idSelection CHAR(36) "HEXTORAW(REPLACE(:idSelection, '-', ''))"
+  selection_id CHAR(36) "HEXTORAW(REPLACE(:selection_id, '-', ''))"
 ```
 
 Commande : `02_charger_oracle.bat festibed/***@//hote:1521/service` (charge les 28 tables dans l'ordre).
@@ -244,7 +244,7 @@ Commande : `02_charger_oracle.bat festibed/***@//hote:1521/service` (charge les 
 Équivalent H2 (tests) :
 
 ```sql
-INSERT INTO COMMUNE (codeInsee, nomCommune, latitude, longitude, codeDepartement)
-SELECT codeInsee, nomCommune, latitude, longitude, codeDepartement
+INSERT INTO COMMUNE (codeInsee, nomCommune, latitude, longitude, departement_id)
+SELECT codeInsee, nomCommune, latitude, longitude, departement_id
 FROM CSVREAD('csv/03_COMMUNE.csv', NULL, 'charset=UTF-8 fieldSeparator=;');
 ```

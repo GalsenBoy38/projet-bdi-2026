@@ -30,8 +30,10 @@ TITRE = Font(bold=True, color="FFFFFF")
 
 
 def lire(t):
+    """Lignes du CSV indexées par les noms du MLD (Col.cle), comme dans generer_peuplement.py."""
+    cle = {c.nom: c.cle for c in t.cols}
     with open(PEUPLEMENT / "csv" / fichier_csv(t), encoding="utf-8", newline="") as f:
-        return list(csv.DictReader(f, delimiter=";"))
+        return [{cle[k]: v for k, v in ligne.items()} for ligne in csv.DictReader(f, delimiter=";")]
 
 
 def typer(c, v):
@@ -78,7 +80,7 @@ def onglet(wb, t, lignes):
         ws.column_dimensions[get_column_letter(j)].width = 38 if c.typ == "id" else max(14, len(c.nom) + 3)
     for i, ligne in enumerate(lignes, 2):
         for j, c in enumerate(t.cols, 1):
-            cell = ws.cell(i, j, typer(c, ligne[c.nom]))
+            cell = ws.cell(i, j, typer(c, ligne[c.cle]))
             if c.typ.startswith("str") or c.typ == "id":
                 cell.number_format = "@"
             elif c.typ == "date":

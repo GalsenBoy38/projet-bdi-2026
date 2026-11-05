@@ -12,7 +12,7 @@ import jakarta.persistence.UniqueConstraint
 import java.util.UUID
 
 /**
- * Héritage JOINED : UTILISATEUR (commun) + une table par sous-type, même clé idUtilisateur.
+ * Héritage JOINED : UTILISATEUR (commun) + une table par sous-type, même clé id.
  *   UtilisateurEntity
  *    ├── FestivalierEntity                 (FrontOffice, réseau social ou validation anonyme)
  *    └── UtilisateurBackofficeEntity       (compte interne, mot de passe haché)
@@ -29,13 +29,13 @@ import java.util.UUID
 abstract class UtilisateurEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "idUtilisateur", nullable = false)
+    @Column(nullable = false)
     val id: UUID? = null,
 
-    @Column(name = "nom", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     var nom: String,
 
-    @Column(name = "email", nullable = false, length = 150)
+    @Column(nullable = false, length = 150)
     var email: String,
 ) {
     override fun equals(other: Any?) = this === other || (other is UtilisateurEntity && id != null && id == other.id)

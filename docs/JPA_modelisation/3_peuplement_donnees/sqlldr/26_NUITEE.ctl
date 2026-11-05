@@ -5,9 +5,9 @@ INFILE 'csv/26_NUITEE.csv'
 APPEND INTO TABLE NUITEE
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idEtablissement CHAR(36) "HEXTORAW(REPLACE(:idEtablissement, '-', ''))",
+  etablissement_id CHAR(36) "HEXTORAW(REPLACE(:etablissement_id, '-', ''))",
   numeroHebergement CHAR(40),
   dateNuitee DATE "YYYY-MM-DD",
   prixNuitee,
-  idSelection CHAR(36) "HEXTORAW(REPLACE(:idSelection, '-', ''))"
+  selection_id CHAR(36) "HEXTORAW(REPLACE(:selection_id, '-', ''))"
 )

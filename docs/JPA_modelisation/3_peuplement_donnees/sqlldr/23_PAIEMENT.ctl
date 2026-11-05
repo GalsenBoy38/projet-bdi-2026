@@ -5,10 +5,10 @@ INFILE 'csv/23_PAIEMENT.csv'
 APPEND INTO TABLE PAIEMENT
 FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 (
-  idPaiement CHAR(36) "HEXTORAW(REPLACE(:idPaiement, '-', ''))",
+  id CHAR(36) "HEXTORAW(REPLACE(:id, '-', ''))",
   numTransaction CHAR(120),
   montantPaiement,
   datePaiement TIMESTAMP "YYYY-MM-DD HH24:MI:SS",
   statutPaiement CHAR(80),
-  numeroReservation CHAR(80)
+  reservation_id CHAR(80)
 )
